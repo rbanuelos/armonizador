@@ -25,8 +25,8 @@ class Nota :
 	nombre = None
 	altura = None
 	alteracion = ''
-	
-	
+
+
 class Acorde :
 	"""
 	Clase Acorde.
@@ -49,7 +49,7 @@ class Acorde :
 	>>>mi_acorde.bajo.altura = 2
 
 	>>>print mi_acorde.get_nombre()
-	>>>Fa_mayor
+	>>>Fa
 	"""
 	soprano = Nota()
 	contralto = Nota()
@@ -57,31 +57,52 @@ class Acorde :
 	bajo = Nota()
 	
 	notas = []
-
-	nombre = None
 	
-	def __init__(self):
+	alteraciones = []
+	
+	"""
+	El nombre se refiere a si es Fa o Fa# o Fab
+	El modo se refiere a si es Mayor o menor
+	El estado define si esta en estado fundamental 
+	(la fundamental esta en el bajo), primera inversion (la tercera esta
+	en el bajo) o segunda inversion (la quinta esta en el bajo)
+	""" 
+	nombre = None
+	modo = None
+	estado = None
+	
+	def __init__(self) :
+		"""
+		"""
 		pass
 
-	def get_nombre(self):
-		
+	def get_nombre (self) :
+		"""
+		"""
+		self.notas = []
 		#se guardan los nombres de las notas en una lista
 		self.notas.append(self.soprano.nombre)
 		self.notas.append(self.contralto.nombre)
 		self.notas.append(self.tenor.nombre)
 		self.notas.append(self.bajo.nombre)
 		
+		self.alteraciones = []
+		#se guardan los nombres de las notas en una lista
+		self.alteraciones.append(self.soprano.alteracion)
+		self.alteraciones.append(self.contralto.alteracion)
+		self.alteraciones.append(self.tenor.alteracion)
+		self.alteraciones.append(self.bajo.alteracion)
+		
 		#si algun nombre no esta dentro de los nombres posibles no existe
 		#el acorde
-		for index in range(4):
+		for index in range(4) :
 			if not self.notas[index] in posibles_notas:
-				return 'No existe'
+				return self.nombre
 		
-		#hallar distancias entre voces(notas) 
-		pos_soprano = posibles_notas.index(self.soprano.nombre)
-		pos_contralto = posibles_notas.index(self.contralto.nombre)
-		pos_tenor = posibles_notas.index(self.tenor.nombre)
-		pos_bajo = posibles_notas.index(self.bajo.nombre)
+		#si no tiene una nota repetida esta incorrecto
+		duplicado = self.get_duplicado(self.notas, self.alteraciones)
+		if duplicado == None :
+			return self.nombre
 		
 		#se toma como fundamental algunas de las notas para verificar
 		#si el acorde esta completo
@@ -90,6 +111,9 @@ class Acorde :
 		#fundamental : do
 		#3era : mi
 		#5ta : sol
+		
+		acorde_valido = False
+		
 		for index in range(4):
 			
 			pos_fund = posibles_notas.index(self.notas[index])
@@ -98,43 +122,151 @@ class Acorde :
 			if posibles_notas[pos_tercera] in self.notas:
 				pos_quinta = (pos_tercera + 2)%7
 				if posibles_notas[pos_quinta] in self.notas:
+					acorde_valido = True
+					break
+		
+		if acorde_valido :
+			
+			self.nombre = posibles_notas[pos_fund]
+			
+			#sumarle la alteracion al nombre una vez
+			for i in range(4) :
+				if posibles_notas[pos_fund] == self.notas[i] :
+					self.nombre += self.alteraciones[i]
+					break
 					
-					if len(set(self.notas)) == 3:
-						return 'Acorde de '+ str(posibles_notas[pos_fund])
-								
-		return "No existe"
+			mod = self.get_modo(pos_fund)
+			
+			if mod != None :
+				self.nombre += mod
+			
+			posicion = self.get_estado(pos_fund)
+			
+			if mod != None :
+				self.nombre += posicion
+				return self.nombre
+			
+		return None
 
-class Escala :
-	
-	def distancia (self, nota_1, nota_2) :
+	def get_modo (self, pos_fund) :
+		"""
+		Casos Validos
+		*	si la distancia entre la fundamental y la tercera es de 2 
+		tonos y la distancia entre la tercera y la quinta es 1,5 tonos 
+		entonces es un acorde mayor.
 		
-		dist_count = 0
-		nota_actual = nota_1
+		*	si la distancia entre la fundamental y la tercera es de 1.5 
+		tonos y la distancia entre la tercera y la quinta es 2 tonos 
+		entonces es un acorde menor.
+		"""
 		
-		while nota_actual.nombre != nota_2.nombre : 
+		nombre_1 = posibles_notas[pos_fund]
+		nombre_3 = posibles_notas[(pos_fund + 2)%7]
+		nombre_5 = posibles_notas[(pos_fund + 4)%7]
+		
+		for index in range (4) :
 			
-			#las distancias entre notas mi-fa y si-do son 1/2 de tono
-			#el resto son de 1 tono
-			if nota_actual.nombre == 'Mi' or nota_actual.nombre == 'Si':
-				dist_count += 0.5
+			if nombre_1 == self.notas[index] :
+				nota_1 = Nota()
+				nota_1.nombre = self.notas[index]
+				nota_1.alteracion = self.alteraciones[index]
+			
+			if nombre_3 == self.notas[index] :
+				nota_3 = Nota()
+				nota_3.nombre = self.notas[index]
+				nota_3.alteracion = self.alteraciones[index]
+		
+			if nombre_5 == self.notas[index] :
+				nota_5 = Nota()
+				nota_5.nombre = self.notas[index]
+				nota_5.alteracion = self.alteraciones[index]
+		
+		#distancia_1 es la distancia entre la fundamental y la 3era 
+		#y la distancia_2 es entre la 3era y la quinta
+		distancia_1 = distancia (nota_1, nota_3)
+		distancia_2 = distancia (nota_3, nota_5)
+		
+		if distancia_1 == 2 and distancia_2 == 1.5 :
+			self.modo = ''
+			return self.modo
+		elif distancia_1 == 1.5 and distancia_2 == 2 :
+			self.modo = 'm'
+			return self.modo
+		
+		return None
+
+	def get_duplicado (self, notas, alteraciones) :
+		"""
+		"""
+		
+		#si solo hay una sola nota repetida el len de la lista sin 
+		#repetidos debe ser 3
+		if len(set(notas)) != 3 :
+			return None
+		
+		#concatenar las notas con alteraciones para verificar repetidos
+		aux = ['','','','']
+		
+		for i in range (4) : 
+			aux[i] = str(notas[i]) + str(alteraciones[i])
+		
+		for i in range (4) : 
+			
+			nota_aux = aux.pop(i)
+			
+			if nota_aux in aux :
+				return notas[aux.index(nota_aux)]
 			else :
-				dist_count += 1
-			
-			if nota_actual.alteracion == '#' :
-				dist_count -= 0.5
-			elif nota_actual.alteracion == 'b' : 
-				dist_count += 0.5
-			
-			#posicion de la siguiente nota en la escala
-			pos_sgte = (posibles_notas.index(nota_actual.nombre)+1)%7
-			
-			#se actualiza los valores del iterador
-			nota_actual.nombre = posibles_notas[pos_sgte]
-			nota_actual.alteracion = None
+				aux.append(nota_aux)
 		
-		if nota_2.alteracion == '#' :
-				dist_count += 0.5
-		elif nota_2.alteracion == 'b' : 
-				dist_count -= 0.5
+		return None
+
+	def get_estado (self, pos_fund) :
+		"""
+		"""
+		nombre_1 = posibles_notas[pos_fund]
+		nombre_3 = posibles_notas[(pos_fund + 2)%7]
+		nombre_5 = posibles_notas[(pos_fund + 4)%7]
 		
-		return dist_count
+		if nombre_1 == self.bajo.nombre :
+			return ''
+		elif nombre_3 == self.bajo.nombre :
+			return '6'
+		elif nombre_5 == self.bajo.nombre :
+			return '6-4'
+
+"""
+Metodos utiles
+"""
+	
+def distancia (nota_1, nota_2) :
+	"""
+	"""
+	dist_count = 0
+	nota_actual = nota_1
+	
+	if nota_1.alteracion == '#' :
+		dist_count -= 0.5
+	elif nota_1.alteracion == 'b' : 
+		dist_count += 0.5
+	if nota_2.alteracion == '#' :
+		dist_count += 0.5
+	elif nota_2.alteracion == 'b' : 
+		dist_count -= 0.5
+
+	#si no son la misma nota se itera el vector de notas posibles 
+	#hasta llegar al destino
+	while nota_actual.nombre != nota_2.nombre : 
+		
+		#las distancias entre notas mi-fa y si-do son 1/2 de tono
+		#el resto son de 1 tono
+		if nota_actual.nombre == 'Mi' or nota_actual.nombre == 'Si':
+			dist_count += 0.5
+		else :
+			dist_count += 1
+		
+		pos_sgte = (posibles_notas.index(nota_actual.nombre)+1)%7
+		
+		nota_actual.nombre = posibles_notas[pos_sgte]
+	
+	return dist_count
