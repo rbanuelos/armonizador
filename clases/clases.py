@@ -101,6 +101,7 @@ class Acorde :
 		
 		#si no tiene una nota repetida esta incorrecto
 		duplicado = self.get_duplicado(self.notas, self.alteraciones)
+		
 		if duplicado == None :
 			return self.nombre
 		
@@ -212,10 +213,12 @@ class Acorde :
 		
 		for i in range (4) : 
 			
-			nota_aux = aux.pop(i)
+			index = i
 			
+			nota_aux = aux.pop(i)
+
 			if nota_aux in aux :
-				return notas[aux.index(nota_aux)]
+				return notas[i]
 			else :
 				aux.append(nota_aux)
 		
@@ -238,35 +241,93 @@ class Acorde :
 """
 Metodos utiles
 """
+class Util :
 	
-def distancia (nota_1, nota_2) :
-	"""
-	"""
-	dist_count = 0
-	nota_actual = nota_1
-	
-	if nota_1.alteracion == '#' :
-		dist_count -= 0.5
-	elif nota_1.alteracion == 'b' : 
-		dist_count += 0.5
-	if nota_2.alteracion == '#' :
-		dist_count += 0.5
-	elif nota_2.alteracion == 'b' : 
-		dist_count -= 0.5
+	def distancia (self, nota_1, nota_2) :
+		"""
+		"""
+		dist_count = 0
 
-	#si no son la misma nota se itera el vector de notas posibles 
-	#hasta llegar al destino
-	while nota_actual.nombre != nota_2.nombre : 
-		
-		#las distancias entre notas mi-fa y si-do son 1/2 de tono
-		#el resto son de 1 tono
-		if nota_actual.nombre == 'Mi' or nota_actual.nombre == 'Si':
+		if nota_1.alteracion == '#' :
+			dist_count -= 0.5
+		elif nota_1.alteracion == 'b' : 
 			dist_count += 0.5
-		else :
-			dist_count += 1
+		if nota_2.alteracion == '#' :
+			dist_count += 0.5
+		elif nota_2.alteracion == 'b' : 
+			dist_count -= 0.5
 		
-		pos_sgte = (posibles_notas.index(nota_actual.nombre)+1)%7
+		nota_actual = Nota()
+		nota_actual.nombre = nota_1.nombre
+		nota_actual.alteracion = nota_1.alteracion
 		
-		nota_actual.nombre = posibles_notas[pos_sgte]
+		#si no son la misma nota se itera el vector de notas posibles 
+		#hasta llegar al destino
+		while nota_actual.nombre != nota_2.nombre : 
+			
+			#las distancias entre notas mi-fa y si-do son 1/2 de tono
+			#el resto son de 1 tono
+			if nota_actual.nombre == 'Mi' : 
+				dist_count += 0.5
+			elif nota_actual.nombre == 'Si' :
+				dist_count += 0.5 
+			else :
+				dist_count += 1
+			
+			pos_sgte = (posibles_notas.index(nota_actual.nombre)+1)%7
+			
+			nota_actual.nombre = posibles_notas[pos_sgte]
+		
+		return dist_count
+
+util = Util()
+
+class Tonalidad :
 	
-	return dist_count
+	nota = Nota()
+	modo = None
+	
+	escala_nombres = []
+	escala_alteraciones = ['','','','','','','','']
+	
+	def __init__ (self, nombre, alteracion, modo) :
+		self.nota.nombre = nombre
+		self.nota.alteracion = alteracion
+		self.modo = modo
+		
+	def crear_escala (self) :
+
+		inicio = self.nota.nombre  
+		index = posibles_notas.index(inicio)
+		
+		for i in range(index, index+8) :
+			self.escala_nombres.append(posibles_notas [i%7]) 
+		
+		self.escala_alteraciones[0] = self.nota.alteracion
+		
+		n1 = Nota() 
+		n2 = Nota()
+		
+		#FALTA COMPROBAR PARA EL MODO MENOR
+		dist_modo_mayor = [1, 1, 0.5, 1, 1, 1, 0.5]
+		
+		for i in range (7) :
+			
+			n1.nombre = self.escala_nombres[i]
+			n1.alteracion = self.escala_alteraciones[i]
+			
+			n2.nombre = self.escala_nombres[i+1]
+			n2.alteracion = self.escala_alteraciones[i+1]
+			
+			dist = util.distancia (n1, n2) 
+			
+			print dist, dist_modo_mayor[i]
+			
+			if dist > dist_modo_mayor[i] :
+				self.escala_alteraciones[i+1] = 'b'
+			elif dist < dist_modo_mayor[i] :
+				self.escala_alteraciones[i+1] = '#'
+			
+			
+		
+		return self.escala_nombres, self.escala_alteraciones
