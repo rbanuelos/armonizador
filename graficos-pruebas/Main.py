@@ -36,11 +36,13 @@ class VentanaPrincipal :
 
 		while not quit:
 			for event in pygame.event.get():
-
+				
+				self.draw_claves()
+				'''
 				mouse_x, mouse_y = pygame.mouse.get_pos()
 				mouse_y -= 6
 				mouse_x += 1
-				print "Mouse : " +str(mouse_x)+ ", "+ str(mouse_y)
+				#print "Mouse : " +str(mouse_x)+ ", "+ str(mouse_y)
 				if event.type == pygame.QUIT:
 					quit = True
 					pygame.quit()
@@ -106,7 +108,7 @@ class VentanaPrincipal :
 							break
 
 				#handler_method()
-
+				'''
 			clock.tick(50)
 
 	def draw(self):
@@ -175,6 +177,12 @@ class VentanaPrincipal :
 		"""
 		pygame.draw.ellipse(self.screen, borde,(ptox,ptoy,21, 16))
 		return pygame.draw.ellipse(self.screen, fondo,(ptox+1,ptoy+1,19, 14))
+	
+	def draw_claves (self) :
+		superficie_imagen = pygame.image.load('img/clavefa.jpg')
+		ventana = ventana = pygame.display.get_surface()
+		ventana.blit(superficie_imagen, (10,10))
+		pygame.display.flip() 
 
 if __name__ == "__main__" :
 	ventana = VentanaPrincipal()

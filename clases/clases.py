@@ -97,13 +97,13 @@ class Acorde :
 		#el acorde
 		for index in range(4) :
 			if not self.notas[index] in posibles_notas:
-				return self.nombre
+				return 'Existe uno o mas nombres incorrectos'
 		
 		#si no tiene una nota repetida esta incorrecto
 		duplicado = self.get_duplicado(self.notas, self.alteraciones)
 		
 		if duplicado == None :
-			return self.nombre
+			return 'No tiene nota duplicada'
 		
 		#se toma como fundamental algunas de las notas para verificar
 		#si el acorde esta completo
@@ -126,6 +126,8 @@ class Acorde :
 					acorde_valido = True
 					break
 		
+		print 'Acorde Valido: ' + str(acorde_valido)
+		
 		if acorde_valido :
 			
 			self.nombre = posibles_notas[pos_fund]
@@ -138,10 +140,14 @@ class Acorde :
 					
 			mod = self.get_modo(pos_fund)
 			
+			print 'Es de modo: ' + str(mod)  
+			
 			if mod != None :
 				self.nombre += mod
 			
 			posicion = self.get_estado(pos_fund)
+			
+			print 'Estado: ' + str(posicion)
 			
 			if mod != None :
 				self.nombre += posicion
@@ -184,8 +190,8 @@ class Acorde :
 		
 		#distancia_1 es la distancia entre la fundamental y la 3era 
 		#y la distancia_2 es entre la 3era y la quinta
-		distancia_1 = distancia (nota_1, nota_3)
-		distancia_2 = distancia (nota_3, nota_5)
+		distancia_1 = util.distancia (nota_1, nota_3)
+		distancia_2 = util.distancia (nota_3, nota_5)
 		
 		if distancia_1 == 2 and distancia_2 == 1.5 :
 			self.modo = ''
@@ -206,21 +212,23 @@ class Acorde :
 			return None
 		
 		#concatenar las notas con alteraciones para verificar repetidos
-		aux = ['','','','']
+		aux = []
 		
 		for i in range (4) : 
-			aux[i] = str(notas[i]) + str(alteraciones[i])
+			aux.append(str(notas[i]) + str(alteraciones[i]))
+		
 		
 		for i in range (4) : 
 			
 			index = i
 			
-			nota_aux = aux.pop(i)
-
+			nota_aux = aux[i]
+			aux[i] = ''
+			
 			if nota_aux in aux :
 				return notas[i]
 			else :
-				aux.append(nota_aux)
+				aux[i] = nota_aux
 		
 		return None
 
@@ -279,7 +287,25 @@ class Util :
 			nota_actual.nombre = posibles_notas[pos_sgte]
 		
 		return dist_count
+	
+	def menor_distancia (self, nota_1, nota_2) :
+		"""
+		"""
+		
+		cambiar_altura = False
+		
+		inicio = posibles_notas.index (nota_1.nombre)
+		fin = posibles_notas.index (nota_2.nombre)
+		
+		distancia = abs(fin - inicio)
+		 
+		if distancia > 4 :
+			cambiar_altura = True
+			return 8 - distancia, cambiar_altura
+		
+		return distancia, cambiar_altura
 
+ 
 util = Util()
 
 class Tonalidad :
@@ -331,3 +357,4 @@ class Tonalidad :
 			
 		
 		return self.escala_nombres, self.escala_alteraciones
+
