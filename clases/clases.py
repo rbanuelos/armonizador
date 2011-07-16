@@ -305,12 +305,9 @@ class Util :
 		
 		return distancia, cambiar_altura
 
-	def enlace (self, tonalidad, acorde_anterior, bajo_dado) :
+	def get_movimientos (self, tonalidad, acorde_anterior, bajo_dado) :
 		
-		#lista de posibles acordes a retornar
-		acordes_siguientes = []
-		
-		#auxiliares para guardar los distintas posiciones de los acordes
+		#auxiliares para guardar los distintas variantes
 		sopranos = []
 		sopranos_dist = []
 		contraltos = [] 
@@ -346,7 +343,6 @@ class Util :
 			#nueva nota para la soprano
 			nueva_nota = Nota()
 			
-			print str(acorde_anterior.soprano.nombre)+' a ' + str(nota.nombre)
 			distancia, ajustar_altura = \
 				self.menor_distancia(acorde_anterior.soprano, nota) 
 				
@@ -357,8 +353,6 @@ class Util :
 			
 			nueva_nota.nombre = nota.nombre 
 			nueva_nota.alteracion = nota.alteracion
-			
-			print nueva_nota.nombre
 			 
 			sopranos.append (nueva_nota)
 			sopranos_dist.append(distancia)
@@ -399,8 +393,98 @@ class Util :
 			tenores_dist.append(distancia)
 			
 		return sopranos, sopranos_dist, contraltos, contraltos_dist, \
-													tenores, tenores_dist
+			tenores, tenores_dist
 
+	def posibles_disposiciones (self, tonalidad, acorde_anterior, bajo_dado) :
+		
+		#lista de posibles movimientos de la soprano, contralto y
+		#tenor y sus respectivas distancias
+		list_s, s_dist, list_c, c_dist, list_t, t_dist = \
+			self.get_movimientos (tonalidad, acorde_anterior, \
+															bajo_dado)
+		
+		combinaciones = []
+		
+		#sirve para verificar si es un acorde valido. cuenta los repetidos
+		contador = [0, 0, 0]
+		
+		acorde = []
+		for index in range (3) :
+			acorde.append(list_s[index])
+		
+		#i, j, k iteradores sobre las 3 listas 
+		for i in range (3) :
+			nota_1 = list_s[i]
+			
+			contador[i] += 1
+			
+			for j in range (3) :
+				nota_2 = list_c[j]
+				
+				if contador[j] == 1 :
+					continue
+				
+				contador[j] += 1
+				
+				for k in range (3) :
+					nota_3 = list_t[k]
+					
+					if contador[k] == 1 :
+						continue
+					
+					contador[k] += 1
+					
+					combinacion = [nota_1, nota_2, nota_3, bajo_dado]
+					combinaciones.append(combinacion)
+					
+					contador[k] -= 1
+				
+				contador[j] -= 1
+			
+			contador[i] -= 1
+		
+		return combinaciones, s_dist, c_dist, t_dist
+
+	##################### REGLA 1 - ENLACE ARMONICO#################
+	def regla_1 (self, tonalidad, acorde_anterior, bajo_dado) :
+		
+		combinaciones, s_dist, c_dist, t_dist = \
+						self.posibles_disposiciones(tonalidad, \
+											acorde_anterior, bajo_dado)
+		
+		pass_regla_1 = []
+		
+		#NO SIEMPRE EL BAJO VA A SER LA FUNDAMENTAL
+		pos = posibles_notas.index(bajo_dado.nombre)
+		_notas = [posibles_notas[pos], posibles_notas[(pos+2)%7], \
+											posibles_notas[(pos+4)%7]]
+		
+		for index in range(3) :
+			
+			if s_dist[index] == 0 :
+				
+				for i in range(len(combinaciones)) :					
+					
+					if combinaciones[i][0].nombre == _notas[index] :
+						pass_regla_1.append(combinaciones[i])
+
+			if c_dist[index] == 0 :
+				
+				for i in range(len(combinaciones)) :					
+					
+					if combinaciones[i][1].nombre == _notas[index] :
+						pass_regla_1.append(combinaciones[i])
+			
+			if t_dist[index] == 0 :
+				
+				for i in range(len(combinaciones)) :					
+					
+					if combinaciones[i][2].nombre == _notas[index] :
+						pass_regla_1.append(combinaciones[i])
+
+		return pass_regla_1
+
+		
 util = Util()
 
 class Tonalidad :

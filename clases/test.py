@@ -58,6 +58,8 @@ Prueba para enlazar acordes
 bajo = Nota ()
 bajo.nombre = 'Fa'
 bajo.alteracion = ''
+bajo.altura = 2
+
 
 #tonalidad Do mayor
 tonalidad = Tonalidad ('Do', '', '')
@@ -77,20 +79,17 @@ acorde_anterior.bajo.nombre = 'Do'
 acorde_anterior.bajo.altura = 2
 acorde_anterior.bajo.alteracion = ''
 
-lista, distancias, lista2, distancias2, lista3, distancias3 = \
-							util.enlace (tonalidad, acorde_anterior, bajo)
+combinaciones = util.regla_1 (tonalidad, acorde_anterior, bajo)
+print 'Acorde anterior'
+print  str(acorde_anterior.soprano.nombre) + str(acorde_anterior.soprano.altura)
+print  str(acorde_anterior.contralto.nombre) + str(acorde_anterior.contralto.altura)
+print  str(acorde_anterior.tenor.nombre) + str(acorde_anterior.tenor.altura)
+print  str(acorde_anterior.bajo.nombre) + str(acorde_anterior.bajo.altura)
 
-print 'Soprano List'
-for index in range (len(lista)) :
-	print str(lista[index].nombre)+str(lista[index].altura)+ \
-									' distancia ' + str(distancias[index]) 
-
-print 'Contralto List'
-for index in range (len(lista2)) :
-	print str(lista2[index].nombre)+str(lista2[index].altura)+ \
-									' distancia ' + str(distancias2[index]) 
-
-print 'Tenor List'
-for index in range (len(lista3)) :
-	print str(lista3[index].nombre)+str(lista3[index].altura)+ \
-									' distancia ' + str(distancias3[index]) 
+print 'Combinaciones que cumplen con la regla de enlace armonico'
+for i in range(len(combinaciones)) :
+	print 'Combinacion numero : '+str(i+1)
+	for j in range(4) :
+		print str(combinaciones[i][j].nombre)+ \
+				str(combinaciones[i][j].altura)
+	print '\n'
