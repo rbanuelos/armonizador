@@ -351,7 +351,7 @@ class Util :
 				self.menor_distancia(acorde_anterior.soprano, nota) 
 				
 			if ajustar_altura :
-				nueva_nota.altura = acorde_anterior.soprano.altura + 1
+				nueva_nota.altura = acorde_anterior.soprano.altura - 1
 			else :
 				nueva_nota.altura = acorde_anterior.soprano.altura
 			
@@ -370,7 +370,7 @@ class Util :
 				self.menor_distancia(acorde_anterior.contralto, nota) 
 		
 			if ajustar_altura :
-				nueva_nota.altura = acorde_anterior.contralto.altura + 1
+				nueva_nota.altura = acorde_anterior.contralto.altura - 1
 			else :
 				nueva_nota.altura = acorde_anterior.contralto.altura
 			
@@ -388,7 +388,7 @@ class Util :
 				self.menor_distancia(acorde_anterior.tenor, nota) 
 		
 			if ajustar_altura :
-				nueva_nota.altura = acorde_anterior.tenor.altura + 1
+				nueva_nota.altura = acorde_anterior.tenor.altura - 1
 			else :
 				nueva_nota.altura = acorde_anterior.tenor.altura
 			

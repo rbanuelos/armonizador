@@ -65,7 +65,7 @@ tonalidad = Tonalidad ('Do', '', '')
 #el acorde anterior es un Do Mayor
 acorde_anterior = Acorde()
 acorde_anterior.soprano.nombre = 'Do'
-acorde_anterior.soprano.altura = 2
+acorde_anterior.soprano.altura = 4
 acorde_anterior.soprano.alteracion = ''
 acorde_anterior.contralto.nombre = 'Mi'
 acorde_anterior.contralto.altura = 3
