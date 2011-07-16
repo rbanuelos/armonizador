@@ -299,13 +299,108 @@ class Util :
 		
 		distancia = abs(fin - inicio)
 		 
-		if distancia > 4 :
+		if distancia > 3 :
 			cambiar_altura = True
-			return 8 - distancia, cambiar_altura
+			return 7 - distancia, cambiar_altura
 		
 		return distancia, cambiar_altura
 
- 
+	def enlace (self, tonalidad, acorde_anterior, bajo_dado) :
+		
+		#lista de posibles acordes a retornar
+		acordes_siguientes = []
+		
+		#auxiliares para guardar los distintas posiciones de los acordes
+		sopranos = []
+		sopranos_dist = []
+		contraltos = [] 
+		contraltos_dist = [] 
+		tenores = []
+		tenores_dist = []
+		
+		#se obtiene la escala de la tonalidad. Esto se debe hacer una 
+		#sola vez
+		escala, alteraciones = tonalidad.crear_escala()
+		
+		#terminar el grado de la nota del bajo dentro del acorde
+		pos_dentro_de_escala = escala.index(bajo_dado.nombre)
+		
+		#VALIDACION: en el caso de que la nota del bajo sea distinta a las
+		#notas de la escala
+		if bajo_dado.alteracion != alteraciones[pos_dentro_de_escala] :
+			return None
+		  
+		notas_de_acorde = []
+		
+		#se anhaden como notas del acorde; la fundamental, la 3era y 
+		#la 5ta
+		for index in [0, 2, 4] :
+			nota = Nota()
+			pos = (pos_dentro_de_escala + index)%7
+			nota.nombre = escala[pos]
+			nota.alteracion = alteraciones [pos]
+			notas_de_acorde.append (nota)
+		
+		#elegir opciones validas para la soprano, contralto y tenor
+		for nota in notas_de_acorde :
+			#nueva nota para la soprano
+			nueva_nota = Nota()
+			
+			print str(acorde_anterior.soprano.nombre)+' a ' + str(nota.nombre)
+			distancia, ajustar_altura = \
+				self.menor_distancia(acorde_anterior.soprano, nota) 
+				
+			if ajustar_altura :
+				nueva_nota.altura = acorde_anterior.soprano.altura + 1
+			else :
+				nueva_nota.altura = acorde_anterior.soprano.altura
+			
+			nueva_nota.nombre = nota.nombre 
+			nueva_nota.alteracion = nota.alteracion
+			
+			print nueva_nota.nombre
+			 
+			sopranos.append (nueva_nota)
+			sopranos_dist.append(distancia)
+			
+			#nueva nota para la contralto
+			nueva_nota = Nota()
+				
+			distancia, ajustar_altura = \
+				self.menor_distancia(acorde_anterior.contralto, nota) 
+		
+			if ajustar_altura :
+				nueva_nota.altura = acorde_anterior.contralto.altura + 1
+			else :
+				nueva_nota.altura = acorde_anterior.contralto.altura
+			
+			nueva_nota.nombre = nota.nombre 
+			nueva_nota.alteracion = nota.alteracion
+			
+			 
+			contraltos.append (nueva_nota)
+			contraltos_dist.append(distancia)
+			
+			#nueva nota para el tenor
+			nueva_nota = Nota()
+				
+			distancia, ajustar_altura = \
+				self.menor_distancia(acorde_anterior.tenor, nota) 
+		
+			if ajustar_altura :
+				nueva_nota.altura = acorde_anterior.tenor.altura + 1
+			else :
+				nueva_nota.altura = acorde_anterior.tenor.altura
+			
+			nueva_nota.nombre = nota.nombre 
+			nueva_nota.alteracion = nota.alteracion
+			 
+			tenores.append (nueva_nota)
+			tenores_dist.append(distancia)
+			
+		return sopranos, sopranos_dist, contraltos, contraltos_dist, \
+													tenores, tenores_dist
+
 util = Util()
 
 class Tonalidad :
@@ -346,8 +441,6 @@ class Tonalidad :
 			n2.alteracion = self.escala_alteraciones[i+1]
 			
 			dist = util.distancia (n1, n2) 
-			
-			print dist, dist_modo_mayor[i]
 			
 			if dist > dist_modo_mayor[i] :
 				self.escala_alteraciones[i+1] = 'b'
