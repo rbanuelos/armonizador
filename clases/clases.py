@@ -526,9 +526,72 @@ class Util :
 		
 		return pass_regla_1
 
-	#~ ############# REGLA 2 - PROHIBIDO EL CRUCE DE VOCES##############
-	#~ def regla_2 (self, tonalidad, acorde_anterior, bajo_dado) :
-	
+	############# REGLA 2 - PROHIBIDO EL CRUCE DE VOCES##############
+	def regla_2 (self, acorde_anterior, acorde_sgte) :
+		"""
+		Segunda Regla de armonia tradicional.
+		Prohibido el cruce de voces.
+		Las voces estan ordenadas segun sigue en orden de mas agudo a mas
+		grave: soprano, contralto, tenor, bajo
+		
+		Entonces esta regla establece que la contralto no puede cantar
+		una nota mas aguda que la soprano, ya que esta se encuentra antes
+		que la contralto en la escala de mas aguda a grave. Lo mismo se 
+		cumple para las otras combinaciones
+		
+		Tambien esta prohibido que si la soprano canta un Do4 en un acorde
+		la contralto cante un Re4 en el siguiente acorde.
+		
+		Osea, 
+			Si tomamos al tenor como ejemplo la nota cantada por la 
+			contralto en el acorde anterior sirve como limite para 
+			que el tenor no puede cruzar en el sigueinte acorde
+			
+		Retorna Booleano 
+		True en el caso de que tenga cruce, False en caso contrario
+		"""
+		 
+		if self.cruce(acorde_sgte.soprano, acorde_sgte.contralto) :
+			return True
+			
+		if self.cruce(acorde_sgte.contralto, acorde_sgte.tenor) :
+			return True
+		
+		if self.cruce(acorde_sgte.tenor, acorde_sgte.bajo) :
+			return True
+		
+		#en el caso de que sea el primer acorde no existe un anterior
+		if acorde_anterior == None :
+			return False
+
+		if self.cruce(acorde_anterior.soprano, acorde_sgte.contralto) :
+			return True
+			
+		if self.cruce(acorde_anterior.contralto, acorde_sgte.tenor) :
+			return True
+		
+		if self.cruce(acorde_anterior.tenor, acorde_sgte.bajo) :
+			return True
+		
+		return False
+		
+	def cruce (self, nota_1, nota_2) :
+		"""
+		"""
+		
+		if nota_1.altura < nota_2.altura :
+			return True
+		
+		elif nota_1.altura == nota_2.altura :
+			
+			pos_1 = posibles_notas.index(nota_1.nombre)
+			pos_2 = posibles_notas.index(nota_2.nombre)
+			
+			if pos_1 < pos_2 :
+				return True
+		
+		return False
+		
 util = Util()
 
 class Tonalidad :

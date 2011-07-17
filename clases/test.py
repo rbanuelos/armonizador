@@ -23,16 +23,16 @@ from armonizador import *
 #~ 
 #~ print mi_acorde.get_nombre()
 
-#~ 
+
 #~ """
 #~ Prueba de reconocer distancia entre notas
 #~ """
 #~ 
 #~ n_1 = Nota()
-#~ n_1.nombre = 'Do'
+#~ n_1.nombre = 'Re'
 #~ n_1.alteracion = ''
 #~ n_2 = Nota()
-#~ n_2.nombre = 'Re'
+#~ n_2.nombre = 'Do'
 #~ n_2.alteracion = ''
  #~ 
 #~ print util.menor_distancia(n_1, n_2)
@@ -82,17 +82,19 @@ acorde_anterior.bajo.alteracion = ''
 
 armonizador = Armonizador()
 
-acorde_sgte = armonizador.enlace (tonalidad, acorde_anterior, bajo)
+acordes_len = armonizador.enlace (tonalidad, acorde_anterior, bajo)
+
+print acordes_len
 
 print 'Acorde anterior'
 print  str(acorde_anterior.soprano.nombre) + str(acorde_anterior.soprano.altura)
 print  str(acorde_anterior.contralto.nombre) + str(acorde_anterior.contralto.altura)
 print  str(acorde_anterior.tenor.nombre) + str(acorde_anterior.tenor.altura)
 print  str(acorde_anterior.bajo.nombre) + str(acorde_anterior.bajo.altura)
-
-print 'Una posible solucion'
-print  str(acorde_sgte.soprano.nombre) + str(acorde_sgte.soprano.altura)
-print  str(acorde_sgte.contralto.nombre) + str(acorde_sgte.contralto.altura)
-print  str(acorde_sgte.tenor.nombre) + str(acorde_sgte.tenor.altura)
-print  str(acorde_sgte.bajo.nombre) + str(acorde_sgte.bajo.altura)
+#~ 
+#~ print 'Una posible solucion'
+#~ print  str(acorde_sgte.soprano.nombre) + str(acorde_sgte.soprano.altura)
+#~ print  str(acorde_sgte.contralto.nombre) + str(acorde_sgte.contralto.altura)
+#~ print  str(acorde_sgte.tenor.nombre) + str(acorde_sgte.tenor.altura)
+#~ print  str(acorde_sgte.bajo.nombre) + str(acorde_sgte.bajo.altura)
 
