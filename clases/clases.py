@@ -51,10 +51,10 @@ class Acorde :
 	>>>print mi_acorde.get_nombre()
 	>>>Fa
 	"""
-	soprano = Nota()
-	contralto = Nota()
-	tenor = Nota()
-	bajo = Nota()
+	soprano = None
+	contralto = None
+	tenor = None
+	bajo = None
 	
 	notas = []
 	
@@ -74,8 +74,12 @@ class Acorde :
 	def __init__(self) :
 		"""
 		"""
-		pass
+		self.soprano = Nota()
+		self.contralto = Nota()
+		self.tenor = Nota()
+		self.bajo = Nota()
 
+		
 	def get_nombre (self) :
 		"""
 		"""
@@ -444,6 +448,7 @@ class Util :
 			contador[i] += 1
 			
 			for j in range (3) :
+				
 				nota_2 = list_c[j]
 				
 				if contador[j] == 1 :
@@ -452,6 +457,7 @@ class Util :
 				contador[j] += 1
 				
 				for k in range (3) :
+					
 					nota_3 = list_t[k]
 					
 					if contador[k] == 1 :
@@ -471,7 +477,7 @@ class Util :
 		return combinaciones, s_dist, c_dist, t_dist
 
 	##################### REGLA 1 - ENLACE ARMONICO#################
-	def regla_1 (self, tonalidad, acorde_anterior, bajo_dado) :
+	def regla_1 (self, combinaciones, s_dist, c_dist, t_dist, bajo_dado) :
 		"""
 		Primera regla de la armonia tradicional.
 		Define que si existe una nota comun entre un acorde y su acorde 
@@ -481,9 +487,6 @@ class Util :
 		se retorna solo las combinaciones que cumplen con la regla.
 		puede tener excepciones
 		"""
-		combinaciones, s_dist, c_dist, t_dist = \
-						self.posibles_disposiciones(tonalidad, \
-											acorde_anterior, bajo_dado)
 		
 		pass_regla_1 = []
 		
@@ -523,7 +526,9 @@ class Util :
 		
 		return pass_regla_1
 
-		
+	#~ ############# REGLA 2 - PROHIBIDO EL CRUCE DE VOCES##############
+	#~ def regla_2 (self, tonalidad, acorde_anterior, bajo_dado) :
+	
 util = Util()
 
 class Tonalidad :
@@ -531,13 +536,14 @@ class Tonalidad :
 	Clase que define la tonalidad del ejercicio de armonia a resolver
 	Contiene metodos necesarios para la generacion de acordes
 	"""
-	nota = Nota()
+	nota = None
 	modo = None
 	
 	escala_nombres = []
 	escala_alteraciones = ['','','','','','','','']
 	
 	def __init__ (self, nombre, alteracion, modo) :
+		self.nota = Nota()
 		self.nota.nombre = nombre
 		self.nota.alteracion = alteracion
 		self.modo = modo
@@ -579,4 +585,5 @@ class Tonalidad :
 		
 		
 		return self.escala_nombres, self.escala_alteraciones
+
 

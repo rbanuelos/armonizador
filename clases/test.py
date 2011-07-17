@@ -1,6 +1,7 @@
 #!/bin/python
 
-from clases import *
+from armonizador import *
+
 
 #~ """
 #~ Prueba de reconocer acordes
@@ -79,17 +80,19 @@ acorde_anterior.bajo.nombre = 'Do'
 acorde_anterior.bajo.altura = 2
 acorde_anterior.bajo.alteracion = ''
 
-combinaciones = util.regla_1 (tonalidad, acorde_anterior, bajo)
+armonizador = Armonizador()
+
+acorde_sgte = armonizador.enlace (tonalidad, acorde_anterior, bajo)
+
 print 'Acorde anterior'
 print  str(acorde_anterior.soprano.nombre) + str(acorde_anterior.soprano.altura)
 print  str(acorde_anterior.contralto.nombre) + str(acorde_anterior.contralto.altura)
 print  str(acorde_anterior.tenor.nombre) + str(acorde_anterior.tenor.altura)
 print  str(acorde_anterior.bajo.nombre) + str(acorde_anterior.bajo.altura)
 
-print 'Combinaciones que cumplen con la regla de enlace armonico'
-for i in range(len(combinaciones)) :
-	print 'Combinacion numero : '+str(i+1)
-	for j in range(4) :
-		print str(combinaciones[i][j].nombre)+ \
-				str(combinaciones[i][j].altura)
-	print '\n'
+print 'Una posible solucion'
+print  str(acorde_sgte.soprano.nombre) + str(acorde_sgte.soprano.altura)
+print  str(acorde_sgte.contralto.nombre) + str(acorde_sgte.contralto.altura)
+print  str(acorde_sgte.tenor.nombre) + str(acorde_sgte.tenor.altura)
+print  str(acorde_sgte.bajo.nombre) + str(acorde_sgte.bajo.altura)
+
