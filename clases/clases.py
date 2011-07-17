@@ -591,7 +591,72 @@ class Util :
 				return True
 		
 		return False
+	
+	################## REGLA 3 - SENSIBLE A TONICA #################
+	def regla_3 (self, tonalidad, acorde_anterior, acorde_sgte) :
+		"""
+		Si la sensible de una tonalidad (VII grado en la escala) se 
+		encuentra en la soprano o en el bajo, en el acorde siguiente 
+		esa voz debe pasar a la tonica (I grado) 
 		
+		Retorna True si no cumple con la regla
+		"""
+		
+		escala, alteraciones = tonalidad.crear_escala()
+		 
+		if acorde_anterior.soprano.nombre == escala[6] and \
+						acorde_sgte.nombre.soprano.nombre != escala[0] :
+			return True
+			
+		if acorde_anterior.bajo.nombre == escala[6] and \
+						acorde_sgte.nombre.bajo.nombre != escala[0] :
+			return True
+		
+		return False
+		
+	def distancia_entre_voces (self, acorde) :
+		"""
+		No es una de las reglas de armonia pero es un requisito en la 
+		resolucion de ejercicios
+		
+		En armonia tradicional se definen las siguientes distancias 
+		maximas entre voces
+		
+		soprano - contralto -----> 8va
+		contralto - tenor   -----> 8va
+		tenor - bajo        -----> 12va
+		
+		Retorna True en el caso de que se supere algun limite
+		"""
+		
+		if acorde.soprano.altura > acorde.contralto.altura :
+			
+			pos_1 = posibles_notas.index( acorde.soprano.nombre)
+			pos_2 = posibles_notas.index( acorde.contralto.nombre)
+			
+			if pos_1 > pos_2 :
+				return True
+		
+		if acorde.contralto.altura > acorde.tenor.altura :
+			
+			pos_1 = posibles_notas.index( acorde.contralto.nombre)
+			pos_2 = posibles_notas.index( acorde.tenor.nombre)
+			
+			if pos_1 > pos_2 :
+				return True
+		
+		if acorde.tenor.altura > acorde.bajo.altura :
+			
+			pos_1 = posibles_notas.index( acorde.tenor.nombre)
+			pos_2 = posibles_notas.index( acorde.bajo.nombre)
+			
+			if pos_1 - pos_2 > 4 :
+				return True
+		
+		return False
+	
+	################## REGLA 4 - SENSIBLE A TONICA #################
+	#def regla_3 (self, tonalidad, acorde_anterior, acorde_sgte) :
 util = Util()
 
 class Tonalidad :

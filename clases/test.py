@@ -1,7 +1,7 @@
 #!/bin/python
 
 from armonizador import *
-
+import random
 
 #~ """
 #~ Prueba de reconocer acordes
@@ -82,19 +82,25 @@ acorde_anterior.bajo.alteracion = ''
 
 armonizador = Armonizador()
 
-acordes_len = armonizador.enlace (tonalidad, acorde_anterior, bajo)
+acordes = armonizador.enlace (tonalidad, acorde_anterior, bajo)
 
-print acordes_len
+#print len(acordes)
 
 print 'Acorde anterior'
 print  str(acorde_anterior.soprano.nombre) + str(acorde_anterior.soprano.altura)
 print  str(acorde_anterior.contralto.nombre) + str(acorde_anterior.contralto.altura)
 print  str(acorde_anterior.tenor.nombre) + str(acorde_anterior.tenor.altura)
 print  str(acorde_anterior.bajo.nombre) + str(acorde_anterior.bajo.altura)
-#~ 
-#~ print 'Una posible solucion'
-#~ print  str(acorde_sgte.soprano.nombre) + str(acorde_sgte.soprano.altura)
-#~ print  str(acorde_sgte.contralto.nombre) + str(acorde_sgte.contralto.altura)
-#~ print  str(acorde_sgte.tenor.nombre) + str(acorde_sgte.tenor.altura)
-#~ print  str(acorde_sgte.bajo.nombre) + str(acorde_sgte.bajo.altura)
 
+if len(acordes) > 0 :
+	
+	pos = random.randint (0, len(acordes)-1)  
+	
+	print 'Una posible solucion'
+	print  str(acordes[0].soprano.nombre) + str(acordes[0].soprano.altura)
+	print  str(acordes[0].contralto.nombre) + str(acordes[0].contralto.altura)
+	print  str(acordes[0].tenor.nombre) + str(acordes[0].tenor.altura)
+	print  str(acordes[0].bajo.nombre) + str(acordes[0].bajo.altura)
+
+else :
+	print 'No existe solucion que cumpla las reglas'
