@@ -246,13 +246,15 @@ class Acorde :
 		elif nombre_5 == self.bajo.nombre :
 			return '6-4'
 
-"""
-Metodos utiles
-"""
+
 class Util :
-	
+	"""
+	Metodos utiles
+	"""
 	def distancia (self, nota_1, nota_2) :
 		"""
+		Metodo para hallar las distancias entre las notas
+		Utilizado para generar las escalas de las tonalidades
 		"""
 		dist_count = 0
 
@@ -290,6 +292,17 @@ class Util :
 	
 	def menor_distancia (self, nota_1, nota_2) :
 		"""
+		Metodo para hallar el camino mas corto entre una nota y otra
+		
+		Ej:
+		Dado 2 notas; Do y Si
+		el camino mas corto dentro del array de notas posibles es igual
+		a 1.
+		
+		Recorriendo el array hacia adelante la distancia es igual a 6, 
+		en cambio recorriendo hacia atras es 1 
+		
+		['Do','Re', 'Mi', 'Fa', 'Sol', 'La', 'Si'] 
 		"""
 		
 		cambiar_altura = False
@@ -306,6 +319,12 @@ class Util :
 		return distancia, cambiar_altura
 
 	def get_movimientos (self, tonalidad, acorde_anterior, bajo_dado) :
+		"""
+		Metodo para obtener los movimientos posibles de cada voz
+		Una voz puede ir a cualquiera de las 3 notas del siguiente 
+		acorde y cada una de esas posibilidades tiene una distancia 
+		asociada
+		"""
 		
 		#auxiliares para guardar los distintas variantes
 		sopranos = []
@@ -329,6 +348,10 @@ class Util :
 		  
 		notas_de_acorde = []
 		
+		"""
+		TODO
+		Metodo para generar acordes
+		"""
 		#se anhaden como notas del acorde; la fundamental, la 3era y 
 		#la 5ta
 		for index in [0, 2, 4] :
@@ -396,7 +419,9 @@ class Util :
 			tenores, tenores_dist
 
 	def posibles_disposiciones (self, tonalidad, acorde_anterior, bajo_dado) :
-		
+		"""
+		Determina la combinacion de notas para el siguiente acorde
+		"""
 		#lista de posibles movimientos de la soprano, contralto y
 		#tenor y sus respectivas distancias
 		list_s, s_dist, list_c, c_dist, list_t, t_dist = \
@@ -447,7 +472,15 @@ class Util :
 
 	##################### REGLA 1 - ENLACE ARMONICO#################
 	def regla_1 (self, tonalidad, acorde_anterior, bajo_dado) :
+		"""
+		Primera regla de la armonia tradicional.
+		Define que si existe una nota comun entre un acorde y su acorde 
+		siguiente, dicha nota debe mantenerse en la misma voz y a la 
+		misma altura
 		
+		se retorna solo las combinaciones que cumplen con la regla.
+		puede tener excepciones
+		"""
 		combinaciones, s_dist, c_dist, t_dist = \
 						self.posibles_disposiciones(tonalidad, \
 											acorde_anterior, bajo_dado)
@@ -461,13 +494,17 @@ class Util :
 		
 		for index in range(3) :
 			
+			#se verifica si exista una distancia que sea 0 en algun 
+			#movimiento de la soprano
 			if s_dist[index] == 0 :
 				
 				for i in range(len(combinaciones)) :					
 					
 					if combinaciones[i][0].nombre == _notas[index] :
 						pass_regla_1.append(combinaciones[i])
-
+			
+			#se verifica si exista una distancia que sea 0 en algun 
+			#movimiento de la contralto
 			if c_dist[index] == 0 :
 				
 				for i in range(len(combinaciones)) :					
@@ -475,20 +512,25 @@ class Util :
 					if combinaciones[i][1].nombre == _notas[index] :
 						pass_regla_1.append(combinaciones[i])
 			
+			#se verifica si exista una distancia que sea 0 en algun 
+			#movimiento del tenor
 			if t_dist[index] == 0 :
 				
 				for i in range(len(combinaciones)) :					
 					
 					if combinaciones[i][2].nombre == _notas[index] :
 						pass_regla_1.append(combinaciones[i])
-
+		
 		return pass_regla_1
 
 		
 util = Util()
 
 class Tonalidad :
-	
+	"""
+	Clase que define la tonalidad del ejercicio de armonia a resolver
+	Contiene metodos necesarios para la generacion de acordes
+	"""
 	nota = Nota()
 	modo = None
 	
@@ -501,7 +543,11 @@ class Tonalidad :
 		self.modo = modo
 		
 	def crear_escala (self) :
-
+		"""
+		Metodo para generar una escala dado un nombre de una tonalidad
+		Se retorna un array con los nombres de las notas de la escala y
+		otro con las alteraciones de las notas
+		"""
 		inicio = self.nota.nombre  
 		index = posibles_notas.index(inicio)
 		
@@ -530,8 +576,7 @@ class Tonalidad :
 				self.escala_alteraciones[i+1] = 'b'
 			elif dist < dist_modo_mayor[i] :
 				self.escala_alteraciones[i+1] = '#'
-			
-			
+		
 		
 		return self.escala_nombres, self.escala_alteraciones
 
