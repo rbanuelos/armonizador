@@ -51,8 +51,14 @@ class Armonizador :
 		
 		for index in range(len(pass_regla_2)) :
 			if not util.regla_3(tonalidad, acorde_anterior, \
-													pass_regla_1[index]) :
+													pass_regla_2[index]) :
 				pass_regla_3.append (pass_regla_2[index])
 		
-		return pass_regla_3
+		pass_regla_4 = []
+		
+		for index in range(len(pass_regla_3)) :
+			if not util.regla_4(acorde_anterior, pass_regla_3[index]) :
+				pass_regla_4.append (pass_regla_3[index])
+	
+		return pass_regla_4
 		

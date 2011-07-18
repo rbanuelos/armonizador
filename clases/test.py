@@ -97,10 +97,10 @@ if len(acordes) > 0 :
 	pos = random.randint (0, len(acordes)-1)  
 	
 	print 'Una posible solucion'
-	print  str(acordes[0].soprano.nombre) + str(acordes[0].soprano.altura)
-	print  str(acordes[0].contralto.nombre) + str(acordes[0].contralto.altura)
-	print  str(acordes[0].tenor.nombre) + str(acordes[0].tenor.altura)
-	print  str(acordes[0].bajo.nombre) + str(acordes[0].bajo.altura)
+	print  str(acordes[pos].soprano.nombre) + str(acordes[pos].soprano.altura)
+	print  str(acordes[pos].contralto.nombre) + str(acordes[pos].contralto.altura)
+	print  str(acordes[pos].tenor.nombre) + str(acordes[pos].tenor.altura)
+	print  str(acordes[pos].bajo.nombre) + str(acordes[pos].bajo.altura)
 
 else :
 	print 'No existe solucion que cumpla las reglas'

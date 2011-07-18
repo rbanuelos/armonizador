@@ -655,8 +655,94 @@ class Util :
 		
 		return False
 	
-	################## REGLA 4 - SENSIBLE A TONICA #################
-	#def regla_3 (self, tonalidad, acorde_anterior, acorde_sgte) :
+	########## REGLA 4 - PROHIBIDO 5tas y 8vas PARALELAS #############
+	def regla_4 (self, acorde_ant, acorde_sgte) :
+		"""
+		Prohibida las 5tas y 8vas paralelas.
+		si entre un par de voces por ejemplo (tenor y soprano)
+		se forma una 5ta o una 8va, en el siguiente acorde esta 
+		prohibido que se formen una 5ta u 8va nuevamente entre dichas 
+		voces
+		"""
+		#si existe una 5ta entre las voces y la 5ta se repite en el acorde
+		#siguiente entre las mismas voces entonces es una 5ta paralela
+		if self._5ta_(acorde_ant.contralto, acorde_ant.soprano)  \
+				and	self._5ta_(acorde_sgte.contralto, acorde_sgte.soprano) :
+			return True
+		
+		if self._5ta_(acorde_ant.tenor, acorde_ant.soprano)  \
+				and	self._5ta_(acorde_sgte.tenor, acorde_sgte.soprano) :
+			return True
+		
+		if self._5ta_(acorde_ant.bajo, acorde_ant.soprano)  \
+				and self._5ta_(acorde_sgte.bajo, acorde_sgte.soprano) :
+			return True
+		
+		if self._5ta_(acorde_ant.tenor, acorde_ant.contralto)  \
+				and self._5ta_(acorde_sgte.tenor, acorde_sgte.contralto) :
+			return True
+		
+		if self._5ta_(acorde_ant.bajo, acorde_ant.contralto) \
+				and	self._5ta_(acorde_sgte.bajo, acorde_sgte.contralto) :
+			return True
+		
+		if self._5ta_(acorde_ant.bajo, acorde_ant.tenor)  \
+				and	self._5ta_(acorde_sgte.bajo, acorde_sgte.tenor) :
+			return True
+		
+		#si existe una 8va entre las voces y la 8va se repite en el acorde
+		#siguiente entre las mismas voces entonces es una 8va paralela
+		if self._8va_(acorde_ant.contralto, acorde_ant.soprano) \
+				and self._8va_(acorde_sgte.contralto, acorde_sgte.soprano) :
+			return True
+		
+		if self._8va_(acorde_ant.tenor, acorde_ant.soprano) \
+				and self._8va_(acorde_sgte.tenor, acorde_sgte.soprano) :
+			return True
+		
+		if self._8va_(acorde_ant.bajo, acorde_ant.soprano)  \
+				and self._8va_(acorde_sgte.bajo, acorde_sgte.soprano) :
+			return True
+		
+		if self._8va_(acorde_ant.tenor, acorde_ant.contralto) \
+				and self._8va_(acorde_sgte.tenor, acorde_sgte.contralto) :
+			return True
+		
+		if self._8va_(acorde_ant.bajo, acorde_ant.contralto)  \
+				and self._8va_(acorde_sgte.bajo, acorde_sgte.contralto) :
+			return True
+		
+		if self._8va_(acorde_ant.bajo, acorde_ant.tenor) \
+				and self._8va_(acorde_sgte.bajo, acorde_sgte.tenor) :
+			return True
+		
+		return False
+		
+		
+	def _5ta_ (self, nota_1, nota_2) :
+		"""
+		"""
+		pos_1 = posibles_notas.index( nota_1.nombre)
+		#posicion de la 5ta es a 4 pasos adelante en el array de posibles
+		#notas
+		pos_5ta = (pos_1 + 4)%7
+		
+		if nota_2.nombre == posibles_notas[pos_5ta] :
+			return True
+		
+		return False
+		
+	def _8va_ (self, nota_1, nota_2) :
+		"""
+		"""
+		#si tienen el mismo nombre pero son de diferentes alturas entonces
+		#existe una octava
+		if nota_1.nombre == nota_2.nombre and \
+										nota_1.altura != nota_2.altura : 
+			return True
+		
+		return False
+
 util = Util()
 
 class Tonalidad :
