@@ -622,9 +622,10 @@ class Util :
 		En armonia tradicional se definen las siguientes distancias 
 		maximas entre voces
 		
-		soprano - contralto -----> 8va
-		contralto - tenor   -----> 8va
-		tenor - bajo        -----> 12va
+				Voces			Distancia
+		soprano - contralto 		8va
+		contralto - tenor   		8va
+		tenor - bajo        		12va
 		
 		Retorna True en el caso de que se supere algun limite
 		"""
@@ -718,7 +719,6 @@ class Util :
 		
 		return False
 		
-		
 	def _5ta_ (self, nota_1, nota_2) :
 		"""
 		"""
@@ -742,6 +742,77 @@ class Util :
 			return True
 		
 		return False
+
+	####################### REGLA 7 - ENLACE ########################
+	def regla_7 (self, acorde_ant, acorde_sgte) :
+		"""
+		La septima regla de armonia tradicional. Enlace IV-V.
+		En dicho enlace la nota del bajo sube (movimiento ascendente) y 
+		las demas voces bajan (movimiento descendente)
+		
+		Obs: Solo para el enlace de acordes de IV a V grado en estado
+		fundamental
+		
+		ej:
+			En la tonalidad de Do mayor pasar de Fa a Sol
+		
+		Retorna True en caso de que no se cumpla la regla
+		"""
+		
+		#la nota del bajo de un acorde al siguiente debe presentar un 
+		#movimiento ascendente
+		if self.direccion_movimiento( acorde_ant.bajo, \
+									acorde_sgte.bajo) != 'ascendente' :
+			return True
+			
+		#las demas notas deben presentar un movimiento descendente
+		if self.direccion_movimiento( acorde_ant.soprano, \
+								acorde_sgte.soprano) != 'descendente' :
+			return True
+		
+		if self.direccion_movimiento( acorde_ant.contralto, \
+								acorde_sgte.contralto) != 'descendente' :
+			return True
+		
+		if self.direccion_movimiento( acorde_ant.tenor, \
+								acorde_sgte.tenor) != 'descendente' :
+			return True
+		
+		return False
+		
+	def direccion_movimiento (self, nota_1, nota_2):
+		"""
+		Metodo que determina la direccion en la que una nota se mueve
+		si la nota_2 es mas aguda que la nota_1 entonces el movimiento 
+		fue ascendente, si la nota se mantuvo en su misma posicion
+		entonces no hubo movimiento y en el ultimo caso la direccion es
+		descendente.
+		"""
+		
+		#este valor se mantiene si es que no hubo movimiento
+		movimiento = None
+		
+		#si las alturas son diferentes podemos determinar cual es mas 
+		#agudo o mas grave
+		if nota_1.altura < nota_2.altura :
+			movimiento = 'ascendente'
+		
+		elif nota_1.altura > nota_2.altura :
+			movimiento = 'descendente'
+		
+		#si ambas alturas son iguales es mas agudo aquel que tenga mayor 
+		#posicion dentro del array de notas posibles
+		else :
+			pos_1 = posibles_notas.index( nota_1.nombre)
+			pos_2 = posibles_notas.index( nota_2.nombre)
+			
+			if pos_1 > pos_2 :
+				movimiento = 'descendente'
+			
+			elif pos_1 < pos_2 :
+				movimiento = 'ascendente'
+
+		return movimiento
 
 util = Util()
 

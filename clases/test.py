@@ -57,7 +57,7 @@ Prueba para enlazar acordes
 
 #el bajo dado es un Fa
 bajo = Nota ()
-bajo.nombre = 'Fa'
+bajo.nombre = 'Sol'
 bajo.alteracion = ''
 bajo.altura = 2
 
@@ -67,16 +67,16 @@ tonalidad = Tonalidad ('Do', '', '')
 
 #el acorde anterior es un Do Mayor
 acorde_anterior = Acorde()
-acorde_anterior.soprano.nombre = 'Do'
-acorde_anterior.soprano.altura = 4
+acorde_anterior.soprano.nombre = 'La'
+acorde_anterior.soprano.altura = 3
 acorde_anterior.soprano.alteracion = ''
-acorde_anterior.contralto.nombre = 'Mi'
+acorde_anterior.contralto.nombre = 'Fa'
 acorde_anterior.contralto.altura = 3
 acorde_anterior.contralto.alteracion = ''
-acorde_anterior.tenor.nombre = 'Sol'
-acorde_anterior.tenor.altura = 2
+acorde_anterior.tenor.nombre = 'Do'
+acorde_anterior.tenor.altura = 3
 acorde_anterior.tenor.alteracion = ''
-acorde_anterior.bajo.nombre = 'Do'
+acorde_anterior.bajo.nombre = 'Fa'
 acorde_anterior.bajo.altura = 2
 acorde_anterior.bajo.alteracion = ''
 
@@ -84,7 +84,7 @@ armonizador = Armonizador()
 
 acordes = armonizador.enlace (tonalidad, acorde_anterior, bajo)
 
-#print len(acordes)
+print len(acordes)
 
 print 'Acorde anterior'
 print  str(acorde_anterior.soprano.nombre) + str(acorde_anterior.soprano.altura)
