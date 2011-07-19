@@ -55,28 +55,26 @@ import random
 Prueba para enlazar acordes
 """
 
-#el bajo dado es un Fa
+
 bajo = Nota ()
-bajo.nombre = 'Sol'
+bajo.nombre = 'La'
 bajo.alteracion = ''
 bajo.altura = 2
 
+tonalidad = Tonalidad ('Re', '', '')
 
-#tonalidad Do mayor
-tonalidad = Tonalidad ('Do', '', '')
 
-#el acorde anterior es un Do Mayor
 acorde_anterior = Acorde()
-acorde_anterior.soprano.nombre = 'La'
+acorde_anterior.soprano.nombre = 'Si'
 acorde_anterior.soprano.altura = 3
 acorde_anterior.soprano.alteracion = ''
-acorde_anterior.contralto.nombre = 'Fa'
+acorde_anterior.contralto.nombre = 'Sol'
 acorde_anterior.contralto.altura = 3
 acorde_anterior.contralto.alteracion = ''
-acorde_anterior.tenor.nombre = 'Do'
+acorde_anterior.tenor.nombre = 'Re'
 acorde_anterior.tenor.altura = 3
 acorde_anterior.tenor.alteracion = ''
-acorde_anterior.bajo.nombre = 'Fa'
+acorde_anterior.bajo.nombre = 'Sol'
 acorde_anterior.bajo.altura = 2
 acorde_anterior.bajo.alteracion = ''
 
@@ -84,23 +82,33 @@ armonizador = Armonizador()
 
 acordes = armonizador.enlace (tonalidad, acorde_anterior, bajo)
 
-print len(acordes)
+#print len(acordes)
 
-print 'Acorde anterior'
-print  str(acorde_anterior.soprano.nombre) + str(acorde_anterior.soprano.altura)
-print  str(acorde_anterior.contralto.nombre) + str(acorde_anterior.contralto.altura)
-print  str(acorde_anterior.tenor.nombre) + str(acorde_anterior.tenor.altura)
-print  str(acorde_anterior.bajo.nombre) + str(acorde_anterior.bajo.altura)
+print 'Acorde Anterior : ' + str(acorde_anterior.get_nombre())
 
+print 'soprano : ' + str(acorde_anterior.soprano.nombre) \
+	+ str(acorde_anterior.soprano.alteracion)+ str(acorde_anterior.soprano.altura)
+print 'contralto : ' + str(acorde_anterior.contralto.nombre) \
+	+ str(acorde_anterior.contralto.alteracion)+ str(acorde_anterior.contralto.altura)
+print 'tenor : ' + str(acorde_anterior.tenor.nombre) \
+	+ str(acorde_anterior.tenor.alteracion)+ str(acorde_anterior.tenor.altura)
+print 'bajo : ' + str(acorde_anterior.bajo.nombre) \
+	+ str(acorde_anterior.bajo.alteracion)+ str(acorde_anterior.bajo.altura)
+
+print '----------------------------------------------------------------'
 if len(acordes) > 0 :
 	
 	pos = random.randint (0, len(acordes)-1)  
 	
-	print 'Una posible solucion'
-	print  str(acordes[pos].soprano.nombre) + str(acordes[pos].soprano.altura)
-	print  str(acordes[pos].contralto.nombre) + str(acordes[pos].contralto.altura)
-	print  str(acordes[pos].tenor.nombre) + str(acordes[pos].tenor.altura)
-	print  str(acordes[pos].bajo.nombre) + str(acordes[pos].bajo.altura)
-
+	print 'Una posible solucion : ' + str (acordes[pos].get_nombre()) 
+	print  'soprano : ' + str(acordes[pos].soprano.nombre) \
+		+str(acordes[pos].soprano.alteracion) + str(acordes[pos].soprano.altura)
+	print  'contralto : ' + str(acordes[pos].contralto.nombre) \
+		+str(acordes[pos].contralto.alteracion) + str(acordes[pos].contralto.altura)
+	print  'tenor : ' + str(acordes[pos].tenor.nombre) \
+		+str(acordes[pos].tenor.alteracion) + str(acordes[pos].tenor.altura)
+	print  'bajo : ' + str(acordes[pos].bajo.nombre) \
+		+str(acordes[pos].bajo.alteracion) + str(acordes[pos].bajo.altura)
+	
 else :
 	print 'No existe solucion que cumpla las reglas'

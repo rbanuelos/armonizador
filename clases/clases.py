@@ -130,7 +130,7 @@ class Acorde :
 					acorde_valido = True
 					break
 		
-		print 'Acorde Valido: ' + str(acorde_valido)
+		#print 'Acorde Valido: ' + str(acorde_valido)
 		
 		if acorde_valido :
 			
@@ -144,14 +144,14 @@ class Acorde :
 					
 			mod = self.get_modo(pos_fund)
 			
-			print 'Es de modo: ' + str(mod)  
+			#print 'Es de modo: ' + str(mod)  
 			
 			if mod != None :
 				self.nombre += mod
 			
 			posicion = self.get_estado(pos_fund)
 			
-			print 'Estado: ' + str(posicion)
+			#print 'Estado: ' + str(posicion)
 			
 			if mod != None :
 				self.nombre += posicion

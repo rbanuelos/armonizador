@@ -6,7 +6,11 @@ class Armonizador :
 	"""
 	
 	def enlace (self, tonalidad, acorde_anterior, bajo_dado) :
-		
+		"""
+		Obtiene las combinaciones posibles de las voces y va filtrando
+		esas combinaciones (acordes) mediante la validacion del 
+		cumplimiento de las reglas
+		"""
 		combinaciones, s_dist, c_dist, t_dist = \
 						util.posibles_disposiciones(tonalidad, \
 											acorde_anterior, bajo_dado)
@@ -70,3 +74,11 @@ class Armonizador :
 				pass_regla_7.append (pass_regla_4[index])
 		
 		return pass_regla_7
+	
+	#########################TODO##################################
+	def reglas_filter (self, tonalidad, acorde_anterior, bajo_dado) :
+		"""
+		Metodo que determina que reglas deben aplicarse de acuerdo a los 
+		acordes que componen el enlace
+		"""
+		
