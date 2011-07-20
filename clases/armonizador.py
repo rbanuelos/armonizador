@@ -87,7 +87,7 @@ class Armonizador :
 					if not util.regla_4(acorde_anterior, pass_regla_3[index]) :
 						pass_regla_4.append (pass_regla_3[index])
 			else :
-				pass_regla_4 = pass_regla_3
+				pass_regla_4 += pass_regla_3
 			
 			aplicar_regla_7 = False
 			
@@ -96,10 +96,10 @@ class Armonizador :
 					if not util.regla_7(acorde_anterior, pass_regla_4[index]) :
 						pass_regla_7.append (pass_regla_4[index])
 			else :
-				pass_regla_7 = pass_regla_4
+				pass_regla_7 += pass_regla_4
 			
 			resultados += pass_regla_7
-		
+
 		return resultados
 	
 	def get_triadas (self, tonalidad, bajo_dado) :

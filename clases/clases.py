@@ -330,8 +330,15 @@ class Util :
 		distancia = abs(fin - inicio)
 		 
 		if distancia > 3 :
-			cambiar_altura = True
+			
+			if fin < inicio :
+				cambiar_altura = 1
+			else :
+				cambiar_altura = -1
+	
 			return 7 - distancia, cambiar_altura
+		
+		cambiar_altura = 0
 		
 		return distancia, cambiar_altura
 
@@ -405,7 +412,8 @@ class Util :
 				self.menor_distancia(acorde_anterior.soprano, nota) 
 				
 			if ajustar_altura :
-				nueva_nota.altura = acorde_anterior.soprano.altura - 1
+				nueva_nota.altura = acorde_anterior.soprano.altura \
+														+ ajustar_altura
 			else :
 				nueva_nota.altura = acorde_anterior.soprano.altura
 			
@@ -422,7 +430,8 @@ class Util :
 				self.menor_distancia(acorde_anterior.contralto, nota) 
 		
 			if ajustar_altura :
-				nueva_nota.altura = acorde_anterior.contralto.altura - 1
+				nueva_nota.altura = acorde_anterior.contralto.altura \
+														+ ajustar_altura
 			else :
 				nueva_nota.altura = acorde_anterior.contralto.altura
 			
@@ -440,7 +449,8 @@ class Util :
 				self.menor_distancia(acorde_anterior.tenor, nota) 
 		
 			if ajustar_altura :
-				nueva_nota.altura = acorde_anterior.tenor.altura - 1
+				nueva_nota.altura = acorde_anterior.tenor.altura \
+														+ ajustar_altura
 			else :
 				nueva_nota.altura = acorde_anterior.tenor.altura
 			
@@ -509,7 +519,6 @@ class Util :
 					
 					combinacion = [nota_1, nota_2, nota_3, bajo_dado]
 					combinaciones.append(combinacion)
-					
 					contador[k] -= 1
 				
 				contador[j] -= 1
@@ -532,10 +541,27 @@ class Util :
 		
 		pass_regla_1 = []
 		
-		#NO SIEMPRE EL BAJO VA A SER LA FUNDAMENTAL
-		pos = posibles_notas.index(bajo_dado.nombre)
-		_notas = [posibles_notas[pos], posibles_notas[(pos+2)%7], \
-											posibles_notas[(pos+4)%7]]
+		acorde = Acorde()
+		acorde.soprano = combinaciones[0][0]
+		acorde.contralto = combinaciones[0][1]
+		acorde.tenor = combinaciones[0][2]
+		acorde.bajo = combinaciones[0][3]
+		
+		#solo para que se guarde el nombre del acorde
+		acorde.get_full_name()
+		
+		_notas = []
+		
+		#hallar la posicion de la fundamental del acorde
+		fund = acorde.acorde_valido()
+		_notas.append( posibles_notas[fund] )
+		#agregar la 3era
+		pos_3 = (fund+2)%7
+		_notas.append( posibles_notas[pos_3] )
+		#agregar la 5ta
+		pos_5 = (fund+4)%7
+		_notas.append( posibles_notas[pos_5] )
+		
 		
 		for index in range(3) :
 			
