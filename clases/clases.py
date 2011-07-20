@@ -71,6 +71,11 @@ class Acorde :
 	modo = None
 	estado = None
 	
+	"""
+	Relativo a la tonalidad
+	"""
+	grado = None 
+	
 	def __init__(self) :
 		"""
 		"""
@@ -78,9 +83,34 @@ class Acorde :
 		self.contralto = Nota()
 		self.tenor = Nota()
 		self.bajo = Nota()
-
+	
+	def acorde_valido (self) :
+		"""
+		se toma como fundamental algunas de las notas para verificar
+		si el acorde esta completo
+		se necesita una fundamental, una 3era, y una 5ta.
+		ej: Do_mayor
+		fundamental : do
+		3era : mi
+		5ta : sol
 		
-	def get_nombre (self) :
+		retorna la posicion de la fundamental en el array de posibles 
+		notas
+		"""
+		
+		for index in range(4):
+			
+			pos_fund = posibles_notas.index(self.notas[index])
+			pos_tercera = (pos_fund + 2)%7
+			
+			if posibles_notas[pos_tercera] in self.notas:
+				pos_quinta = (pos_tercera + 2)%7
+				if posibles_notas[pos_quinta] in self.notas:
+					return pos_fund
+
+		return None
+	
+	def get_full_name (self) :
 		"""
 		"""
 		self.notas = []
@@ -109,30 +139,9 @@ class Acorde :
 		if duplicado == None :
 			return 'No tiene nota duplicada'
 		
-		#se toma como fundamental algunas de las notas para verificar
-		#si el acorde esta completo
-		#se necesita una fundamental, una 3era, y una 5ta.
-		#ej: Do_mayor
-		#fundamental : do
-		#3era : mi
-		#5ta : sol
+		pos_fund = self.acorde_valido()
 		
-		acorde_valido = False
-		
-		for index in range(4):
-			
-			pos_fund = posibles_notas.index(self.notas[index])
-			pos_tercera = (pos_fund + 2)%7
-			
-			if posibles_notas[pos_tercera] in self.notas:
-				pos_quinta = (pos_tercera + 2)%7
-				if posibles_notas[pos_quinta] in self.notas:
-					acorde_valido = True
-					break
-		
-		#print 'Acorde Valido: ' + str(acorde_valido)
-		
-		if acorde_valido :
+		if pos_fund != None :
 			
 			self.nombre = posibles_notas[pos_fund]
 			
