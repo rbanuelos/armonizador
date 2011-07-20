@@ -209,10 +209,14 @@ class Acorde :
 		if distancia_1 == 2 and distancia_2 == 1.5 :
 			self.modo = ''
 			return self.modo
+		
 		elif distancia_1 == 1.5 and distancia_2 == 2 :
 			self.modo = 'm'
 			return self.modo
 		
+		elif distancia_1 == 1.5 and distancia_2 == 1.5 :
+			self.modo = 'dim'
+			return self.modo
 		return None
 
 	def get_duplicado (self, notas, alteraciones) :
@@ -331,7 +335,8 @@ class Util :
 		
 		return distancia, cambiar_altura
 
-	def get_movimientos (self, tonalidad, acorde_anterior, bajo_dado) :
+	def get_movimientos (self, tonalidad, acorde_anterior, bajo_dado, \
+														posible_acorde) :
 		"""
 		Metodo para obtener los movimientos posibles de cada voz
 		Una voz puede ir a cualquiera de las 3 notas del siguiente 
@@ -358,22 +363,39 @@ class Util :
 		#notas de la escala
 		if bajo_dado.alteracion != alteraciones[pos_dentro_de_escala] :
 			return None
-		  
-		notas_de_acorde = []
+		 
+		"""
+			TODO
+			Metodo para generar acordes
+			
+			#se anhaden como notas del acorde; la fundamental, la 3era y 
+			#la 5ta
+			for index in [0, 2, 4] :
+				nota = Nota()
+				pos = (pos_dentro_de_escala + index)%7
+				nota.nombre = escala[pos]
+				nota.alteracion = alteraciones [pos]
+				notas_de_acorde.append (nota)
+		"""
+	
 		
-		"""
-		TODO
-		Metodo para generar acordes
-		"""
+		notas_de_acorde = []
+		#sirve para que el metodo combinatorio sepa cual puede duplicar
+		posicion_duplicado = None
+		
 		#se anhaden como notas del acorde; la fundamental, la 3era y 
 		#la 5ta
-		for index in [0, 2, 4] :
+		for index in range (3) :
 			nota = Nota()
-			pos = (pos_dentro_de_escala + index)%7
-			nota.nombre = escala[pos]
-			nota.alteracion = alteraciones [pos]
+			nota.nombre = posible_acorde[index]
+			pos = escala.index(nota.nombre)
+			nota.alteracion = alteraciones[pos]
 			notas_de_acorde.append (nota)
-		
+			
+			if posible_acorde[3] == posible_acorde[index] :
+				posicion_duplicado = index
+			
+
 		#elegir opciones validas para la soprano, contralto y tenor
 		for nota in notas_de_acorde :
 			#nueva nota para la soprano
@@ -428,31 +450,42 @@ class Util :
 			tenores.append (nueva_nota)
 			tenores_dist.append(distancia)
 			
-		return sopranos, sopranos_dist, contraltos, contraltos_dist, \
-			tenores, tenores_dist
+		return posicion_duplicado, sopranos, sopranos_dist, contraltos, \
+									contraltos_dist, tenores, tenores_dist
 
-	def posibles_disposiciones (self, tonalidad, acorde_anterior, bajo_dado) :
+	def posibles_disposiciones (self, tonalidad, acorde_anterior, \
+											bajo_dado, posible_acorde) :
 		"""
 		Determina la combinacion de notas para el siguiente acorde
 		"""
 		#lista de posibles movimientos de la soprano, contralto y
 		#tenor y sus respectivas distancias
-		list_s, s_dist, list_c, c_dist, list_t, t_dist = \
+		pos_duplicado, list_s, s_dist, list_c, c_dist, list_t, t_dist = \
 			self.get_movimientos (tonalidad, acorde_anterior, \
-															bajo_dado)
+											bajo_dado, posible_acorde)
 		
 		combinaciones = []
 		
-		#sirve para verificar si es un acorde valido. cuenta los repetidos
 		contador = [0, 0, 0]
+		#sirve para verificar si es un acorde valido. cuenta los repetidos
+		for index in range(3) :
+			
+			if index == pos_duplicado :
+				contador[index] = -1
+			else :
+				contador[index] = 0
 		
-		acorde = []
-		for index in range (3) :
-			acorde.append(list_s[index])
-		
+		#el bajo suma 1 valor a su correspondiente contador
+		for index in range(3) :
+			if list_s[index].nombre == bajo_dado.nombre :
+				contador[index] += 1
+
 		#i, j, k iteradores sobre las 3 listas 
 		for i in range (3) :
 			nota_1 = list_s[i]
+			
+			if contador[i] == 1 :
+				continue
 			
 			contador[i] += 1
 			
