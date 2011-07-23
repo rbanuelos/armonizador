@@ -72,6 +72,11 @@ class Acorde :
 	estado = None
 	
 	"""
+	Nombre completo
+	"""
+	cifrado = None
+	
+	"""
 	Relativo a la tonalidad
 	"""
 	grado = None 
@@ -143,12 +148,13 @@ class Acorde :
 		
 		if pos_fund != None :
 			
+			self.cifrado = posibles_notas[pos_fund]
 			self.nombre = posibles_notas[pos_fund]
 			
 			#sumarle la alteracion al nombre una vez
 			for i in range(4) :
 				if posibles_notas[pos_fund] == self.notas[i] :
-					self.nombre += self.alteraciones[i]
+					self.cifrado += self.alteraciones[i]
 					break
 					
 			mod = self.get_modo(pos_fund)
@@ -156,15 +162,15 @@ class Acorde :
 			#print 'Es de modo: ' + str(mod)  
 			
 			if mod != None :
-				self.nombre += mod
+				self.cifrado += mod
 			
 			posicion = self.get_estado(pos_fund)
 			
 			#print 'Estado: ' + str(posicion)
 			
 			if mod != None :
-				self.nombre += posicion
-				return self.nombre
+				self.cifrado += posicion
+				return self.cifrado
 			
 		return None
 
