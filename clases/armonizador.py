@@ -22,7 +22,7 @@ class Armonizador :
 			pass_regla_3 = [] 
 			pass_regla_4 = [] 
 			pass_regla_7 = [] 
-			pass_regla_8 = [] 
+			pass_regla_9 = [] 
 			
 			combinaciones, s_dist, c_dist, t_dist = \
 			util.posibles_disposiciones(tonalidad, acorde_anterior, \
@@ -33,10 +33,10 @@ class Armonizador :
 			verificar_regla = self.reglas_filter( tonalidad, \
 									acorde_anterior, combinaciones[0] )
 			
-			#PRUEBA
-			aplicar_regla_1 = False
+			#return verificar_regla
 			
-			if aplicar_regla_1 :
+			#se pregunta si se debe aplicar la regla o no 
+			if verificar_regla[0] :
 				#Combinaciones que cumplen la primera regla
 				combinaciones = util.regla_1 (combinaciones, s_dist, \
 												c_dist, t_dist, bajo_dado)
@@ -65,9 +65,7 @@ class Armonizador :
 				if not util.distancia_entre_voces ( acorde ) :
 					pass_regla_1.append(acorde)
 			
-			aplicar_regla_2 = True
-			
-			if aplicar_regla_2 :
+			if verificar_regla[1] :
 				for index in range(len(pass_regla_1)) :
 					if not util.regla_2(acorde_anterior, pass_regla_1[index]) :
 						pass_regla_2.append(pass_regla_1[index])
@@ -75,10 +73,9 @@ class Armonizador :
 				#si no se aplico la regla se toma como que todas las
 				#anteriores combinaciones pasaron la regla
 				pass_regla_2 += pass_regla_1
-		
-			aplicar_regla_3 = True
 			
-			if aplicar_regla_3 :
+			
+			if verificar_regla[2] :
 				for index in range(len(pass_regla_2)) :
 					if not util.regla_3(tonalidad, acorde_anterior, \
 															pass_regla_2[index]) :
@@ -87,25 +84,29 @@ class Armonizador :
 				pass_regla_3 += pass_regla_2
 			
 			
-			aplicar_regla_4 = True
-			
-			if aplicar_regla_4 :
+			if verificar_regla[3] :
 				for index in range(len(pass_regla_3)) :
 					if not util.regla_4(acorde_anterior, pass_regla_3[index]) :
 						pass_regla_4.append (pass_regla_3[index])
 			else :
 				pass_regla_4 += pass_regla_3
 			
-			aplicar_regla_7 = False
 			
-			if aplicar_regla_7 :
+			if verificar_regla[6] :
 				for index in range(len(pass_regla_4)) :
 					if not util.regla_7(acorde_anterior, pass_regla_4[index]) :
 						pass_regla_7.append (pass_regla_4[index])
 			else :
 				pass_regla_7 += pass_regla_4
 			
-			resultados += pass_regla_7
+			if verificar_regla[8] :
+				for index in range(len(pass_regla_7)) :
+					if not util.regla_9(acorde_anterior, pass_regla_7[index]) :
+						pass_regla_9.append (pass_regla_7[index])
+			else :
+				pass_regla_9 += pass_regla_7
+			
+			resultados += pass_regla_9
 
 		return resultados
 	
@@ -255,6 +256,12 @@ class Armonizador :
 		inversion si inversion vale 0 entonces el acorde no esta 
 		invertido, si vale 1 entonces esta en primera inversion y 2 si 
 		es que se encuentra en 2da inversion
+		
+		En este metodo estan de forma implicita la reglas 8, 11, 13, 14,
+		15 y 16 de manera completo o parcial. 
+		
+		Las reglas antes mencionadas definen que notas se pueden 
+		duplicar segun el acorde y su estado
 		"""
 		
 		#Acordes de I grado
@@ -375,21 +382,47 @@ class Armonizador :
 		for index in range(14):
 			reglas_a_aplicar.append(False)
 		
-		#verifica si debe aplicarse la regla 1
 		escala, alteraciones = tonalidad.crear_escala()
 		
-		print acorde_anterior.get_full_name()
-		print acorde_sgte.get_full_name()
+		acorde_anterior.get_full_name()
+		acorde_sgte.get_full_name()
 		
 		nombre_1 = acorde_anterior.nombre
 		nombre_2 = acorde_sgte.nombre
 		
 		grado_1 = escala.index( nombre_1 ) + 1
-		grado_2 = escala.index( nombre_2) + 1
+		grado_2 = escala.index( nombre_2 ) + 1
 		
-		print self.regla_1_filter( grado_1, grado_2 )
+		estado_1 = acorde_anterior.estado
+		estado_2 = acorde_sgte.estado
+		
+		#verifica si debe aplicarse la regla 1
+		reglas_a_aplicar[0] = self.regla_1_filter( grado_1, grado_2 )
 
-	def regla_1_filter ( self, grado_1, grado_2 ) :
+		#la regla 2 siempre se realiza
+		reglas_a_aplicar[1] = True
+		
+		#la regla 3 siempre se realiza
+		reglas_a_aplicar[2] = True
+		
+		#la regla 4 siempre se realiza
+		reglas_a_aplicar[3] = True
+		
+		#PRUEBA
+		reglas_a_aplicar[4] = False
+		
+		#PRUEBA
+		reglas_a_aplicar[5] = False
+		
+		reglas_a_aplicar[6] = self.regla_7_filter( grado_1, estado_1, \
+														grado_2, estado_2)
+		
+		reglas_a_aplicar[8] = self.regla_7_filter( grado_1, estado_1, \
+														grado_2, estado_2)
+		
+		return reglas_a_aplicar
+		
+	def regla_1_filter( self, grado_1, grado_2 ) :
 		"""
 		Metodo que determina si verificar o no la regla 1 
 		Esta regla solo se aplica a acordes que tienen notas en comun
@@ -397,5 +430,65 @@ class Armonizador :
 		if grado_2 == (grado_1+2)%7 or grado_2 == (grado_1+3)%7 \
 				or grado_2 == (grado_1+4)%7 or grado_2 == (grado_1+5)%7 :
 			return True
+		
+		return False
+	
+	def regla_5_filter( self, nro_compas ) :
+		"""
+		Metodo que determina si verificar o no la regla 5 
+		Esta regla solo se aplica al ultimo acorde del ejercicio. Debe
+		estar en estado fundamental y puede faltarle la 5ta.
+		
+		ej :
+			Fa mayor.
+			Notas = Fa, Fa, La (sin el Do)
+			
+		"""
+		if nro_compas == 8 :
+			return True
+		
+		return False
+
+	def regla_6_filter( self, nro_compas_1, nro_compas_2 ) :
+		"""
+		Metodo que determina si verificar o no la regla 6 
+		Esta regla solo se aplica si el acorde anterior y el siguiente
+		son distintos. se verifica que no sean el mismo acorde
+		
+		"""
+		if nro_compas_1 != nro_compas_2 :
+			return True
+		
+		return False
+
+	def regla_7_filter( self, grado_1, estado_1, grado_2, estado_2  ) : 
+		"""
+		Metodo que determina si se comprueba la regla 7 o no.
+		Se aplica solo para el enlace IV - V
+		
+		"""
+		#verifica que los grados sean respectivamente IV y V
+		if grado_1 == 4 and grado_2 == 5:
+			#verifica que esten ambos acordes en estado fundamental
+			if estado_1 == '' and estado_2 == '' :
+				return True
+		
+		return False
+			
+	def regla_9_filter( self, grado_1, estado_1, grado_2, estado_2  ) : 
+		"""
+		Metodo que determina si se comprueba la regla 9 o no.
+		Se aplica solo para el enlace IV - V6 y el enlace IV6 - V
+		
+		"""
+		#verifica que los grados sean respectivamente IV y V
+		if grado_1 == 4 and grado_2 == 5:
+			
+			#verifica que esten ambos acordes en estado fundamental
+			if estado_1 == '6' and estado_2 == '' :
+				return True
+			
+			if estado_1 == '' and estado_2 == '6' :
+				return True
 		
 		return False

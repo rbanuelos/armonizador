@@ -263,18 +263,21 @@ class Acorde :
 		nombre_5 = posibles_notas[(pos_fund + 4)%7]
 		
 		if nombre_1 == self.bajo.nombre :
-			return ''
+			self.estado = ''
+			return self.estado
 		elif nombre_3 == self.bajo.nombre :
-			return '6'
+			self.estado = '6'
+			return self.estado
 		elif nombre_5 == self.bajo.nombre :
-			return '6-4'
+			self.estado = '6-4'
+			return self.estado
 
 
 class Util :
 	"""
 	Metodos utiles
 	"""
-	def distancia (self, nota_1, nota_2) :
+	def distancia( self, nota_1, nota_2 ) :
 		"""
 		Metodo para hallar las distancias entre las notas
 		Utilizado para generar las escalas de las tonalidades
@@ -313,7 +316,7 @@ class Util :
 		
 		return dist_count
 	
-	def menor_distancia (self, nota_1, nota_2) :
+	def menor_distancia( self, nota_1, nota_2 ) :
 		"""
 		Metodo para hallar el camino mas corto entre una nota y otra
 		
@@ -348,8 +351,8 @@ class Util :
 		
 		return distancia, cambiar_altura
 
-	def get_movimientos (self, tonalidad, acorde_anterior, bajo_dado, \
-														posible_acorde) :
+	def get_movimientos( self, tonalidad, acorde_anterior, bajo_dado, \
+														posible_acorde ) :
 		"""
 		Metodo para obtener los movimientos posibles de cada voz
 		Una voz puede ir a cualquiera de las 3 notas del siguiente 
@@ -469,8 +472,8 @@ class Util :
 		return posicion_duplicado, sopranos, sopranos_dist, contraltos, \
 									contraltos_dist, tenores, tenores_dist
 
-	def posibles_disposiciones (self, tonalidad, acorde_anterior, \
-											bajo_dado, posible_acorde) :
+	def posibles_disposiciones( self, tonalidad, acorde_anterior, \
+											bajo_dado, posible_acorde ) :
 		"""
 		Determina la combinacion de notas para el siguiente acorde
 		"""
@@ -534,7 +537,7 @@ class Util :
 		return combinaciones, s_dist, c_dist, t_dist
 
 	##################### REGLA 1 - ENLACE ARMONICO#################
-	def regla_1 (self, combinaciones, s_dist, c_dist, t_dist, bajo_dado) :
+	def regla_1( self, combinaciones, s_dist, c_dist, t_dist, bajo_dado ) :
 		"""
 		Primera regla de la armonia tradicional.
 		Define que si existe una nota comun entre un acorde y su acorde 
@@ -601,7 +604,7 @@ class Util :
 		return pass_regla_1
 
 	############# REGLA 2 - PROHIBIDO EL CRUCE DE VOCES##############
-	def regla_2 (self, acorde_anterior, acorde_sgte) :
+	def regla_2( self, acorde_anterior, acorde_sgte ) :
 		"""
 		Segunda Regla de armonia tradicional.
 		Prohibido el cruce de voces.
@@ -649,7 +652,7 @@ class Util :
 		
 		return False
 		
-	def cruce (self, nota_1, nota_2) :
+	def cruce( self, nota_1, nota_2 ) :
 		"""
 		"""
 		
@@ -667,7 +670,7 @@ class Util :
 		return False
 	
 	################## REGLA 3 - SENSIBLE A TONICA #################
-	def regla_3 (self, tonalidad, acorde_anterior, acorde_sgte) :
+	def regla_3( self, tonalidad, acorde_anterior, acorde_sgte ) :
 		"""
 		Si la sensible de una tonalidad (VII grado en la escala) se 
 		encuentra en la soprano o en el bajo, en el acorde siguiente 
@@ -688,7 +691,7 @@ class Util :
 		
 		return False
 		
-	def distancia_entre_voces (self, acorde) :
+	def distancia_entre_voces( self, acorde ) :
 		"""
 		No es una de las reglas de armonia pero es un requisito en la 
 		resolucion de ejercicios
@@ -731,7 +734,7 @@ class Util :
 		return False
 	
 	########## REGLA 4 - PROHIBIDO 5tas y 8vas PARALELAS #############
-	def regla_4 (self, acorde_ant, acorde_sgte) :
+	def regla_4( self, acorde_ant, acorde_sgte ) :
 		"""
 		Prohibida las 5tas y 8vas paralelas.
 		si entre un par de voces por ejemplo (tenor y soprano)
@@ -793,7 +796,7 @@ class Util :
 		
 		return False
 		
-	def _5ta_ (self, nota_1, nota_2) :
+	def _5ta_( self, nota_1, nota_2 ) :
 		"""
 		"""
 		pos_1 = posibles_notas.index( nota_1.nombre)
@@ -806,7 +809,7 @@ class Util :
 		
 		return False
 		
-	def _8va_ (self, nota_1, nota_2) :
+	def _8va_( self, nota_1, nota_2 ) :
 		"""
 		"""
 		#si tienen el mismo nombre pero son de diferentes alturas entonces
@@ -817,8 +820,8 @@ class Util :
 		
 		return False
 
-	####################### REGLA 7 - ENLACE ########################
-	def regla_7 (self, acorde_ant, acorde_sgte) :
+	##################### REGLA 7 - ENLACE IV-V ######################
+	def regla_7( self, acorde_ant, acorde_sgte ) :
 		"""
 		La septima regla de armonia tradicional. Enlace IV-V.
 		En dicho enlace la nota del bajo sube (movimiento ascendente) y 
@@ -887,6 +890,23 @@ class Util :
 				movimiento = 'ascendente'
 
 		return movimiento
+
+	################ REGLA 9 - ENLACE IV6-V y IV-V6 ###################
+	def regla_9( self, acorde_ant, acorde_sgte ) :
+		"""
+		La Novena regla de armonia tradicional. Enlace IV6-V y IV-V6.
+		En ambos casos el bajo debe descender
+		
+		Retorna True en caso de que no se cumpla la regla
+		"""
+		#la nota del bajo de un acorde al siguiente debe presentar un 
+		#movimiento descendente
+		if self.direccion_movimiento( acorde_ant.bajo, \
+									acorde_sgte.bajo) != 'descendente' :
+			return True
+		
+		return False
+			
 
 util = Util()
 
