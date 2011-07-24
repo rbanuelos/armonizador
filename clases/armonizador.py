@@ -23,6 +23,7 @@ class Armonizador :
 			pass_regla_4 = [] 
 			pass_regla_7 = [] 
 			pass_regla_9 = [] 
+			pass_regla_10 = [] 
 			
 			combinaciones, s_dist, c_dist, t_dist = \
 			util.posibles_disposiciones(tonalidad, acorde_anterior, \
@@ -106,7 +107,14 @@ class Armonizador :
 			else :
 				pass_regla_9 += pass_regla_7
 			
-			resultados += pass_regla_9
+			if verificar_regla[9] :
+				for index in range(len(pass_regla_9)) :
+					if not util.regla_10( acorde_anterior, pass_regla_9[index] ) :
+						pass_regla_10.append( pass_regla_9[index] )
+			else :
+				pass_regla_10 += pass_regla_9
+				
+			resultados += pass_regla_10
 
 		return resultados
 	
@@ -380,7 +388,7 @@ class Armonizador :
 		#incializamos el array booleano que nos permite saber si aplicar
 		#o no la regla de acuerdo a la posicion dentro del array
 		for index in range(14):
-			reglas_a_aplicar.append(False)
+			reglas_a_aplicar.append(True)
 		
 		escala, alteraciones = tonalidad.crear_escala()
 		
@@ -417,9 +425,11 @@ class Armonizador :
 		reglas_a_aplicar[6] = self.regla_7_filter( grado_1, estado_1, \
 														grado_2, estado_2)
 		
-		reglas_a_aplicar[8] = self.regla_7_filter( grado_1, estado_1, \
+		reglas_a_aplicar[8] = self.regla_9_filter( grado_1, estado_1, \
 														grado_2, estado_2)
 		
+		reglas_a_aplicar[9] = self.regla_10_filter( grado_1, estado_1, \
+														grado_2, estado_2)
 		return reglas_a_aplicar
 		
 	def regla_1_filter( self, grado_1, grado_2 ) :
@@ -489,6 +499,21 @@ class Armonizador :
 				return True
 			
 			if estado_1 == '' and estado_2 == '6' :
+				return True
+		
+		return False
+
+	def regla_10_filter( self, grado_1, estado_1, grado_2, estado_2  ) : 
+		"""
+		Metodo que determina si se comprueba la regla 10 o no.
+		Se aplica solo para el enlace IV6 - V6 
+		
+		"""
+		#verifica que los grados sean respectivamente IV y V
+		if grado_1 == 4 and grado_2 == 5:
+			
+			#verifica que esten ambos acordes en estado fundamental
+			if estado_1 == '6' and estado_2 == '6' :
 				return True
 		
 		return False

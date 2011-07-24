@@ -81,7 +81,7 @@ class Acorde :
 	"""
 	grado = None 
 	
-	def __init__(self) :
+	def __init__( self ) :
 		"""
 		"""
 		self.soprano = Nota()
@@ -89,7 +89,7 @@ class Acorde :
 		self.tenor = Nota()
 		self.bajo = Nota()
 	
-	def acorde_valido (self) :
+	def acorde_valido( self ) :
 		"""
 		se toma como fundamental algunas de las notas para verificar
 		si el acorde esta completo
@@ -115,7 +115,7 @@ class Acorde :
 
 		return None
 	
-	def get_full_name (self) :
+	def get_full_name( self ) :
 		"""
 		"""
 		self.notas = []
@@ -174,7 +174,7 @@ class Acorde :
 			
 		return None
 
-	def get_modo (self, pos_fund) :
+	def get_modo( self, pos_fund ) :
 		"""
 		Casos Validos
 		*	si la distancia entre la fundamental y la tercera es de 2 
@@ -225,7 +225,7 @@ class Acorde :
 			return self.modo
 		return None
 
-	def get_duplicado (self, notas, alteraciones) :
+	def get_duplicado( self, notas, alteraciones ) :
 		"""
 		"""
 		
@@ -255,7 +255,7 @@ class Acorde :
 		
 		return None
 
-	def get_estado (self, pos_fund) :
+	def get_estado( self, pos_fund ) :
 		"""
 		"""
 		nombre_1 = posibles_notas[pos_fund]
@@ -628,26 +628,35 @@ class Util :
 		True en el caso de que tenga cruce, False en caso contrario
 		"""
 		 
-		if self.cruce(acorde_sgte.soprano, acorde_sgte.contralto) :
+		if self.cruce( acorde_sgte.soprano, acorde_sgte.contralto ) :
 			return True
 			
-		if self.cruce(acorde_sgte.contralto, acorde_sgte.tenor) :
+		if self.cruce( acorde_sgte.contralto, acorde_sgte.tenor ) :
 			return True
 		
-		if self.cruce(acorde_sgte.tenor, acorde_sgte.bajo) :
+		if self.cruce( acorde_sgte.tenor, acorde_sgte.bajo ) :
 			return True
 		
 		#en el caso de que sea el primer acorde no existe un anterior
 		if acorde_anterior == None :
 			return False
 
-		if self.cruce(acorde_anterior.soprano, acorde_sgte.contralto) :
+		if self.cruce( acorde_anterior.soprano, acorde_sgte.contralto ) :
 			return True
 			
-		if self.cruce(acorde_anterior.contralto, acorde_sgte.tenor) :
+		if self.cruce( acorde_anterior.contralto, acorde_sgte.tenor ) :
 			return True
 		
-		if self.cruce(acorde_anterior.tenor, acorde_sgte.bajo) :
+		if self.cruce( acorde_anterior.tenor, acorde_sgte.bajo ) :
+			return True
+			
+		if self.cruce( acorde_sgte.soprano, acorde_anterior.contralto ) :
+			return True
+			
+		if self.cruce( acorde_sgte.contralto, acorde_anterior.tenor ) :
+			return True
+		
+		if self.cruce( acorde_sgte.tenor, acorde_anterior.bajo ) :
 			return True
 		
 		return False
@@ -906,8 +915,59 @@ class Util :
 			return True
 		
 		return False
+	
+	################### REGLA 10 - ENLACE IV6-V6 ######################
+	def regla_10( self, acorde_ant, acorde_sgte ) :
+		"""
+		La Decima regla de armonia tradicional. Enlace IV6-V6.
+		Esta regla establece que en el acorde IV6 se debe duplicar la 
+		fundamental y en el acorde V6 la quinta
+		
+		Retorna True en caso de que no se cumpla la regla
+		"""
+		acorde_ant.get_full_name()
+		acorde_sgte.get_full_name()
+		
+		#obtenemos las posiciones de la fundamental en el primer acorde
+		#y la quinta en el siguiente acorde
+		pos_fund = acorde_ant.acorde_valido()
+		pos_3 = (acorde_sgte.acorde_valido() + 4)%7
+		
+		nombre_1 = posibles_notas[pos_fund]
+		nombre_2 = posibles_notas[pos_3]
+		
+		notas_1 = []
+		notas_1.append( acorde_ant.soprano.nombre ) 
+		notas_1.append( acorde_ant.contralto.nombre )
+		notas_1.append( acorde_ant.tenor.nombre )
+		notas_1.append( acorde_ant.bajo.nombre )
+		 
+		notas_2 = []
+		notas_2.append( acorde_sgte.soprano.nombre ) 
+		notas_2.append( acorde_sgte.contralto.nombre )
+		notas_2.append( acorde_sgte.tenor.nombre )
+		notas_2.append( acorde_sgte.bajo.nombre )
+		
+		#variables para contar repetidos
+		count_1 = 0
+		count_2 = 0 
+		
+		for index in range( len( notas_1 ) ) :
+			#encontramos la nota que queremos que este duplicada en cada
+			#lista
+			if notas_1[index] == nombre_1 :
+				print str(notas_1[index])+' y '+str(nombre_1)
+				count_1 += 1
 			
-
+			if notas_2[index] == nombre_2 :
+				print str(notas_2[index])+' y '+str(nombre_2)
+				count_2 += 1
+			
+		if count_1 == 2 and count_2 == 2 :
+			return False
+		
+		return True
+ 		 
 util = Util()
 
 class Tonalidad :
