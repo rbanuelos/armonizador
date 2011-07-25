@@ -210,8 +210,8 @@ class VentanaPrincipal :
 		Mbaez : 13/07/2011
 		Dibuja una blanca
 		"""
-		dif_1 = ptox + int(ptox)
-		dif_2 = ptoy + int(ptoy)
+		dif_1 = ptox - int(ptox)
+		dif_2 = ptoy - int(ptoy)
 		
 		if dif_1 > 0.5 :
 			ptox = int(ptox) + 1
@@ -224,8 +224,11 @@ class VentanaPrincipal :
 			ptoy = int(ptoy)
 
 		dibujar.aaellipse(self.screen, ptox, ptoy, 10, 7, borde )
-		return dibujar.aaellipse(self.screen, ptox+1, ptoy+1, 8, 5, fondo)
-	
+		dibujar.aaellipse(self.screen, ptox+1, ptoy+1, 8, 5, fondo)
+		
+		dibujar.vline(self.screen, ptox+11, ptoy-30, ptoy+5, \
+															Color.BLACK )
+		
 	def draw_claves( self ) :
 		"""
 		"""
@@ -329,22 +332,8 @@ class VentanaPrincipal :
 		"""
 		Metodo para mostrar el nombre de las notas
 		"""
-		# Create a font
+		
 		font = pygame.font.Font(None, 15)
-
-		# Render the text
-		text = font.render('Lineas', True, (255, 255, 255), \
-														(159, 182, 205))
-
-		# Create a rectangle
-		textRect = text.get_rect()
-
-		# Center the rectangle
-		textRect.centerx = 1070
-		textRect.centery = 30
-
-		# Blit the text
-		self.screen.blit(text, textRect)
 		
 		notas = ['do', 'si', 'la', 'sol', 'fa', 'mi', 're']
 		alturas = [5, 4, 3, 2, 1] 
@@ -365,6 +354,9 @@ class VentanaPrincipal :
 			# Render the text
 			text = font.render(nombre, True, (0, 0, 0), \
 													(255, 255, 255, 255))
+			
+			textRect = text.get_rect()
+			
 			# posicion
 			textRect.centerx = 1070
 			textRect.centery = 58 + i*8
