@@ -34,7 +34,7 @@ class VentanaPrincipal :
 		self.draw_compases()
 		#self.draw_cifra_compas()
 		self.draw_nombre_lineas()
-		self.draw_armadura()
+		self.draw_armadura_sostenido()
 		
 		pygame.display.flip()
 		
@@ -129,15 +129,16 @@ class VentanaPrincipal :
 		"""
 		space = 8
 		self.lineas = []
-		#Se anhaden las lineas adicionales de arriba
-		for i in range (1,4) :
+		
+		######### 1er Endecagrama clave de Sol###########
+		for i in range (3,4) :
 			if i%2 != 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
 
 			self.lineas.append(rect)
-		
+			
 		for i in range (4,14) :
 			if i%2 == 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.BLACK)
@@ -153,8 +154,9 @@ class VentanaPrincipal :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
 
 			self.lineas.append(rect)
-
-		for i in range (18,23) :
+		
+		######### 1er Endecagrama clave de Fa###########
+		for i in range (20,25) :
 			if i%2 != 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
 			else :
@@ -162,8 +164,7 @@ class VentanaPrincipal :
 
 			self.lineas.append(rect)
 		
-		print self.lineas
-		for i in range (23,33) :
+		for i in range (25,35) :
 			if i%2 == 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.BLACK)
 			else :
@@ -171,7 +172,57 @@ class VentanaPrincipal :
 
 			self.lineas.append(rect)
 
-		for i in range (33,37) :
+		for i in range (35,37) :
+			if i%2 != 0 :
+				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+			else :
+				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+
+			self.lineas.append(rect)
+			
+		######### 2do Endecagrama clave de Sol###########
+		for i in range (45,46) :
+			if i%2 != 0 :
+				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+			else :
+				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+
+			self.lineas.append(rect)
+			
+		for i in range (46,56) :
+			if i%2 == 0 :
+				rect = self.draw_line(50, 50 + space * i, Color.BLACK)
+			else :
+				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+
+			self.lineas.append(rect)
+
+		for i in range (56,60) :
+			if i%2 != 0 :
+				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+			else :
+				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+
+			self.lineas.append(rect)
+		
+		######### 2do Endecagrama clave de Fa###########
+		for i in range (62,67) :
+			if i%2 != 0 :
+				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+			else :
+				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+
+			self.lineas.append(rect)
+		
+		for i in range (67,77) :
+			if i%2 == 0 :
+				rect = self.draw_line(50, 50 + space * i, Color.BLACK)
+			else :
+				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+
+			self.lineas.append(rect)
+
+		for i in range (77,79) :
 			if i%2 != 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
 			else :
@@ -233,44 +284,45 @@ class VentanaPrincipal :
 	def draw_claves( self ) :
 		"""
 		"""
-		#dibuja la clave de Sol
-		fullname = os.path.join('', 'clave_de_sol.gif')
-		image = pygame.image.load(fullname)
-		image = pygame.transform.scale(image, (45, 95))
-		image = image.convert() # Set the right pixel depth
-		colorkey = image.get_at((0,0)) # Get pixel for transparent colour
-		image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
-		imagerect = image.get_rect() # Get the rect of the image
-		screenrect = self.screen.get_rect()
-		imagerect.centerx, imagerect.centery = 80, 120
-		
-		self.screen.blit(image, imagerect)
-		
-		#dibuja la clave de Fa
-		fullname = os.path.join('', 'ClaveFa.gif')
-		image = pygame.image.load(fullname)
-		image = pygame.transform.scale(image, (95, 96))
-		image = image.convert() # Set the right pixel depth
-		colorkey = image.get_at((0,0)) # Get pixel for transparent colour
-		image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
-		imagerect = image.get_rect() # Get the rect of the image
-		screenrect = self.screen.get_rect()
-		imagerect.centerx, imagerect.centery = 80, 269
-		
-		self.screen.blit(image, imagerect)
-		
-		#dibuja el corchete
-		fullname = os.path.join('', 'corchete.gif')
-		image = pygame.image.load(fullname)
-		image = pygame.transform.scale(image, (30, 230))
-		image = image.convert() # Set the right pixel depth
-		colorkey = image.get_at((0,0)) # Get pixel for transparent colour
-		image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
-		imagerect = image.get_rect() # Get the rect of the image
-		screenrect = self.screen.get_rect()
-		imagerect.centerx, imagerect.centery = 25, 194
-		
-		self.screen.blit(image, imagerect)
+		for desp in (0, 336) :
+			#dibuja la clave de Sol
+			fullname = os.path.join('', 'clave_de_sol.gif')
+			image = pygame.image.load(fullname)
+			image = pygame.transform.scale(image, (45, 95))
+			image = image.convert() # Set the right pixel depth
+			colorkey = image.get_at((0,0)) # Get pixel for transparent colour
+			image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
+			imagerect = image.get_rect() # Get the rect of the image
+			screenrect = self.screen.get_rect()
+			imagerect.centerx, imagerect.centery = 80, 120 + desp
+			
+			self.screen.blit(image, imagerect)
+			
+			#dibuja la clave de Fa
+			fullname = os.path.join('', 'ClaveFa.gif')
+			image = pygame.image.load(fullname)
+			image = pygame.transform.scale(image, (95, 96))
+			image = image.convert() # Set the right pixel depth
+			colorkey = image.get_at((0,0)) # Get pixel for transparent colour
+			image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
+			imagerect = image.get_rect() # Get the rect of the image
+			screenrect = self.screen.get_rect()
+			imagerect.centerx, imagerect.centery = 80, 284 + desp
+			
+			self.screen.blit(image, imagerect)
+			
+			#dibuja el corchete
+			fullname = os.path.join('', 'corchete.gif')
+			image = pygame.image.load(fullname)
+			image = pygame.transform.scale(image, (30, 260))
+			image = image.convert() # Set the right pixel depth
+			colorkey = image.get_at((0,0)) # Get pixel for transparent colour
+			image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
+			imagerect = image.get_rect() # Get the rect of the image
+			screenrect = self.screen.get_rect()
+			imagerect.centerx, imagerect.centery = 25, 200 + desp
+			
+			self.screen.blit(image, imagerect)
 	
 	def draw_cifra_compas( self ) :
 		"""
@@ -305,15 +357,23 @@ class VentanaPrincipal :
 		tam = 64
 		pos_y = 82
 		#desplazamiento hacia abajo
-		desp_y = 160
+		desp_y = 176
 		
-		for i in range(3) :
+		for i in range(4) :
 			
 			dibujar.vline(self.screen, pos_x + i*210, pos_y, pos_y+tam, \
 															Color.BLACK )
 			dibujar.vline(self.screen, pos_x + i*210, pos_y + desp_y, pos_y  \
 											+ desp_y + tam, Color.BLACK )
 		
+		pos_y = 418
+		for i in range(4) :
+			dibujar.vline(self.screen, pos_x + i*210, pos_y, pos_y+tam, \
+															Color.BLACK )
+			dibujar.vline(self.screen, pos_x + i*210, pos_y + desp_y, pos_y  \
+											+ desp_y + tam, Color.BLACK )
+		
+			
 		#raya final
 		dibujar.vline(self.screen, pos_x + 3*210, pos_y, pos_y+tam, \
 															Color.BLACK )
@@ -349,7 +409,7 @@ class VentanaPrincipal :
 		
 		total_notas.append( 'do1' )
 		
-		for i in range(35) :
+		for i in range(2, 34) :
 			
 			nombre = total_notas[i+1]
 			# Render the text
@@ -359,12 +419,34 @@ class VentanaPrincipal :
 			textRect = text.get_rect()
 			
 			# posicion
-			textRect.centerx = 1070
-			textRect.centery = 58 + i*8
+			if i < 17 :
+				textRect.centerx = 1070
+				textRect.centery = 58 + i*8
+			else :
+				nombre = total_notas[i]
+				# Render the text
+				text = font.render(nombre, True, (0, 0, 0), \
+													(255, 255, 255, 255))
+				textRect.centerx = 1070
+				textRect.centery = 58 + (i+2)*8 
 			
 			self.screen.blit(text, textRect)
-
-	def draw_armadura( self ) :
+			
+			# posicion
+			if i < 17 :
+				textRect.centerx = 1070
+				textRect.centery = 58 + i*8+336
+			else :
+				nombre = total_notas[i]
+				# Render the text
+				text = font.render(nombre, True, (0, 0, 0), \
+													(255, 255, 255, 255))
+				textRect.centerx = 1070
+				textRect.centery = 58 + (i+2)*8+336 
+			
+			self.screen.blit(text, textRect)
+			
+	def draw_armadura_sostenido( self ) :
 		"""
 		Metodo que dibuja la armadura de clave segun haya seleccionado 
 		el usuario
@@ -388,58 +470,136 @@ class VentanaPrincipal :
 		screenrect = self.screen.get_rect()
 		
 		#distancia entre claves
-		dist = 175
+		dist = 192
 		#corrimiento en X
 		desp_x = 9
 		
-		for i in range(orden_sostenidos["la"]) :
-			
-			if i == 0 :
-				imagerect.centerx, imagerect.centery = 105+desp_x, 83
-			
-			elif i == 1 :
-				imagerect.centerx, imagerect.centery = 118+desp_x, 105
-			
-			elif i == 2 :
-				imagerect.centerx, imagerect.centery = 131+desp_x, 75
-			
-			elif i == 3 :
-				imagerect.centerx, imagerect.centery = 144+desp_x, 98
-			
-			elif i == 4 :
-				imagerect.centerx, imagerect.centery = 157+desp_x, 125
-			
-			elif i == 5 :
-				imagerect.centerx, imagerect.centery = 170+desp_x, 91
-			
-			elif i == 6 :
-				imagerect.centerx, imagerect.centery = 183+desp_x, 114
-			
-			self.screen.blit(image, imagerect)
-			
-			#armadura para la clave de Fa
-			if i == 0 :
-				imagerect.centerx, imagerect.centery = 105+desp_x, 83+dist
-			
-			elif i == 1 :
-				imagerect.centerx, imagerect.centery = 118+desp_x, 105+dist
-			
-			elif i == 2 :
-				imagerect.centerx, imagerect.centery = 131+desp_x, 75+dist
-			
-			elif i == 3 :
-				imagerect.centerx, imagerect.centery = 144+desp_x, 98+dist
-			
-			elif i == 4 :
-				imagerect.centerx, imagerect.centery = 157+desp_x, 125+dist
-			
-			elif i == 5 :
-				imagerect.centerx, imagerect.centery = 170+desp_x, 91+dist
-			
-			elif i == 6 :
-				imagerect.centerx, imagerect.centery = 183+desp_x, 114+dist
-			
-			self.screen.blit(image, imagerect)
+		for desp in (0, 336):
+			for i in range(orden_sostenidos["la"]) :
+				
+				if i == 0 :
+					imagerect.centerx, imagerect.centery = 105+desp_x, 83+desp
+				
+				elif i == 1 :
+					imagerect.centerx, imagerect.centery = 118+desp_x, 105+desp
+				
+				elif i == 2 :
+					imagerect.centerx, imagerect.centery = 131+desp_x, 75+desp
+				
+				elif i == 3 :
+					imagerect.centerx, imagerect.centery = 144+desp_x, 98+desp
+				
+				elif i == 4 :
+					imagerect.centerx, imagerect.centery = 157+desp_x, 125+desp
+				
+				elif i == 5 :
+					imagerect.centerx, imagerect.centery = 170+desp_x, 91+desp
+				
+				elif i == 6 :
+					imagerect.centerx, imagerect.centery = 183+desp_x, 114+desp
+				
+				self.screen.blit(image, imagerect)
+				
+				#armadura para la clave de Fa
+				if i == 0 :
+					imagerect.centerx, imagerect.centery = 105+desp_x, 83+dist+desp
+				
+				elif i == 1 :
+					imagerect.centerx, imagerect.centery = 118+desp_x, 105+dist+desp
+				
+				elif i == 2 :
+					imagerect.centerx, imagerect.centery = 131+desp_x, 75+dist+desp
+				
+				elif i == 3 :
+					imagerect.centerx, imagerect.centery = 144+desp_x, 98+dist+desp
+				
+				elif i == 4 :
+					imagerect.centerx, imagerect.centery = 157+desp_x, 125+dist+desp
+				
+				elif i == 5 :
+					imagerect.centerx, imagerect.centery = 170+desp_x, 91+dist+desp
+				
+				elif i == 6 :
+					imagerect.centerx, imagerect.centery = 183+desp_x, 114+dist+desp
+				
+				self.screen.blit(image, imagerect)
+
+	def draw_armadura_bemol( self ) :
+		"""
+		Metodo que dibuja la armadura de clave segun haya seleccionado 
+		el usuario
+		"""
+		orden_sostenidos = d = {"fa": 1,
+								"sib": 2,
+								"mib": 3,
+								"lab": 4,
+								"reb": 5,
+								"solb": 6,
+								"dob": 7}
+		
+		fullname = os.path.join('', 'bemol.gif')
+		image = pygame.image.load(fullname)
+		image = pygame.transform.scale(image, (35, 60))
+		image = image.convert() # Set the right pixel depth
+		colorkey = image.get_at((0,0)) # Get pixel for transparent colour
+		image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
+		imagerect = image.get_rect() # Get the rect of the image
+		screenrect = self.screen.get_rect()
+		
+		#distancia entre claves
+		dist = 192
+		#corrimiento en X
+		desp_x = 9
+		
+		for desp in (0, 336) :
+			for i in range(orden_sostenidos["reb"]) :
+				
+				if i == 0 :
+					imagerect.centerx, imagerect.centery = 105+desp_x, 105+desp
+				
+				elif i == 1 :
+					imagerect.centerx, imagerect.centery = 118+desp_x, 79+desp
+				
+				elif i == 2 :
+					imagerect.centerx, imagerect.centery = 131+desp_x, 112+desp
+				
+				elif i == 3 :
+					imagerect.centerx, imagerect.centery = 144+desp_x, 88+desp
+				
+				elif i == 4 :
+					imagerect.centerx, imagerect.centery = 157+desp_x, 120+desp
+				
+				elif i == 5 :
+					imagerect.centerx, imagerect.centery = 170+desp_x, 96+desp
+				
+				elif i == 6 :
+					imagerect.centerx, imagerect.centery = 183+desp_x, 128+desp
+				
+				self.screen.blit(image, imagerect)
+				
+				#armadura para la clave de Fa
+				if i == 0 :
+					imagerect.centerx, imagerect.centery = 105+desp_x, 105+dist+desp
+				
+				elif i == 1 :
+					imagerect.centerx, imagerect.centery = 118+desp_x, 79+dist+desp
+				
+				elif i == 2 :
+					imagerect.centerx, imagerect.centery = 131+desp_x, 112+dist+desp
+				
+				elif i == 3 :
+					imagerect.centerx, imagerect.centery = 144+desp_x, 88+dist+desp
+				
+				elif i == 4 :
+					imagerect.centerx, imagerect.centery = 157+desp_x, 120+dist+desp
+				
+				elif i == 5 :
+					imagerect.centerx, imagerect.centery = 170+desp_x, 96+dist+desp
+				
+				elif i == 6 :
+					imagerect.centerx, imagerect.centery = 183+desp_x, 128+dist+desp
+				
+				self.screen.blit(image, imagerect)
 
 if __name__ == "__main__" :
 	
