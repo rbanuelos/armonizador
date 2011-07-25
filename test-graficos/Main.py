@@ -173,7 +173,7 @@ class VentanaPrincipal :
 			self.lineas.append(rect)
 
 		for i in range (35,37) :
-			if i%2 != 0 :
+			if i%2 == 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
@@ -223,7 +223,7 @@ class VentanaPrincipal :
 			self.lineas.append(rect)
 
 		for i in range (77,79) :
-			if i%2 != 0 :
+			if i%2 == 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
@@ -360,26 +360,22 @@ class VentanaPrincipal :
 		desp_y = 176
 		
 		for i in range(4) :
-			
-			dibujar.vline(self.screen, pos_x + i*210, pos_y, pos_y+tam, \
-															Color.BLACK )
-			dibujar.vline(self.screen, pos_x + i*210, pos_y + desp_y, pos_y  \
+			dibujar.vline(self.screen, pos_x + i*210, pos_y, pos_y  \
 											+ desp_y + tam, Color.BLACK )
 		
 		pos_y = 418
-		for i in range(4) :
-			dibujar.vline(self.screen, pos_x + i*210, pos_y, pos_y+tam, \
-															Color.BLACK )
-			dibujar.vline(self.screen, pos_x + i*210, pos_y + desp_y, pos_y  \
+		for i in range(3) :
+			dibujar.vline(self.screen, pos_x + i*210, pos_y, pos_y  \
 											+ desp_y + tam, Color.BLACK )
-		
 			
-		#raya final
-		dibujar.vline(self.screen, pos_x + 3*210, pos_y, pos_y+tam, \
-															Color.BLACK )
-		dibujar.vline(self.screen, pos_x + 3*210, pos_y + desp_y, pos_y  \
+		#rayas finales
+		dibujar.vline(self.screen, pos_x + 3*208, pos_y, pos_y  \
 											+ desp_y + tam, Color.BLACK )
 		
+		for i in range(4) :
+			dibujar.vline(self.screen, pos_x + 3*210+i, pos_y, pos_y  \
+											+ desp_y + tam, Color.BLACK )
+
 	def draw_cursor( self ) :
 		"""
 		"""
