@@ -57,7 +57,7 @@ Prueba para enlazar acordes
 
 
 bajo = Nota ()
-bajo.nombre = 'Re'
+bajo.nombre = 'Fa'
 bajo.alteracion = '#'
 bajo.altura = 2
 
@@ -65,18 +65,18 @@ tonalidad = Tonalidad ('Mi', '', '')
 
 
 acorde_anterior = Acorde()
-acorde_anterior.soprano.nombre = 'La'
+acorde_anterior.soprano.nombre = 'Si'
 acorde_anterior.soprano.altura = 3
 acorde_anterior.soprano.alteracion = ''
-acorde_anterior.contralto.nombre = 'La'
+acorde_anterior.contralto.nombre = 'Sol'
 acorde_anterior.contralto.altura = 3
-acorde_anterior.contralto.alteracion = ''
+acorde_anterior.contralto.alteracion = '#'
 acorde_anterior.tenor.nombre = 'Mi'
 acorde_anterior.tenor.altura = 3
 acorde_anterior.tenor.alteracion = ''
-acorde_anterior.bajo.nombre = 'Do'
+acorde_anterior.bajo.nombre = 'Mi'
 acorde_anterior.bajo.altura = 2
-acorde_anterior.bajo.alteracion = '#'
+acorde_anterior.bajo.alteracion = ''
 
 armonizador = Armonizador()
 
