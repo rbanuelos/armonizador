@@ -80,7 +80,7 @@ class VentanaPrincipal :
 						#if abs(mouse_y  - linea_y) <= espaciado_y :
 						if __linea.collidepoint(mouse_x, mouse_y) :
 							print "len:"+str(len(self.lineas))
-							if index > 17:
+							if index > 100:
 								print "index"  +str(index)
 								break
 							"""
@@ -147,7 +147,7 @@ class VentanaPrincipal :
 
 			self.lineas.append(rect)
 
-		for i in range (14,18) :
+		for i in range (14,19) :
 			if i%2 != 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
 			else :
@@ -197,7 +197,7 @@ class VentanaPrincipal :
 
 			self.lineas.append(rect)
 
-		for i in range (56,60) :
+		for i in range (56,61) :
 			if i%2 != 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
 			else :
