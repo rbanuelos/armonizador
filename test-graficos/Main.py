@@ -17,7 +17,7 @@ class VentanaPrincipal :
 	height = 0
 	screen = None
 
-	def __init__ (self,width=1100 , height=800, title='Pyntagrama'):
+	def __init__( self, width=1100, height=800, title='Armonizador') :
 		"""
 		"""
 		pygame.init()
@@ -32,12 +32,13 @@ class VentanaPrincipal :
 		self.draw()
 		self.draw_claves()
 		self.draw_compases()
-		self.draw_cifra_compas()
+		#self.draw_cifra_compas()
 		self.draw_nombre_lineas()
+		self.draw_armadura()
 		
 		pygame.display.flip()
 		
-	def handler (self, handler_method=None):
+	def handler( self, handler_method=None ) :
 		"""
 		"""
 		clock = pygame.time.Clock()
@@ -122,7 +123,7 @@ class VentanaPrincipal :
 
 			clock.tick(50)
 
-	def draw(self):
+	def draw( self ):
 		"""
 		Mbaez : 13/07/2011
 		"""
@@ -285,12 +286,12 @@ class VentanaPrincipal :
 		image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
 		imagerect = image.get_rect() # Get the rect of the image
 		screenrect = self.screen.get_rect()
-		imagerect.centerx, imagerect.centery = 180, 120
+		imagerect.centerx, imagerect.centery = 230, 120
 		
 		self.screen.blit(image, imagerect)
 		
 		#dibuja la cifra de compas
-		imagerect.centerx, imagerect.centery = 180, 280
+		imagerect.centerx, imagerect.centery = 230, 280
 		
 		self.screen.blit(image, imagerect)
 
@@ -362,6 +363,83 @@ class VentanaPrincipal :
 			textRect.centery = 58 + i*8
 			
 			self.screen.blit(text, textRect)
+
+	def draw_armadura( self ) :
+		"""
+		Metodo que dibuja la armadura de clave segun haya seleccionado 
+		el usuario
+		"""
+		orden_sostenidos = d = {"do": 0,
+								"sol": 1,
+								"re": 2,
+								"la": 3,
+								"mi": 4,
+								"si": 5,
+								"fa#": 6,
+								"do#": 7}
+		
+		fullname = os.path.join('', 'sostenido.gif')
+		image = pygame.image.load(fullname)
+		image = pygame.transform.scale(image, (35, 60))
+		image = image.convert() # Set the right pixel depth
+		colorkey = image.get_at((0,0)) # Get pixel for transparent colour
+		image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
+		imagerect = image.get_rect() # Get the rect of the image
+		screenrect = self.screen.get_rect()
+		
+		#distancia entre claves
+		dist = 175
+		#corrimiento en X
+		desp_x = 9
+		
+		for i in range(orden_sostenidos["la"]) :
+			
+			if i == 0 :
+				imagerect.centerx, imagerect.centery = 105+desp_x, 83
+			
+			elif i == 1 :
+				imagerect.centerx, imagerect.centery = 118+desp_x, 105
+			
+			elif i == 2 :
+				imagerect.centerx, imagerect.centery = 131+desp_x, 75
+			
+			elif i == 3 :
+				imagerect.centerx, imagerect.centery = 144+desp_x, 98
+			
+			elif i == 4 :
+				imagerect.centerx, imagerect.centery = 157+desp_x, 125
+			
+			elif i == 5 :
+				imagerect.centerx, imagerect.centery = 170+desp_x, 91
+			
+			elif i == 6 :
+				imagerect.centerx, imagerect.centery = 183+desp_x, 114
+			
+			self.screen.blit(image, imagerect)
+			
+			#armadura para la clave de Fa
+			if i == 0 :
+				imagerect.centerx, imagerect.centery = 105+desp_x, 83+dist
+			
+			elif i == 1 :
+				imagerect.centerx, imagerect.centery = 118+desp_x, 105+dist
+			
+			elif i == 2 :
+				imagerect.centerx, imagerect.centery = 131+desp_x, 75+dist
+			
+			elif i == 3 :
+				imagerect.centerx, imagerect.centery = 144+desp_x, 98+dist
+			
+			elif i == 4 :
+				imagerect.centerx, imagerect.centery = 157+desp_x, 125+dist
+			
+			elif i == 5 :
+				imagerect.centerx, imagerect.centery = 170+desp_x, 91+dist
+			
+			elif i == 6 :
+				imagerect.centerx, imagerect.centery = 183+desp_x, 114+dist
+			
+			self.screen.blit(image, imagerect)
 
 if __name__ == "__main__" :
 	
