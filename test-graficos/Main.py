@@ -37,7 +37,7 @@ class VentanaPrincipal :
 		self.draw_armadura_sostenido()
 		#self.draw_cursor ()
 		
-		print "lineas" + str(self.lineas)
+		print len(self.lineas)
 				
 		pygame.display.flip()
 		
@@ -57,7 +57,7 @@ class VentanaPrincipal :
 				mouse_x, mouse_y = pygame.mouse.get_pos()
 				mouse_y -= 2
 				mouse_x += 0.5
-				#print "Mouse : " +str(mouse_x)+ ", "+ str(mouse_y)
+				
 				if event.type == pygame.QUIT:
 					quit = True
 					pygame.quit()
@@ -71,9 +71,9 @@ class VentanaPrincipal :
 					index = 0
 					for linea in self.lineas :
 						index += 1
-						linea_y = linea.y - 8
+						linea_y = linea.y 
 
-						__linea = pygame.Rect(linea.x, linea_y,501,7)
+						__linea = pygame.Rect(linea.x, linea_y,1100,7)
 						"""
 						Mbaez : 13/07/2011
 						Se obtiene el centro de la linea, esto es para que cada
@@ -82,10 +82,9 @@ class VentanaPrincipal :
 						print str(index)+ " " +str(linea_y)+" "+str(mouse_y)
 						#if abs(mouse_y  - linea_y) <= espaciado_y :
 						if __linea.collidepoint(mouse_x, mouse_y) :
-							print "len:"+str(len(self.lineas))
-							if index > 100:
-								print "index"  +str(index)
-								break
+							#if index > 120:
+							#	print "index"  +str(index)
+							#	break
 							"""
 							Mbaez : 13/07/2011
 							Se controla si se supera el unbral definido por
@@ -150,7 +149,7 @@ class VentanaPrincipal :
 
 			self.lineas.append(rect)
 
-		for i in range (14,19) :
+		for i in range (14,18) :
 			if i%2 != 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
 			else :
@@ -200,7 +199,7 @@ class VentanaPrincipal :
 
 			self.lineas.append(rect)
 
-		for i in range (56,61) :
+		for i in range (56,60) :
 			if i%2 != 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
 			else :
