@@ -35,7 +35,10 @@ class VentanaPrincipal :
 		#self.draw_cifra_compas()
 		self.draw_nombre_lineas()
 		self.draw_armadura_sostenido()
+		#self.draw_cursor ()
 		
+		print "lineas" + str(self.lineas)
+				
 		pygame.display.flip()
 		
 	def handler( self, handler_method=None ) :
@@ -275,11 +278,40 @@ class VentanaPrincipal :
 		else :
 			ptoy = int(ptoy)
 
-		dibujar.aaellipse(self.screen, ptox, ptoy, 10, 7, borde )
-		dibujar.aaellipse(self.screen, ptox+1, ptoy+1, 8, 5, fondo)
+		"""
+		fullname = os.path.join('', 'half note up.gif')
+		image = pygame.image.load(fullname)
+		image = pygame.transform.scale(image, (30, 52))
+		image = image.convert() # Set the right pixel depth
+		colorkey = image.get_at((0,0)) # Get pixel for transparent colour
+		image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
+		imagerect = image.get_rect() # Get the rect of the image
+		screenrect = self.screen.get_rect()
+		imagerect.centerx, imagerect.centery = ptox, ptoy-16
 		
-		dibujar.vline(self.screen, ptox+11, ptoy-30, ptoy+5, \
-															Color.BLACK )
+		self.screen.blit(image, imagerect)
+		
+		pygame.display.flip()
+		"""
+		
+		fullname = os.path.join('', 'half note down.gif')
+		image = pygame.image.load(fullname)
+		image = pygame.transform.scale(image, (30, 52))
+		image = image.convert() # Set the right pixel depth
+		colorkey = image.get_at((0,0)) # Get pixel for transparent colour
+		image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
+		imagerect = image.get_rect() # Get the rect of the image
+		screenrect = self.screen.get_rect()
+		imagerect.centerx, imagerect.centery = ptox, ptoy+16
+		
+		self.screen.blit(image, imagerect)
+		
+		pygame.display.flip()
+		
+		#dibujar.aaellipse(self.screen, ptox, ptoy, 10, 7, borde )
+		#dibujar.aaellipse(self.screen, ptox+1, ptoy+1, 8, 5, fondo)
+		
+		#dibujar.vline(self.screen, ptox+11, ptoy-30, ptoy+5, Color.BLACK )
 		
 	def draw_claves( self ) :
 		"""
@@ -312,15 +344,17 @@ class VentanaPrincipal :
 			self.screen.blit(image, imagerect)
 			
 			#dibuja el corchete
-			fullname = os.path.join('', 'corchete.gif')
+			fullname = os.path.join('', 'corchete2.gif')
 			image = pygame.image.load(fullname)
-			image = pygame.transform.scale(image, (30, 260))
+			#image = pygame.transform.scale(image, (30, 260))
+			image = pygame.transform.scale(image, (120, 600))
 			image = image.convert() # Set the right pixel depth
 			colorkey = image.get_at((0,0)) # Get pixel for transparent colour
 			image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
 			imagerect = image.get_rect() # Get the rect of the image
 			screenrect = self.screen.get_rect()
-			imagerect.centerx, imagerect.centery = 25, 200 + desp
+			#imagerect.centerx, imagerect.centery = 25, 200 + desp
+			imagerect.centerx, imagerect.centery = 40, 120 + desp
 			
 			self.screen.blit(image, imagerect)
 	
@@ -379,10 +413,38 @@ class VentanaPrincipal :
 	def draw_cursor( self ) :
 		"""
 		"""
-		mouse_image = pygame.image.load('blanca.gif').convert_alpha()
-
-		mouse_pos = pygame.mouse.get_pos()
-		self.screen.blit(mouse_image, mouse_pos)
+		
+		CURSOR_DATA = (	"              XXX       ",
+						"              X.X       ", 
+						"              X.X       ", 
+						"              X.X       ", 
+						"              X.X       ", 
+						"              X.X       ", 
+						"              X.X       ", 
+						"              X.X       ", 
+						"              X.X       ", 
+						"              X.X       ", 
+						"              X.X       ", 
+						"              X.X       ", 
+						"              X.X       ", 
+						"              X.X       ", 
+						"            XXX.X       ", 
+						"         XXX.. .X       ", 
+						"       XX..    .X       ", 
+						"      XX..     .X       ", 
+						"     XX..      .X       ", 
+						"     XX..      .X       ", 
+						"      XX..    .XX       ", 
+						"        XX.. .XXX       ", 
+						"          XXXXX X       ",
+						"                        ")
+		
+						
+		cur = pygame.cursors.compile(CURSOR_DATA)
+		cursorSize = (len(CURSOR_DATA), len(CURSOR_DATA[0]))
+		hotspot = (0, len(CURSOR_DATA)-1)            
+		pygame.mouse.set_cursor(cursorSize, hotspot, *cur)
+		
 		pygame.display.update()
 
 	def draw_nombre_lineas( self ) :
