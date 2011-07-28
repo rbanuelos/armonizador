@@ -5,6 +5,39 @@ import pygame.gfxdraw as dibujar
 from pygame.locals import *
 import os
 
+#nombre de las lineas 64 en total
+nombres = ['sol4', 'fa4', 'mi4','re4', 'do4', 
+			'si3', 'la3', 'sol3', 'fa3', 'mi3','re3', 'do3',
+			'si2', 'la2', 'sol2',
+			
+			'sol3', 'fa3', 'mi3','re3', 'do3',
+			'si2', 'la2', 'sol2','fa2', 'mi2','re2', 'do2',
+			'si1', 'la1', 'sol1', 'fa1', 'mi1',
+			
+			'sol4', 'fa4', 'mi4','re4', 'do4', 
+			'si3', 'la3', 'sol3', 'fa3', 'mi3','re3', 'do3',
+			'si2', 'la2', 'sol2',
+			
+			'sol3', 'fa3', 'mi3','re3', 'do3',
+			'si2', 'la2', 'sol2','fa2', 'mi2','re2', 'do2',
+			'si1', 'la1', 'sol1', 'fa1', 'mi1'
+			]
+
+tesitura_soprano = ['sol4', 'fa4', 'mi4','re4', 'do4', 
+					'si3', 'la3', 'sol3', 'fa3', 'mi3','re3', 'do3'
+					]
+
+tesitura_contralto = ['do4', 'si3', 'la3', 'sol3', 'fa3', 'mi3',
+						're3', 'do3', 'si2', 'la2', 'sol2',
+						]
+						
+tesitura_tenor = ['sol3', 'fa3', 'mi3','re3', 'do3','si2', 
+					'la2', 'sol2','fa2', 'mi2','re2', 'do2'
+					]
+					
+tesitura_bajo = ['do3', 'si2', 'la2', 'sol2','fa2', 'mi2','re2', 'do2',
+									'si1', 'la1', 'sol1', 'fa1', 'mi1',]
+
 class Color:
 	WHITE = 255, 255, 255
 	BLACK = 0, 0, 0
@@ -16,7 +49,38 @@ class VentanaPrincipal :
 	width = 0
 	height = 0
 	screen = None
-
+	
+	#grillas ocupadas por alguna nota
+	grilla_ocupada_arriba = [	False, False, 
+								False, False,
+								False, False,
+								False, False
+							]
+							
+	grilla_ocupada_abajo = [	False, False, 
+								False, False,
+								False, False,
+								False, False
+							]
+						
+	#lugares disponibles dentro del pentagrama en este caso 4/4 2 blancas
+	#por compas
+	grillas_arriba =	[	250, 350, 
+							470, 570,
+							690, 790,
+							900, 1000
+						]
+				
+	grillas_abajo =	[	250, 350, 
+						470, 570,
+						690, 790,
+						900
+					]
+	
+	#en el caso de redibujar la pantalla se mantiene un registro de
+	#todas las notas que se dibujaron
+	notas = []
+	
 	def __init__( self, width=1100, height=800, title='Armonizador') :
 		"""
 		"""
@@ -28,11 +92,10 @@ class VentanaPrincipal :
 
 		pygame.display.set_caption(title)
 		
-		
+		#self.draw_fondo()
 		self.draw()
 		self.draw_claves()
 		self.draw_compases()
-		#self.draw_cifra_compas()
 		self.draw_nombre_lineas()
 		self.draw_armadura_sostenido()
 		#self.draw_cursor ()
@@ -46,7 +109,7 @@ class VentanaPrincipal :
 		"""
 		clock = pygame.time.Clock()
 		quit = False
-
+		
 		espaciado_x = 50.0
 		espaciado_y = 4
 
@@ -63,67 +126,97 @@ class VentanaPrincipal :
 					pygame.quit()
 
 				elif event.type == 5: #Cuando hace click
-					"""
-					Mbaez : 13/07/2011
-					Si se hizo click se verifica cada linea del pentagrama
-					para saber donde se debe anhadir la figura
-					"""
-					index = 0
-					for linea in self.lineas :
-						index += 1
-						linea_y = linea.y 
-
-						__linea = pygame.Rect(linea.x, linea_y,1100,7)
-						"""
-						Mbaez : 13/07/2011
-						Se obtiene el centro de la linea, esto es para que cada
-						figura se dibuje en el centro de la linea
-						"""
-						print str(index)+ " " +str(linea_y)+" "+str(mouse_y)
-						#if abs(mouse_y  - linea_y) <= espaciado_y :
-						if __linea.collidepoint(mouse_x, mouse_y) :
-							#if index > 120:
-							#	print "index"  +str(index)
-							#	break
-							"""
-							Mbaez : 13/07/2011
-							Se controla si se supera el unbral definido por
-							espaciado_y para saber a que linea pertenece la
-							figura
-							"""
-							int_x = int(mouse_x/espaciado_x)
-							_x = mouse_x/espaciado_x
-							"""
-							Mbaez : 13/07/2011
-							Las figuras deben estar posicionada en un especie
-							de grilla, por ese motivo se define un espaciado
-							entre las figuras (espaciado_x), se verifica a que
-							columna de la grilla deberia pertenecer la figura.
-							"""
-							print "mouse_x: " +str(mouse_x) +"\tint : " + str(int_x) + "\t x:" + str(_x)
-							if (int_x+0.5 < _x):
-								"""
-								Mbaez : 13/07/2011
-								Si se supera la mitad, la figura pertenece a la
-								siguente columna de la grilla
-								"""
-								int_x += 1
-
-							pos_x = espaciado_x*int_x
-							"""
-							Mbaez : 13/07/2011
-							se establece la posicion de la figura como el centro
-							de la grilla
-							"""
-							__x, __y =__linea.center
-							self.draw_blanca(pos_x, __y)
-
-							pygame.display.flip()
-							break
-
-				#handler_method()
+					self.clic_handler(mouse_x, mouse_y)
 
 			clock.tick(50)
+
+	def clic_handler( self, mouse_x, mouse_y ) :
+		"""
+		cada clic en el pentagrama es atendido por este metodo
+		"""
+		
+		index = 0
+		for linea in self.lineas :
+			index += 1
+			linea_y = linea.y 
+
+			__linea = pygame.Rect(linea.x, linea_y,1100,7)
+			
+			if __linea.collidepoint(mouse_x, mouse_y) :
+				
+				#imprimir el nombre de la linea seleccinoada
+				print str(nombres[self.lineas.index(linea)])
+				
+				# se verifica si estamos en el primer endecagrama o el 
+				# 2do
+				if mouse_y >= 240 and mouse_y <= 336 :
+					grilla = 'arriba'
+				
+				elif  mouse_y >= 576 and mouse_y <= 673 :
+					grilla = 'abajo'
+				
+				else :
+					break
+				
+				int_x = int(mouse_x)
+				
+				#se obtiene la posicion en el eje X de la 
+				#figura
+				pos_x = self.get_grilla( int_x, grilla )
+
+				#se verifica que sea una posicion valida 
+				#dentro de la pantalla
+				if pos_x != None :
+					
+					__x, __y =__linea.center
+					
+					if grilla == 'arriba' :
+						pos_grilla = self.grillas_arriba.index( pos_x )
+						
+						#se verifica que este libre
+						if not self.grilla_ocupada_arriba[pos_grilla] :
+							self.draw_blanca(pos_x, __y)
+							self.grilla_ocupada_arriba[pos_grilla] = True
+							self.notas.append((pos_x, __y))
+						
+						else : 
+							#reemplazar la figura
+							self.reemplazar_figura( pos_x, __y )
+							#dibujar todo de vuelta
+							self.screen.fill(Color.WHITE)
+							self.draw()
+							self.draw_claves()
+							self.draw_compases()
+							self.draw_nombre_lineas()
+							self.draw_armadura_sostenido()
+							#dibujar las figuras anteriores
+							for tupla in self.notas :
+								self.draw_blanca(tupla[0], tupla[1])
+					else :
+						pos_grilla = self.grillas_abajo.index( pos_x )
+						
+						#se verifica que este libre
+						if not self.grilla_ocupada_abajo[pos_grilla] :
+							self.draw_blanca(pos_x, __y)
+							self.grilla_ocupada_abajo[pos_grilla] = True
+							self.notas.append((pos_x, __y))
+						
+						else : 
+							#reemplazar la figura
+							self.reemplazar_figura( pos_x, __y )
+							#dibujar todo de vuelta
+							self.draw()
+							self.draw_claves()
+							self.draw_compases()
+							self.draw_nombre_lineas()
+							self.draw_armadura_sostenido()
+							#dibujar las figuras anteriores
+							for tupla in self.notas :
+								self.draw_blanca(tupla[0], tupla[1])
+							
+				pygame.display.flip()
+				break
+		return
 
 	def draw( self ):
 		"""
@@ -234,6 +327,24 @@ class VentanaPrincipal :
 		
 		pygame.display.flip()
 
+	def draw_fondo( self ) :
+		"""
+		dibuja el fondo de la aplicacion
+		"""
+		
+		#dibuja la clave de Sol
+		fullname = os.path.join('', 'fondo2.jpg')
+		image = pygame.image.load(fullname)
+		image = pygame.transform.scale(image, (1100, 800))
+		#~ image = image.convert() # Set the right pixel depth
+		#~ colorkey = image.get_at((0,0)) # Get pixel for transparent colour
+		#~ image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
+		#~ imagerect = image.get_rect() # Get the rect of the image
+		#~ screenrect = self.screen.get_rect()
+		#~ imagerect.centerx, imagerect.centery = 80, 120 + desp
+		
+		self.screen.blit(image, (0, 0))
+
 	def draw_line (self, ptox, ptoy, color):
 		"""
 		Mbaez : 13/07/2011
@@ -306,11 +417,6 @@ class VentanaPrincipal :
 		self.screen.blit(image, imagerect)
 		
 		pygame.display.flip()
-		
-		#dibujar.aaellipse(self.screen, ptox, ptoy, 10, 7, borde )
-		#dibujar.aaellipse(self.screen, ptox+1, ptoy+1, 8, 5, fondo)
-		
-		#dibujar.vline(self.screen, ptox+11, ptoy-30, ptoy+5, Color.BLACK )
 		
 	def draw_claves( self ) :
 		"""
@@ -453,22 +559,9 @@ class VentanaPrincipal :
 		
 		font = pygame.font.Font(None, 15)
 		
-		notas = ['do', 'si', 'la', 'sol', 'fa', 'mi', 're']
-		alturas = [5, 4, 3, 2, 1] 
-		
-		total_notas = []
-		
-		#creamos la lista de notas con su altura
-		for i in range(5) :
-			 for j in range(7) :
-				nombre = str(notas[j])+str(alturas[i])
-				total_notas.append( nombre )
-		
-		total_notas.append( 'do1' )
-		
-		for i in range(2, 34) :
+		for i in range(32) :
 			
-			nombre = total_notas[i+1]
+			nombre = nombres[i]
 			# Render the text
 			text = font.render(nombre, True, (0, 0, 0), \
 													(255, 255, 255, 255))
@@ -476,30 +569,30 @@ class VentanaPrincipal :
 			textRect = text.get_rect()
 			
 			# posicion
-			if i < 17 :
+			if i < 15 :
 				textRect.centerx = 1070
-				textRect.centery = 58 + i*8
+				textRect.centery = 74 + i*8
 			else :
-				nombre = total_notas[i]
+				nombre = nombres[i]
 				# Render the text
 				text = font.render(nombre, True, (0, 0, 0), \
 													(255, 255, 255, 255))
 				textRect.centerx = 1070
-				textRect.centery = 58 + (i+2)*8 
+				textRect.centery = 74 + (i+2)*8 
 			
 			self.screen.blit(text, textRect)
 			
 			# posicion
-			if i < 17 :
+			if i < 15 :
 				textRect.centerx = 1070
-				textRect.centery = 58 + i*8+336
+				textRect.centery = 74 + i*8+336
 			else :
-				nombre = total_notas[i]
+				nombre = nombres[i]
 				# Render the text
 				text = font.render(nombre, True, (0, 0, 0), \
 													(255, 255, 255, 255))
 				textRect.centerx = 1070
-				textRect.centery = 58 + (i+2)*8+336 
+				textRect.centery = 74 + (i+2)*8+336 
 			
 			self.screen.blit(text, textRect)
 			
@@ -658,6 +751,43 @@ class VentanaPrincipal :
 				
 				self.screen.blit(image, imagerect)
 
+	def get_grilla( self, pos_x, pos_grilla ) :
+		"""
+		Metodo que retorna en que posicion dentro del compas debe ser 
+		colocada la figura
+		"""
+		if pos_grilla == 'arriba' :
+			for grilla in self.grillas_arriba :
+				dif = abs(pos_x - grilla)
+				
+				if dif < 50 :
+					return grilla
+		
+		else :
+			for grilla in self.grillas_abajo :
+				dif = abs(pos_x - grilla)
+				
+				if dif < 50 :
+					return grilla
+					
+		return None
+	
+	def reemplazar_figura( self, x, y ) :
+		"""
+		Metodo que dado un x e y reemplaza por el que ocupa su misma
+		grilla
+		"""
+		distancia_de_clave = 96
+		
+		for tupla in self.notas :
+			if tupla[0] == x :
+				dif = abs(tupla[1]-y)
+				
+				if dif < distancia_de_clave :
+					self.notas.remove( tupla )
+		
+		self.notas.append((x, y))
+		
 if __name__ == "__main__" :
 	
 	ventana = VentanaPrincipal()
