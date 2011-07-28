@@ -81,6 +81,17 @@ class VentanaPrincipal :
 	#todas las notas que se dibujaron
 	notas = []
 	
+	#bajos del ejercicio
+	bajos_dados = [	None, None,
+					None, None,
+					None, None,
+					None, None,
+					None, None,
+					None, None,
+					None, None,
+					None
+					]
+	
 	def __init__( self, width=1100, height=800, title='Armonizador') :
 		"""
 		"""
@@ -98,7 +109,7 @@ class VentanaPrincipal :
 		self.draw_compases()
 		self.draw_nombre_lineas()
 		self.draw_armadura_sostenido()
-		#self.draw_cursor ()
+		self.draw_boton_armonizar ()
 		
 		print len(self.lineas)
 				
@@ -121,31 +132,44 @@ class VentanaPrincipal :
 				mouse_y -= 2
 				mouse_x += 0.5
 				
+				#resaltar el boton cuando el mouse esta encima
+				if self.boton.collidepoint(mouse_x, mouse_y) :
+					self.set_highligthed()
+					pygame.display.flip()
+					
+				else :
+					self.draw_boton_armonizar()
+					pygame.display.flip()
+				
+				#evento clic en salir
 				if event.type == pygame.QUIT:
 					quit = True
 					pygame.quit()
-
-				elif event.type == 5: #Cuando hace click
-					self.clic_handler(mouse_x, mouse_y)
+				
+				#evento click sobre la pantalla
+				elif event.type == 5: 
+					#evento que dibuja sobre la pantalla
+					self.clic_handler_draw(mouse_x, mouse_y)
+					
+					#evento cuando se da clic sobre el boton armonizar
+					self.clic_handler_boton(mouse_x, mouse_y)
 
 			clock.tick(50)
 
-	def clic_handler( self, mouse_x, mouse_y ) :
+	def clic_handler_draw( self, mouse_x, mouse_y ) :
 		"""
 		cada clic en el pentagrama es atendido por este metodo
 		"""
 		
 		index = 0
 		for linea in self.lineas :
+			
 			index += 1
 			linea_y = linea.y 
 
 			__linea = pygame.Rect(linea.x, linea_y,1100,7)
 			
 			if __linea.collidepoint(mouse_x, mouse_y) :
-				
-				#imprimir el nombre de la linea seleccinoada
-				print str(nombres[self.lineas.index(linea)])
 				
 				# se verifica si estamos en el primer endecagrama o el 
 				# 2do
@@ -173,6 +197,10 @@ class VentanaPrincipal :
 					if grilla == 'arriba' :
 						pos_grilla = self.grillas_arriba.index( pos_x )
 						
+						#guardar el nombre de la linea seleccinoada
+						self.bajos_dados[pos_grilla] = \
+										nombres[self.lineas.index(linea)]
+										
 						#se verifica que este libre
 						if not self.grilla_ocupada_arriba[pos_grilla] :
 							self.draw_blanca(pos_x, __y)
@@ -195,6 +223,10 @@ class VentanaPrincipal :
 					else :
 						pos_grilla = self.grillas_abajo.index( pos_x )
 						
+						#guardar el nombre de la linea seleccinoada
+						self.bajos_dados[pos_grilla+8] = \
+										nombres[self.lineas.index(linea)]
+										
 						#se verifica que este libre
 						if not self.grilla_ocupada_abajo[pos_grilla] :
 							self.draw_blanca(pos_x, __y)
@@ -218,6 +250,24 @@ class VentanaPrincipal :
 				break
 		return
 
+	def clic_handler_boton( self, mouse_x, mouse_y ) :
+		"""
+		Se verifica que el clikc hecho por el usuario este dentro del 
+		boton "armonizar"
+		"""
+		
+		if self.boton.collidepoint(mouse_x, mouse_y) :
+			print 'Click sobre el boton'
+			
+		return
+	
+	def armonizador_handler()
+		"""
+		Luego de seleccionar el boton "Armonizar" este metodo se encarga
+		de pasar estos datos a la clase armonizador
+		"""
+		
+		
 	def draw( self ):
 		"""
 		Mbaez : 13/07/2011
@@ -787,6 +837,44 @@ class VentanaPrincipal :
 					self.notas.remove( tupla )
 		
 		self.notas.append((x, y))
+	
+	def draw_boton_armonizar( self ) :
+		"""
+		Despliega en pantalla el boton que sirve para que la maquina 
+		proceda a resolver el ejercicio de armonia
+		"""
+		
+		font = pygame.font.Font(None, 80)
+		# Render the text
+		text = font.render("Armonizar", True, (0, 0, 0), \
+												(255, 255, 255, 255))
+		textRect = text.get_rect()
+		#posicion
+		textRect.centerx = 900
+		textRect.centery = 750
+	
+		self.screen.blit(text, textRect)
+		
+		self.boton = textRect
+
+	def set_highligthed( self ) :
+		"""
+		resalta el boton de armonizar cuando el mouse esta encima
+		"""
+		
+		font = pygame.font.Font(None, 80)
+		# Render the text
+		text = font.render("Armonizar", True, (255, 0, 0), \
+												(255, 255, 255, 255))
+		textRect = text.get_rect()
+		#posicion
+		textRect.centerx = 900
+		textRect.centery = 750
+	
+		self.screen.blit(text, textRect)
+		
+		self.boton = textRect
+		
 		
 if __name__ == "__main__" :
 	
