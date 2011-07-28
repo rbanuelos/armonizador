@@ -257,16 +257,17 @@ class VentanaPrincipal :
 		"""
 		
 		if self.boton.collidepoint(mouse_x, mouse_y) :
-			print 'Click sobre el boton'
+			#probar si dibuja
+			self.draw_acorde( 're4', 'sol3', 'si2', 5 )
 			
 		return
 	
-	def armonizador_handler()
+	def armonizador_handler( self ) :
 		"""
 		Luego de seleccionar el boton "Armonizar" este metodo se encarga
 		de pasar estos datos a la clase armonizador
 		"""
-		
+		return
 		
 	def draw( self ):
 		"""
@@ -420,7 +421,7 @@ class VentanaPrincipal :
 		return rect
 
 	def draw_blanca(self, ptox, ptoy, borde=Color.BLACK, fondo=Color.WHITE,
-					radio=7):
+					plica='abajo'):
 		"""
 		Mbaez : 13/07/2011
 		Dibuja una blanca
@@ -438,31 +439,28 @@ class VentanaPrincipal :
 		else :
 			ptoy = int(ptoy)
 
-		"""
-		fullname = os.path.join('', 'half note up.gif')
-		image = pygame.image.load(fullname)
-		image = pygame.transform.scale(image, (30, 52))
-		image = image.convert() # Set the right pixel depth
-		colorkey = image.get_at((0,0)) # Get pixel for transparent colour
-		image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
-		imagerect = image.get_rect() # Get the rect of the image
-		screenrect = self.screen.get_rect()
-		imagerect.centerx, imagerect.centery = ptox, ptoy-16
-		
-		self.screen.blit(image, imagerect)
-		
-		pygame.display.flip()
-		"""
-		
-		fullname = os.path.join('', 'half note down.gif')
-		image = pygame.image.load(fullname)
-		image = pygame.transform.scale(image, (30, 52))
-		image = image.convert() # Set the right pixel depth
-		colorkey = image.get_at((0,0)) # Get pixel for transparent colour
-		image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
-		imagerect = image.get_rect() # Get the rect of the image
-		screenrect = self.screen.get_rect()
-		imagerect.centerx, imagerect.centery = ptox, ptoy+16
+		if plica == 'arriba' :
+			
+			fullname = os.path.join('', 'half note up.gif')
+			image = pygame.image.load(fullname)
+			image = pygame.transform.scale(image, (30, 52))
+			image = image.convert() # Set the right pixel depth
+			colorkey = image.get_at((0,0)) # Get pixel for transparent colour
+			image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
+			imagerect = image.get_rect() # Get the rect of the image
+			screenrect = self.screen.get_rect()
+			imagerect.centerx, imagerect.centery = ptox, ptoy-16
+			
+		else :
+			fullname = os.path.join('', 'half note down.gif')
+			image = pygame.image.load(fullname)
+			image = pygame.transform.scale(image, (30, 52))
+			image = image.convert() # Set the right pixel depth
+			colorkey = image.get_at((0,0)) # Get pixel for transparent colour
+			image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
+			imagerect = image.get_rect() # Get the rect of the image
+			screenrect = self.screen.get_rect()
+			imagerect.centerx, imagerect.centery = ptox, ptoy+16
 		
 		self.screen.blit(image, imagerect)
 		
@@ -874,7 +872,42 @@ class VentanaPrincipal :
 		self.screen.blit(text, textRect)
 		
 		self.boton = textRect
+	
+	def draw_acorde( self, soprano, contralto, tenor, pos_grilla ) :
+		"""
+		Recibe una lista de notas y una posicion en donde ubicar
+		"""
 		
+		#la posicion X lo determina la grilla a la cual corresponde
+		if pos_grilla > 7 :
+			pos_grilla - 8
+		
+		pos_x = self.grillas_arriba[pos_grilla]
+		
+		dy = 3
+		#se busca en la lista de nombres para saber que linea es
+		y_soprano = None
+		for index in range(12) :
+			if soprano == nombres[index] :
+				y_soprano = self.lineas[index].y + dy
+				break
+				
+		y_contralto = None
+		for index in range(4, 15) :
+			if contralto == nombres[index] :
+				y_contralto = self.lineas[index].y + dy
+				break
+		
+		y_tenor = None
+		for index in range(15, 27) :
+			if tenor == nombres[index] :
+				y_tenor = self.lineas[index].y + dy
+				break
+		
+		self.draw_blanca( pos_x, y_soprano, plica='arriba' )
+		self.draw_blanca( pos_x, y_contralto )
+		self.draw_blanca( pos_x, y_tenor, plica='arriba')
+
 		
 if __name__ == "__main__" :
 	
