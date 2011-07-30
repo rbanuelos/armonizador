@@ -110,8 +110,6 @@ class VentanaPrincipal :
 		self.draw_nombre_lineas()
 		self.draw_armadura_sostenido()
 		self.draw_boton_armonizar ()
-		
-		print len(self.lineas)
 				
 		pygame.display.flip()
 		
@@ -169,7 +167,17 @@ class VentanaPrincipal :
 
 			__linea = pygame.Rect(linea.x, linea_y,1100,7)
 			
-			if __linea.collidepoint(mouse_x, mouse_y) :
+			if __linea.collidepoint( mouse_x, mouse_y ) :
+				
+				#se verifica si es una linea gris
+				try:
+					pos = self.gray_lines.index( linea )
+					linea_ad = 'si'
+					print 'es linea gris'
+				
+				except ValueError:
+					linea_ad = 'no'
+					print "No es linea gris"
 				
 				# se verifica si estamos en el primer endecagrama o el 
 				# 2do
@@ -203,7 +211,8 @@ class VentanaPrincipal :
 										
 						#se verifica que este libre
 						if not self.grilla_ocupada_arriba[pos_grilla] :
-							self.draw_blanca(pos_x, __y)
+							self.draw_blanca(pos_x, __y, \
+											linea_adicional=linea_ad)
 							self.grilla_ocupada_arriba[pos_grilla] = True
 							self.notas.append((pos_x, __y))
 						
@@ -229,7 +238,8 @@ class VentanaPrincipal :
 										
 						#se verifica que este libre
 						if not self.grilla_ocupada_abajo[pos_grilla] :
-							self.draw_blanca(pos_x, __y)
+							self.draw_blanca(pos_x, __y, \
+												linea_adicional=linea_ad)
 							self.grilla_ocupada_abajo[pos_grilla] = True
 							self.notas.append((pos_x, __y))
 						
@@ -237,6 +247,7 @@ class VentanaPrincipal :
 							#reemplazar la figura
 							self.reemplazar_figura( pos_x, __y )
 							#dibujar todo de vuelta
+							self.screen.fill(Color.WHITE)
 							self.draw()
 							self.draw_claves()
 							self.draw_compases()
@@ -258,7 +269,7 @@ class VentanaPrincipal :
 		
 		if self.boton.collidepoint(mouse_x, mouse_y) :
 			#probar si dibuja
-			self.draw_acorde( 're4', 'sol3', 'si2', 5 )
+			self.draw_acorde( 'do4', 'sol3', 'mi3', 10 )
 			
 		return
 	
@@ -275,6 +286,7 @@ class VentanaPrincipal :
 		"""
 		space = 8
 		self.lineas = []
+		self.gray_lines = []
 		
 		######### 1er Endecagrama clave de Sol###########
 		for i in range (3,4) :
@@ -282,6 +294,7 @@ class VentanaPrincipal :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+				self.gray_lines.append( rect )
 
 			self.lineas.append(rect)
 			
@@ -298,6 +311,7 @@ class VentanaPrincipal :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+				self.gray_lines.append( rect )
 
 			self.lineas.append(rect)
 		
@@ -307,7 +321,8 @@ class VentanaPrincipal :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
-
+				self.gray_lines.append( rect )
+				
 			self.lineas.append(rect)
 		
 		for i in range (25,35) :
@@ -323,7 +338,8 @@ class VentanaPrincipal :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
-
+				self.gray_lines.append( rect )
+			
 			self.lineas.append(rect)
 			
 		######### 2do Endecagrama clave de Sol###########
@@ -332,7 +348,8 @@ class VentanaPrincipal :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
-
+				self.gray_lines.append( rect )
+				
 			self.lineas.append(rect)
 			
 		for i in range (46,56) :
@@ -348,6 +365,7 @@ class VentanaPrincipal :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+				self.gray_lines.append( rect )
 
 			self.lineas.append(rect)
 		
@@ -357,7 +375,8 @@ class VentanaPrincipal :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
-
+				self.gray_lines.append( rect )
+				
 			self.lineas.append(rect)
 		
 		for i in range (67,77) :
@@ -371,6 +390,8 @@ class VentanaPrincipal :
 		for i in range (77,79) :
 			if i%2 == 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+				self.gray_lines.append( rect )
+				
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
 
@@ -384,7 +405,7 @@ class VentanaPrincipal :
 		"""
 		
 		#dibuja la clave de Sol
-		fullname = os.path.join('', 'fondo2.jpg')
+		fullname = os.path.join('img', 'fondo2.jpg')
 		image = pygame.image.load(fullname)
 		image = pygame.transform.scale(image, (1100, 800))
 		#~ image = image.convert() # Set the right pixel depth
@@ -421,7 +442,7 @@ class VentanaPrincipal :
 		return rect
 
 	def draw_blanca(self, ptox, ptoy, borde=Color.BLACK, fondo=Color.WHITE,
-					plica='abajo'):
+					plica='abajo', linea_adicional='no'):
 		"""
 		Mbaez : 13/07/2011
 		Dibuja una blanca
@@ -439,9 +460,14 @@ class VentanaPrincipal :
 		else :
 			ptoy = int(ptoy)
 
+		if linea_adicional != 'no' :
+			puntos = [(ptox-16,ptoy), (ptox+17, ptoy)]
+			pygame.Rect(pygame.draw.\
+						lines(self.screen, Color.BLACK, False, puntos, 1))
+							
 		if plica == 'arriba' :
 			
-			fullname = os.path.join('', 'half note up.gif')
+			fullname = os.path.join('img', 'half note up.gif')
 			image = pygame.image.load(fullname)
 			image = pygame.transform.scale(image, (30, 52))
 			image = image.convert() # Set the right pixel depth
@@ -452,7 +478,7 @@ class VentanaPrincipal :
 			imagerect.centerx, imagerect.centery = ptox, ptoy-16
 			
 		else :
-			fullname = os.path.join('', 'half note down.gif')
+			fullname = os.path.join('img', 'half note down.gif')
 			image = pygame.image.load(fullname)
 			image = pygame.transform.scale(image, (30, 52))
 			image = image.convert() # Set the right pixel depth
@@ -464,6 +490,7 @@ class VentanaPrincipal :
 		
 		self.screen.blit(image, imagerect)
 		
+		
 		pygame.display.flip()
 		
 	def draw_claves( self ) :
@@ -471,7 +498,7 @@ class VentanaPrincipal :
 		"""
 		for desp in (0, 336) :
 			#dibuja la clave de Sol
-			fullname = os.path.join('', 'clave_de_sol.gif')
+			fullname = os.path.join('img', 'clave_de_sol.gif')
 			image = pygame.image.load(fullname)
 			image = pygame.transform.scale(image, (45, 95))
 			image = image.convert() # Set the right pixel depth
@@ -484,7 +511,7 @@ class VentanaPrincipal :
 			self.screen.blit(image, imagerect)
 			
 			#dibuja la clave de Fa
-			fullname = os.path.join('', 'ClaveFa.gif')
+			fullname = os.path.join('img', 'ClaveFa.gif')
 			image = pygame.image.load(fullname)
 			image = pygame.transform.scale(image, (95, 96))
 			image = image.convert() # Set the right pixel depth
@@ -497,7 +524,7 @@ class VentanaPrincipal :
 			self.screen.blit(image, imagerect)
 			
 			#dibuja el corchete
-			fullname = os.path.join('', 'corchete2.gif')
+			fullname = os.path.join('img', 'corchete2.gif')
 			image = pygame.image.load(fullname)
 			#image = pygame.transform.scale(image, (30, 260))
 			image = pygame.transform.scale(image, (120, 600))
@@ -517,7 +544,7 @@ class VentanaPrincipal :
 		"""
 		
 		#dibuja la cifra de compas
-		fullname = os.path.join('', '4-4.png')
+		fullname = os.path.join('img', '4-4.png')
 		image = pygame.image.load(fullname)
 		image = pygame.transform.scale(image, (110, 80))
 		image = image.convert() # Set the right pixel depth
@@ -658,7 +685,7 @@ class VentanaPrincipal :
 								"fa#": 6,
 								"do#": 7}
 		
-		fullname = os.path.join('', 'sostenido.gif')
+		fullname = os.path.join('img', 'sostenido.gif')
 		image = pygame.image.load(fullname)
 		image = pygame.transform.scale(image, (35, 60))
 		image = image.convert() # Set the right pixel depth
@@ -735,7 +762,7 @@ class VentanaPrincipal :
 								"solb": 6,
 								"dob": 7}
 		
-		fullname = os.path.join('', 'bemol.gif')
+		fullname = os.path.join('img', 'bemol.gif')
 		image = pygame.image.load(fullname)
 		image = pygame.transform.scale(image, (35, 60))
 		image = image.convert() # Set the right pixel depth
@@ -880,7 +907,11 @@ class VentanaPrincipal :
 		
 		#la posicion X lo determina la grilla a la cual corresponde
 		if pos_grilla > 7 :
-			pos_grilla - 8
+			pos_grilla -= 8
+			#para que se desplace al endecagrama de abajo
+			index_desp = 32
+		else :
+			index_desp = 0
 		
 		pos_x = self.grillas_arriba[pos_grilla]
 		
@@ -889,19 +920,19 @@ class VentanaPrincipal :
 		y_soprano = None
 		for index in range(12) :
 			if soprano == nombres[index] :
-				y_soprano = self.lineas[index].y + dy
+				y_soprano = self.lineas[index+index_desp].y + dy
 				break
 				
 		y_contralto = None
 		for index in range(4, 15) :
 			if contralto == nombres[index] :
-				y_contralto = self.lineas[index].y + dy
+				y_contralto = self.lineas[index+index_desp].y + dy
 				break
 		
 		y_tenor = None
 		for index in range(15, 27) :
 			if tenor == nombres[index] :
-				y_tenor = self.lineas[index].y + dy
+				y_tenor = self.lineas[index+index_desp].y + dy
 				break
 		
 		self.draw_blanca( pos_x, y_soprano, plica='arriba' )

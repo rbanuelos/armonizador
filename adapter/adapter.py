@@ -1,5 +1,21 @@
+import os
+import sys
 
-from armonizador import *
+path = os.path.join(os.path.abspath(__file__))
+
+path = os.path.abspath(os.path.join(path, '..'))
+
+root_directory = os.path.abspath(os.path.join(path, '..'))
+
+clase_directory = os.path.abspath(os.path.join(root_directory, 'clases'))
+
+gui_directory = os.path.abspath(os.path.join(root_directory, 'GUI'))
+
+sys.path.append(clase_directory)
+sys.path.append(gui_directory)
+
+print sys.path
+
 from clases import *
 
 class Adapter :
