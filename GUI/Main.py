@@ -78,7 +78,8 @@ class VentanaPrincipal :
 					]
 	
 	#en el caso de redibujar la pantalla se mantiene un registro de
-	#todas las notas que se dibujaron
+	#todas las notas que se dibujaron antes
+	# nota = tupla(x, y) , plica , linea_adicional
 	notas = []
 	
 	#bajos del ejercicio
@@ -214,21 +215,14 @@ class VentanaPrincipal :
 							self.draw_blanca(pos_x, __y, \
 											linea_adicional=linea_ad)
 							self.grilla_ocupada_arriba[pos_grilla] = True
-							self.notas.append((pos_x, __y))
-						
+							#guardar nota dibujada
+							self.notas.append([(pos_x, __y), 'abajo', linea_ad])
+							
 						else : 
 							#reemplazar la figura
-							self.reemplazar_figura( pos_x, __y )
+							self.reemplazar_figura( pos_x, __y, 'abajo', linea_ad )
 							#dibujar todo de vuelta
-							self.screen.fill(Color.WHITE)
-							self.draw()
-							self.draw_claves()
-							self.draw_compases()
-							self.draw_nombre_lineas()
-							self.draw_armadura_sostenido()
-							#dibujar las figuras anteriores
-							for tupla in self.notas :
-								self.draw_blanca(tupla[0], tupla[1])
+							self.re_draw()
 					else :
 						pos_grilla = self.grillas_abajo.index( pos_x )
 						
@@ -241,21 +235,14 @@ class VentanaPrincipal :
 							self.draw_blanca(pos_x, __y, \
 												linea_adicional=linea_ad)
 							self.grilla_ocupada_abajo[pos_grilla] = True
-							self.notas.append((pos_x, __y))
+							#guardar nota dibujada
+							self.notas.append([(pos_x, __y), 'abajo', linea_ad])
 						
 						else : 
 							#reemplazar la figura
-							self.reemplazar_figura( pos_x, __y )
+							self.reemplazar_figura( pos_x, __y, 'abajo', linea_ad )
 							#dibujar todo de vuelta
-							self.screen.fill(Color.WHITE)
-							self.draw()
-							self.draw_claves()
-							self.draw_compases()
-							self.draw_nombre_lineas()
-							self.draw_armadura_sostenido()
-							#dibujar las figuras anteriores
-							for tupla in self.notas :
-								self.draw_blanca(tupla[0], tupla[1])
+							self.re_draw()
 							
 				pygame.display.flip()
 				break
@@ -263,8 +250,8 @@ class VentanaPrincipal :
 
 	def clic_handler_boton( self, mouse_x, mouse_y ) :
 		"""
-		Se verifica que el clikc hecho por el usuario este dentro del 
-		boton "armonizar"
+		Se verifica que el click hecho por el usuario este dentro del 
+		boton "Armonizar"
 		"""
 		
 		if self.boton.collidepoint(mouse_x, mouse_y) :
@@ -847,21 +834,21 @@ class VentanaPrincipal :
 					
 		return None
 	
-	def reemplazar_figura( self, x, y ) :
+	def reemplazar_figura( self, x, y, plica, linea_adicional ) :
 		"""
 		Metodo que dado un x e y reemplaza por el que ocupa su misma
 		grilla
 		"""
 		distancia_de_clave = 96
 		
-		for tupla in self.notas :
-			if tupla[0] == x :
-				dif = abs(tupla[1]-y)
+		for nota in self.notas :
+			if nota[0][0] == x :
+				dif = abs(nota[0][1]-y)
 				
 				if dif < distancia_de_clave :
-					self.notas.remove( tupla )
+					self.notas.remove( nota )
 		
-		self.notas.append((x, y))
+		self.notas.append([(x, y), plica, linea_adicional])
 	
 	def draw_boton_armonizar( self ) :
 		"""
@@ -918,28 +905,62 @@ class VentanaPrincipal :
 		dy = 3
 		#se busca en la lista de nombres para saber que linea es
 		y_soprano = None
+		linea_ad_soprano = 'no'
 		for index in range(12) :
 			if soprano == nombres[index] :
 				y_soprano = self.lineas[index+index_desp].y + dy
+				if self.lineas[index+index_desp] in self.gray_lines :
+					linea_ad_soprano = 'si'
 				break
 				
 		y_contralto = None
+		linea_ad_contralto = 'no'
 		for index in range(4, 15) :
 			if contralto == nombres[index] :
 				y_contralto = self.lineas[index+index_desp].y + dy
+				if self.lineas[index+index_desp] in self.gray_lines :
+					linea_ad_contralto = 'si'
 				break
 		
 		y_tenor = None
+		linea_ad_tenor = 'no'
 		for index in range(15, 27) :
 			if tenor == nombres[index] :
 				y_tenor = self.lineas[index+index_desp].y + dy
+				if self.lineas[index+index_desp] in self.gray_lines :
+					linea_ad_tenor = 'si'
 				break
 		
-		self.draw_blanca( pos_x, y_soprano, plica='arriba' )
-		self.draw_blanca( pos_x, y_contralto )
-		self.draw_blanca( pos_x, y_tenor, plica='arriba')
+		self.draw_blanca( pos_x, y_soprano, plica='arriba', \
+									linea_adicional= linea_ad_soprano )
+		self.draw_blanca( pos_x, y_contralto, \
+									linea_adicional= linea_ad_contralto )
+		self.draw_blanca( pos_x, y_tenor, plica='arriba', \
+									linea_adicional= linea_ad_tenor )
 
+	def re_draw( self ) :
+		"""
+		Redibuja toda la interfaz
+		"""
 		
+		#dibujar todo de vuelta
+		self.screen.fill(Color.WHITE)
+		self.draw()
+		self.draw_claves()
+		self.draw_compases()
+		self.draw_nombre_lineas()
+		self.draw_armadura_sostenido()
+		#dibujar las figuras anteriores
+		for index in range(len(self.notas)) :
+			
+			x = self.notas[index][0][0]
+			y = self.notas[index][0][1]
+			plica = self.notas[index][1]
+			linea_ad = self.notas[index][2]
+			
+			self.draw_blanca( x, y, plica=plica, linea_adicional=linea_ad)
+		
+
 if __name__ == "__main__" :
 	
 	ventana = VentanaPrincipal()

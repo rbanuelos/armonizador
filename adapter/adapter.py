@@ -17,6 +17,7 @@ sys.path.append(gui_directory)
 print sys.path
 
 from clases import *
+from armonizador import *
 
 class Adapter :
 	"""
@@ -32,7 +33,7 @@ class Adapter :
 	figuras y dibujos dentro del pentagrama.
 	"""
 
-	def acordes_a_grafico( self, acorde, pos_grilla ) :
+	def acordes_a_grafico( self, acorde ) :
 		"""
 		Metodo que recibe un acorde y una posicion donde dibujar
 		"""
@@ -47,4 +48,18 @@ class Adapter :
 		contralto = str(acorde.contralto.nombre.lower()) \
 											+str(acorde.contralto.altura)
 		
+		tenor = str(acorde.tenor.nombre.lower()) \
+											+str(acorde.tenor.altura)
 		
+		to_draw = []
+		to_draw.append( soprano )
+		to_draw.append( contralto )
+		to_draw.append( tenor )
+		
+		return to_draw
+	
+	def grafico_a_acordes( self, soprano, contralto, tenor ) :
+		"""
+		Metodo que recibe un
+		"""
+	
