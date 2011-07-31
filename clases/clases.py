@@ -1,7 +1,22 @@
 
-posibles_notas = ['Do','Re', 'Mi', 'Fa', 'Sol', 'La', 'Si']
+posibles_notas = ['do','re', 'mi', 'fa', 'sol', 'la', 'si']
 posibles_alturas = [1, 2, 3, 4, 5]
 posibles_alteraciones = ['#', 'b', 'n']
+
+tesitura_soprano = ['sol4', 'fa4', 'mi4','re4', 'do4', 
+					'si3', 'la3', 'sol3', 'fa3', 'mi3','re3', 'do3'
+					]
+
+tesitura_contralto = ['do4', 'si3', 'la3', 'sol3', 'fa3', 'mi3',
+						're3', 'do3', 'si2', 'la2', 'sol2',
+						]
+						
+tesitura_tenor = ['sol3', 'fa3', 'mi3','re3', 'do3','si2', 
+					'la2', 'sol2','fa2', 'mi2','re2', 'do2'
+					]
+					
+tesitura_bajo = ['do3', 'si2', 'la2', 'sol2','fa2', 'mi2','re2', 'do2',
+									'si1', 'la1', 'sol1', 'fa1', 'mi1',]
 
 class Nota :
 	"""
@@ -303,9 +318,9 @@ class Util :
 			
 			#las distancias entre notas mi-fa y si-do son 1/2 de tono
 			#el resto son de 1 tono
-			if nota_actual.nombre == 'Mi' : 
+			if nota_actual.nombre == 'mi' : 
 				dist_count += 0.5
-			elif nota_actual.nombre == 'Si' :
+			elif nota_actual.nombre == 'si' :
 				dist_count += 0.5 
 			else :
 				dist_count += 1
@@ -967,7 +982,34 @@ class Util :
 			return False
 		
 		return True
- 		 
+ 		
+ 	def comprobar_tesitura( self, acorde ) :
+		"""
+		Metodo que comprueba que las voces se encuentren dentro de su 
+		tesitura
+		"""
+		
+		nombre_soprano = str(acorde.soprano.nombre) \
+											+ str(acorde.soprano.altura)
+		
+		nombre_contralto = str(acorde.contralto.nombre) \
+											+ str(acorde.contralto.altura)
+		
+		nombre_tenor = str(acorde.tenor.nombre) \
+											+ str(acorde.tenor.altura)
+		
+		if not nombre_soprano in tesitura_soprano :
+			return True
+		
+		if not nombre_contralto in tesitura_contralto :
+			return True
+		
+		if not nombre_tenor in tesitura_tenor :
+			return True
+		
+		return False
+
+		 
 util = Util()
 
 class Tonalidad :

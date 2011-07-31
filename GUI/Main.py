@@ -1,5 +1,21 @@
 #!/bin/python
 
+import os
+import sys
+
+path = os.path.join(os.path.abspath(__file__))
+
+path = os.path.abspath(os.path.join(path, '..'))
+
+root_directory = os.path.abspath(os.path.join(path, '..'))
+
+controller_directory = os.path.abspath( \
+							os.path.join(root_directory, 'controller'))
+
+sys.path.append(controller_directory)
+
+from controller import *
+
 import pygame, time
 import pygame.gfxdraw as dibujar
 from pygame.locals import *
@@ -22,21 +38,6 @@ nombres = ['sol4', 'fa4', 'mi4','re4', 'do4',
 			'si2', 'la2', 'sol2','fa2', 'mi2','re2', 'do2',
 			'si1', 'la1', 'sol1', 'fa1', 'mi1'
 			]
-
-tesitura_soprano = ['sol4', 'fa4', 'mi4','re4', 'do4', 
-					'si3', 'la3', 'sol3', 'fa3', 'mi3','re3', 'do3'
-					]
-
-tesitura_contralto = ['do4', 'si3', 'la3', 'sol3', 'fa3', 'mi3',
-						're3', 'do3', 'si2', 'la2', 'sol2',
-						]
-						
-tesitura_tenor = ['sol3', 'fa3', 'mi3','re3', 'do3','si2', 
-					'la2', 'sol2','fa2', 'mi2','re2', 'do2'
-					]
-					
-tesitura_bajo = ['do3', 'si2', 'la2', 'sol2','fa2', 'mi2','re2', 'do2',
-									'si1', 'la1', 'sol1', 'fa1', 'mi1',]
 
 class Color:
 	WHITE = 255, 255, 255
@@ -255,8 +256,16 @@ class VentanaPrincipal :
 		"""
 		
 		if self.boton.collidepoint(mouse_x, mouse_y) :
-			#probar si dibuja
-			self.draw_acorde( 'do4', 'sol3', 'mi3', 10 )
+			
+			#se le llama al controlador
+			resultado  = controller.estado_actual(self.bajos_dados, "la")
+			
+			print resultado
+			
+			#se dibuja el resultado
+			self.draw_acorde( resultado[0], resultado[1], 
+														resultado[2], 0)
+			
 			
 		return
 	
@@ -448,7 +457,7 @@ class VentanaPrincipal :
 			ptoy = int(ptoy)
 
 		if linea_adicional != 'no' :
-			puntos = [(ptox-16,ptoy), (ptox+17, ptoy)]
+			puntos = [(ptox-18,ptoy), (ptox+17, ptoy)]
 			pygame.Rect(pygame.draw.\
 						lines(self.screen, Color.BLACK, False, puntos, 1))
 							
@@ -931,12 +940,12 @@ class VentanaPrincipal :
 					linea_ad_tenor = 'si'
 				break
 		
-		self.draw_blanca( pos_x, y_soprano, plica='arriba', \
-									linea_adicional= linea_ad_soprano )
+		self.draw_blanca( pos_x+2, y_soprano, plica='arriba', \
+									linea_adicional=linea_ad_soprano )
 		self.draw_blanca( pos_x, y_contralto, \
-									linea_adicional= linea_ad_contralto )
-		self.draw_blanca( pos_x, y_tenor, plica='arriba', \
-									linea_adicional= linea_ad_tenor )
+									linea_adicional=linea_ad_contralto )
+		self.draw_blanca( pos_x+2, y_tenor, plica='arriba', \
+									linea_adicional=linea_ad_tenor )
 
 	def re_draw( self ) :
 		"""

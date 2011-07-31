@@ -5,7 +5,71 @@ class Armonizador :
 	"""
 	"""
 	
-	def enlace (self, tonalidad, acorde_anterior, bajo_dado ) :
+	def crear_primer_acorde( self, tonalidad, bajo ) :
+		"""
+		Crea el primer acorde del ejercicio.
+		Este acorde debe ser la tonica y debe estar en estado 
+		fundamental.
+		"""
+		#creamos la escala
+		escala, alteraciones = tonalidad.crear_escala()
+		
+		if escala[0] != bajo.nombre :
+			return 'Error'
+		
+		notas = []
+		notas.append( escala[0] )
+		notas.append( escala[2] )
+		notas.append( escala[4] )
+		
+		#combinaciones de posiciones distintas
+		disposiciones = self.disposiciones_primer_acorde( notas ) 
+		
+		#PRUEBA
+		acorde = Acorde()
+		#copiar los nombres
+		acorde.soprano.nombre = notas[1]
+		acorde.contralto.nombre = notas[0]
+		acorde.tenor.nombre = notas[2]
+		acorde.bajo.nombre = bajo.nombre
+		
+		#copiar alteraciones
+		acorde.soprano.alteracion = alteraciones[0]
+		acorde.contralto.alteracion = alteraciones[1]
+		acorde.tenor.alteracion = alteraciones[2]
+		acorde.bajo.alteracion = bajo.alteracion
+		
+		#copiar alturas
+		acorde.soprano.altura = 4
+		acorde.contralto.altura = 3
+		acorde.tenor.altura = 3
+		acorde.bajo.altura = bajo.altura
+		
+		return acorde
+		
+	def disposiciones_primer_acorde( self, notas ) :
+		"""
+		Realiza combinaciones de las 3 notas. Estas combinaciones son 
+		un caso especial en el primer acorde
+		""" 
+		
+		disposiciones = []
+		
+		for i in range(3) :
+			nombre_1 = notas[i]
+			for j in range(3) :
+				nombre_2 = notas[j]
+				for k in range(3) :
+					
+					nombre_3 = notas[k]
+					disposicion = [nombre_1, nombre_2, nombre_3]
+					
+					if len(set(disposicion)) == 3 :
+						disposiciones.append(disposicion)
+		
+		return disposiciones
+		
+	def enlace( self, tonalidad, acorde_anterior, bajo_dado ) :
 		"""
 		Obtiene las combinaciones posibles de las voces y va filtrando
 		esas combinaciones (acordes) mediante la validacion del 
@@ -62,9 +126,12 @@ class Armonizador :
 				acorde.tenor.altura = combinaciones[index][2].altura
 				acorde.bajo.altura = bajo_dado.altura
 				
-				#validacion de distancia entre voces
-				if not util.distancia_entre_voces ( acorde ) :
+				#validacion de distancia entre voces y tesitura
+				if not util.distancia_entre_voces ( acorde ) and \
+									not util.comprobar_tesitura( acorde ):
 					pass_regla_1.append(acorde)
+			
+				
 			
 			if verificar_regla[1] :
 				for index in range(len(pass_regla_1)) :
@@ -167,13 +234,13 @@ class Armonizador :
 		"""
 		"""
 		#las posibles triadas a partir de una nota
-		triadas = self.get_triadas(tonalidad, bajo_dado)
+		triadas = self.get_triadas( tonalidad, bajo_dado )
 		
 		escala, alteraciones = tonalidad.crear_escala()
 		
-		grado_1 = escala.index( triadas[0][0])+1
-		grado_2 = escala.index( triadas[1][0])+1
-		grado_3 = escala.index( triadas[2][0])+1
+		grado_1 = escala.index( triadas[0][0] ) + 1
+		grado_2 = escala.index( triadas[1][0] ) + 1
+		grado_3 = escala.index( triadas[2][0] ) + 1
 		
 		posibles_acordes = []
 		tuplas = []
@@ -517,3 +584,6 @@ class Armonizador :
 				return True
 		
 		return False
+
+#instancia para ser utilizada por el controller
+armonizador = Armonizador()
