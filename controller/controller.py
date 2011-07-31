@@ -19,7 +19,7 @@ print sys.path
 from clases import *
 from armonizador import *
 
-class Adapter :
+class Controller :
 	"""
 	Clase que adapta los resultados del armonizador a la interfaz 
 	grafica y viceversa.
@@ -58,8 +58,4 @@ class Adapter :
 		
 		return to_draw
 	
-	def grafico_a_acordes( self, soprano, contralto, tenor ) :
-		"""
-		Metodo que recibe un
-		"""
 	
