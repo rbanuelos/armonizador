@@ -733,28 +733,42 @@ class Util :
 		
 		if acorde.soprano.altura > acorde.contralto.altura :
 			
-			pos_1 = posibles_notas.index( acorde.soprano.nombre)
-			pos_2 = posibles_notas.index( acorde.contralto.nombre)
+			dif = acorde.soprano.altura - acorde.contralto.altura
+			
+			if dif >= 2 : 
+				return True
+				
+			pos_1 = posibles_notas.index( acorde.soprano.nombre )
+			pos_2 = posibles_notas.index( acorde.contralto.nombre )
 			
 			if pos_1 > pos_2 :
 				return True
 		
 		if acorde.contralto.altura > acorde.tenor.altura :
 			
-			pos_1 = posibles_notas.index( acorde.contralto.nombre)
-			pos_2 = posibles_notas.index( acorde.tenor.nombre)
+			dif = acorde.contralto.altura - acorde.tenor.altura
+			
+			if dif >= 2 : 
+				return True
+				
+			pos_1 = posibles_notas.index( acorde.contralto.nombre )
+			pos_2 = posibles_notas.index( acorde.tenor.nombre )
 			
 			if pos_1 > pos_2 :
 				return True
 		
 		if acorde.tenor.altura > acorde.bajo.altura :
 			
-			pos_1 = posibles_notas.index( acorde.tenor.nombre)
-			pos_2 = posibles_notas.index( acorde.bajo.nombre)
+			dif = acorde.tenor.altura - acorde.bajo.altura
 			
-			if pos_1 - pos_2 > 4 :
-				return True
-		
+			pos_1 = posibles_notas.index( acorde.tenor.nombre )
+			pos_2 = posibles_notas.index( acorde.bajo.nombre )
+			
+			distancia = dif * 7 + pos_1 - pos_2
+			
+			if distancia > 12 :
+				return False
+
 		return False
 	
 	########## REGLA 4 - PROHIBIDO 5tas y 8vas PARALELAS #############

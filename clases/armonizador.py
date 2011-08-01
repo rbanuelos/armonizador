@@ -25,27 +25,24 @@ class Armonizador :
 		#combinaciones de posiciones distintas
 		disposiciones = self.disposiciones_primer_acorde( notas ) 
 		
-		#PRUEBA
-		acorde = Acorde()
-		#copiar los nombres
-		acorde.soprano.nombre = notas[1]
-		acorde.contralto.nombre = notas[0]
-		acorde.tenor.nombre = notas[2]
-		acorde.bajo.nombre = bajo.nombre
+		#probar con distintas alturas
+		acordes = self.construir_acorde( disposiciones, escala, \
+													alteraciones, bajo )
 		
-		#copiar alteraciones
-		acorde.soprano.alteracion = alteraciones[0]
-		acorde.contralto.alteracion = alteraciones[1]
-		acorde.tenor.alteracion = alteraciones[2]
-		acorde.bajo.alteracion = bajo.alteracion
+		soluciones = []
+		for acorde in acordes :
+			#validacion de distancia entre voces y tesitura
+			if not util.distancia_entre_voces ( acorde ) and \
+				not util.comprobar_tesitura( acorde ) and \
+				not util.regla_2( None, acorde ) :
+				soluciones.append( acorde )
 		
-		#copiar alturas
-		acorde.soprano.altura = 4
-		acorde.contralto.altura = 3
-		acorde.tenor.altura = 3
-		acorde.bajo.altura = bajo.altura
+			
 		
-		return acorde
+		#elijir una aleatoriamente
+		sorteo = random.randint (0, len(soluciones)-1)  
+		
+		return soluciones[sorteo] 
 		
 	def disposiciones_primer_acorde( self, notas ) :
 		"""
@@ -68,6 +65,51 @@ class Armonizador :
 						disposiciones.append(disposicion)
 		
 		return disposiciones
+	
+	def construir_acorde( self, disposiciones, escala, alteraciones, \
+																bajo) :
+		"""
+		Metodo que crea acordes del mismo tipo a partir de las 
+		diferentes disposiciones.
+		
+		Va anhadiendo diferentes alturas a las voces.
+		"""
+		
+		acordes = []
+		
+		#los rangos representan las diferentes alturas que pueden tener 
+		#las voces
+		for disposicion in disposiciones :
+			for i in range(2) :
+				for j in range(3) :
+					for k in range(2) :
+						
+						nuevo_acorde = Acorde()
+						
+						nuevo_acorde.soprano.nombre = disposicion[0]
+						nuevo_acorde.soprano.altura = i+3
+						#posicion para averiguar su alteracion
+						pos = escala.index( disposicion[0] )
+						nuevo_acorde.soprano.alteracion = alteraciones[pos]
+						
+						nuevo_acorde.contralto.nombre = disposicion[1]
+						nuevo_acorde.contralto.altura = j+2
+						#posicion para averiguar su alteracion
+						pos = escala.index( disposicion[1] )
+						nuevo_acorde.contralto.alteracion = alteraciones[pos]
+						
+						nuevo_acorde.tenor.nombre = disposicion[2]
+						nuevo_acorde.tenor.altura = k+2
+						#posicion para averiguar su alteracion
+						pos = escala.index( disposicion[2] )
+						nuevo_acorde.tenor.alteracion = alteraciones[pos]
+						
+						nuevo_acorde.bajo = bajo
+						
+						if i+3 >= j+2 and j+2 >= k+2 :
+							acordes.append( nuevo_acorde )
+		
+		return acordes
 		
 	def enlace( self, tonalidad, acorde_anterior, bajo_dado ) :
 		"""
@@ -182,8 +224,11 @@ class Armonizador :
 				pass_regla_10 += pass_regla_9
 				
 			resultados += pass_regla_10
-
-		return resultados
+		
+		#elijir una aleatoriamente
+		sorteo = random.randint (0, len(resultados)-1)  
+		
+		return resultados[sorteo] 
 	
 	def get_triadas( self, tonalidad, bajo_dado ) :
 		"""

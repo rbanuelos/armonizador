@@ -57,11 +57,11 @@ Prueba para enlazar acordes
 
 
 bajo = Nota ()
-bajo.nombre = 'mi'
+bajo.nombre = 'la'
 bajo.alteracion = ''
-bajo.altura = 2
+bajo.altura = 1
 
-tonalidad = Tonalidad ('mi', '', '')
+tonalidad = Tonalidad ('la', '', '')
 #~ 
 #~ 
 #~ acorde_anterior = Acorde()

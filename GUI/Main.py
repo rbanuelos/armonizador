@@ -44,6 +44,7 @@ class Color:
 	BLACK = 0, 0, 0
 	GRAY = 191,191,191
 	YELLOW = 255,255, 0
+	BLUE = 255, 0, 255 
 
 class VentanaPrincipal :
 
@@ -254,18 +255,24 @@ class VentanaPrincipal :
 		Se verifica que el click hecho por el usuario este dentro del 
 		boton "Armonizar"
 		"""
+		self.re_draw()
 		
 		if self.boton.collidepoint(mouse_x, mouse_y) :
 			
-			#se le llama al controlador
-			resultado  = controller.estado_actual(self.bajos_dados, "la")
+			for index in range(15) :
+				
+				if self.bajos_dados[index] == None :
+					break
+					
+				#se le llama al controlador
+				resultado, cifrado  = controller.estado_actual( \
+									self.bajos_dados[index], index, "la" )
 			
-			print resultado
+				#se dibuja el resultado
+				self.draw_acorde( resultado[0], resultado[1], 
+													resultado[2], index )
 			
-			#se dibuja el resultado
-			self.draw_acorde( resultado[0], resultado[1], 
-														resultado[2], 0)
-			
+				self.draw_cifrado( cifrado, index )
 			
 		return
 	
@@ -287,7 +294,7 @@ class VentanaPrincipal :
 		######### 1er Endecagrama clave de Sol###########
 		for i in range (3,4) :
 			if i%2 != 0 :
-				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
 				self.gray_lines.append( rect )
@@ -304,7 +311,7 @@ class VentanaPrincipal :
 
 		for i in range (14,18) :
 			if i%2 != 0 :
-				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
 				self.gray_lines.append( rect )
@@ -314,7 +321,7 @@ class VentanaPrincipal :
 		######### 1er Endecagrama clave de Fa###########
 		for i in range (20,25) :
 			if i%2 != 0 :
-				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
 				self.gray_lines.append( rect )
@@ -333,7 +340,7 @@ class VentanaPrincipal :
 			if i%2 == 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
 			else :
-				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
 				self.gray_lines.append( rect )
 			
 			self.lineas.append(rect)
@@ -341,7 +348,7 @@ class VentanaPrincipal :
 		######### 2do Endecagrama clave de Sol###########
 		for i in range (45,46) :
 			if i%2 != 0 :
-				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
 				self.gray_lines.append( rect )
@@ -358,7 +365,7 @@ class VentanaPrincipal :
 
 		for i in range (56,60) :
 			if i%2 != 0 :
-				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
 				self.gray_lines.append( rect )
@@ -368,7 +375,7 @@ class VentanaPrincipal :
 		######### 2do Endecagrama clave de Fa###########
 		for i in range (62,67) :
 			if i%2 != 0 :
-				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
 			else :
 				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
 				self.gray_lines.append( rect )
@@ -389,7 +396,7 @@ class VentanaPrincipal :
 				self.gray_lines.append( rect )
 				
 			else :
-				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
 
 			self.lineas.append(rect)
 		
@@ -822,6 +829,29 @@ class VentanaPrincipal :
 				
 				self.screen.blit(image, imagerect)
 
+	def draw_cifrado( self, string, pos_grilla ) :
+		"""
+		Metodo para dibuajar en pantalla el cifrado de un acorde
+		"""
+		
+		font = pygame.font.Font(None, 30)
+		# Render the text
+		text = font.render(string, True, (0, 0, 0), (255, 255, 255, 255))
+		textRect = text.get_rect()
+		
+		if pos_grilla > 7 :
+			pos_grilla -= 8
+			#para que se desplace al endecagrama de abajo
+			index_desp = 400
+		else :
+			index_desp = 40
+		
+		
+		textRect.centerx = self.grillas_arriba[pos_grilla]
+		textRect.centery = index_desp
+		
+		self.screen.blit(text, textRect)
+		
 	def get_grilla( self, pos_x, pos_grilla ) :
 		"""
 		Metodo que retorna en que posicion dentro del compas debe ser 

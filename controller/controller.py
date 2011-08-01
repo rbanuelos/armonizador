@@ -25,13 +25,19 @@ class Controller :
 	grafica y viceversa.
 	
 	"""
-	def estado_actual( self, bajos_dados, nombre_tonalidad ) :
+	
+	#registro de todos los acordes que se obtuvieron como resultado
+	acordes = []
+	
+	
+	def estado_actual( self, bajos_dado, indice, nombre_tonalidad ) :
 		"""
 		Este es el metodo que sirve de intermediario entre la interfaz
 		grafica y la clase que realiza los enlaces
 		
 		Retorna los acordes en forma de posiciones que se pueden graficar
-		en la pantalla
+		en la pantalla y su cifrado
+		
 		"""
 		
 		#creamos la tonalidad > nombre, alteracion, modo
@@ -39,7 +45,7 @@ class Controller :
 		
 		escala, alteraciones = tonalidad.crear_escala()
 		
-		bajo_actual = bajos_dados[0]
+		bajo_actual = bajos_dado
 		pos = escala.index(bajo_actual[0:len(bajo_actual)-1]) 
 		alteracion = alteraciones[pos]
 		
@@ -50,9 +56,18 @@ class Controller :
 		bajo.altura = int(bajo_actual[len(bajo_actual)-1])
 		bajo.alteracion = alteracion
 		
-		acorde = armonizador.crear_primer_acorde( tonalidad, bajo)
+		if indice == 0 :
+			self.acordes = []
+			acorde = armonizador.crear_primer_acorde( tonalidad, bajo )
 		
-		return self.acordes_a_grafico( acorde )
+		else :
+			acorde = armonizador.enlace( tonalidad, \
+											self.acordes[indice-1], bajo )
+		
+		#guardamos el resultado
+		self.acordes.append( acorde )
+		
+		return self.acordes_a_grafico( acorde ), acorde.get_full_name()
 		
 	def acordes_a_grafico( self, acorde ) :
 		"""
