@@ -386,7 +386,7 @@ class VentanaPrincipal :
 		"""
 		
 		#dibuja la clave de Sol
-		fullname = os.path.join('img', 'Pergamino2.gif')
+		fullname = os.path.join('img', 'Pergamino.gif')
 		image = pygame.image.load(fullname)
 		image = pygame.transform.scale(image, (1100, 850))
 		#~ image = image.convert() # Set the right pixel depth
@@ -1052,6 +1052,7 @@ class VentanaPrincipal :
 		
 		#dibujar todo de vuelta
 		self.screen.fill(Color.WHITE)
+		self.draw_fondo()
 		self.draw()
 		self.draw_claves()
 		self.draw_compases()
