@@ -108,6 +108,8 @@ class VentanaPrincipal :
 		
 		self.draw_fondo()
 		self.draw()
+		#self.draw_fondo()
+		#self.draw_lineas_negras()
 		self.draw_claves()
 		self.draw_compases()
 		#self.draw_nombre_lineas()
@@ -280,9 +282,9 @@ class VentanaPrincipal :
 		######### 1er Endecagrama clave de Sol###########
 		for i in range (3,4) :
 			if i%2 != 0 :
-				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 			else :
-				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 
 			self.lineas.append(rect)
 			
@@ -290,24 +292,24 @@ class VentanaPrincipal :
 			if i%2 == 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.BLACK)
 			else :
-				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 
 			self.lineas.append(rect)
 
 		for i in range (14,18) :
 			if i%2 != 0 :
-				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 			else :
-				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 
 			self.lineas.append(rect)
 		
 		######### 1er Endecagrama clave de Fa###########
 		for i in range (20,25) :
 			if i%2 != 0 :
-				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 			else :
-				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 				
 			self.lineas.append(rect)
 		
@@ -315,24 +317,24 @@ class VentanaPrincipal :
 			if i%2 == 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.BLACK)
 			else :
-				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 
 			self.lineas.append(rect)
 
 		for i in range (35,37) :
 			if i%2 == 0 :
-				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 			else :
-				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 			
 			self.lineas.append(rect)
 			
 		######### 2do Endecagrama clave de Sol###########
 		for i in range (45,46) :
 			if i%2 != 0 :
-				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 			else :
-				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 				
 			self.lineas.append(rect)
 			
@@ -340,24 +342,24 @@ class VentanaPrincipal :
 			if i%2 == 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.BLACK)
 			else :
-				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 
 			self.lineas.append(rect)
 
 		for i in range (56,60) :
 			if i%2 != 0 :
-				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 			else :
-				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 
 			self.lineas.append(rect)
 		
 		######### 2do Endecagrama clave de Fa###########
 		for i in range (62,67) :
 			if i%2 != 0 :
-				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 			else :
-				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 				
 			self.lineas.append(rect)
 		
@@ -365,20 +367,48 @@ class VentanaPrincipal :
 			if i%2 == 0 :
 				rect = self.draw_line(50, 50 + space * i, Color.BLACK)
 			else :
-				rect = self.draw_line(50, 50 + space * i, Color.YELLOW)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 
 			self.lineas.append(rect)
 
 		for i in range (77,79) :
 			if i%2 == 0 :
-				rect = self.draw_line(50, 50 + space * i, Color.GRAY)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 				
 			else :
-				rect = self.draw_line(50, 50 + space * i, Color.BLUE)
+				rect = self.draw_line(50, 50 + space * i, Color.WHITE)
 
 			self.lineas.append(rect)
 		
 		pygame.display.flip()
+	
+	def draw_lineas_negras( self ) :
+		"""
+		dibuja las lineas negras de los pentagramas
+		"""
+		
+		space = 8
+		self.lineas = []
+		
+		for i in range (4,14) :
+			if i%2 == 0 :
+				rect = self.draw_line_negra(50, 50 + space * i, Color.BLACK)
+				
+				
+		for i in range (25,35) :
+			if i%2 == 0 :
+				rect = self.draw_line_negra(50, 50 + space * i, Color.BLACK)
+			
+		for i in range (46,56) :
+			if i%2 == 0 :
+				rect = self.draw_line_negra(50, 50 + space * i, Color.BLACK)
+		
+		for i in range (67,77) :
+			if i%2 == 0 :
+				rect = self.draw_line_negra(50, 50 + space * i, Color.BLACK)
+
+		pygame.display.flip()
+
 
 	def draw_fondo( self ) :
 		"""
@@ -386,9 +416,9 @@ class VentanaPrincipal :
 		"""
 		
 		#dibuja la clave de Sol
-		fullname = os.path.join('img', 'Pergamino.jpg')
+		fullname = os.path.join('img', 'White-Board.jpg')
 		image = pygame.image.load(fullname)
-		image = pygame.transform.scale(image, (1200, 800))
+		image = pygame.transform.scale(image, (1100, 800))
 		#~ image = image.convert() # Set the right pixel depth
 		#~ colorkey = image.get_at((0,0)) # Get pixel for transparent colour
 		#~ image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
@@ -421,6 +451,27 @@ class VentanaPrincipal :
 		pygame.Rect(pygame.draw.\
 							lines(self.screen, color, False, puntos, 1))
 		return rect
+
+	def draw_line_negra( self, ptox, ptoy, color ):
+		"""
+		Mbaez : 13/07/2011
+		Dibuja una linea del pentagrama
+
+		@type  ptox : Integer
+		@param ptox : Coordenada X donde se va dibujar la linea
+
+		@type  ptoy : Integer
+		@param ptoy : Coordenada Y donde se va dibujar la linea
+
+		@type  color : Lista
+		@param color : Representa el color que va tener la linea
+
+		@return Rect: La recta que contiene los puntos de la linea
+		"""
+		puntos = [(ptox,ptoy), (ptox+self.width -100,ptoy)]
+	
+		pygame.Rect(pygame.draw.\
+							lines(self.screen, color, False, puntos, 1))
 
 	def draw_blanca(self, ptox, ptoy, borde=Color.BLACK, fondo=Color.WHITE,
 															plica='abajo'):
@@ -1054,6 +1105,8 @@ class VentanaPrincipal :
 		self.screen.fill(Color.WHITE)
 		self.draw_fondo()
 		self.draw()
+		#self.draw_fondo()
+		#self.draw_lineas_negras()
 		self.draw_claves()
 		self.draw_compases()
 		#self.draw_nombre_lineas()
