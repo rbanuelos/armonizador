@@ -37,7 +37,9 @@ class Armonizador :
 				not util.regla_2( None, acorde ) :
 				soluciones.append( acorde )
 		
-			
+		#si no se encontraron soluciones se retorna None
+		if len(soluciones) == 0 :
+			return None 
 		
 		#elijir una aleatoriamente
 		sorteo = random.randint (0, len(soluciones)-1)  
@@ -225,6 +227,10 @@ class Armonizador :
 				
 			resultados += pass_regla_10
 		
+		#si no se encontraron soluciones se retorna None
+		if len(resultados) == 0 :
+			return None 
+			
 		#elijir una aleatoriamente
 		sorteo = random.randint (0, len(resultados)-1)  
 		

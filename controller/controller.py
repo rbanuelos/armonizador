@@ -29,8 +29,10 @@ class Controller :
 	#registro de todos los acordes que se obtuvieron como resultado
 	acordes = []
 	
+	resultados = []
+	cifrados = []
 	
-	def estado_actual( self, bajos_dado, indice, nombre_tonalidad ) :
+	def estado_actual( self, bajos_dados, nombre_tonalidad ) :
 		"""
 		Este es el metodo que sirve de intermediario entre la interfaz
 		grafica y la clase que realiza los enlaces
@@ -39,35 +41,74 @@ class Controller :
 		en la pantalla y su cifrado
 		
 		"""
+		self.acordes = ['','','','', '', 
+							'','' ,'', '', '',
+							 '','','','', '']
+		
+		
+		self.resultados = ['','','','', '', 
+							'','' ,'', '', '',
+							 '','','','', '']
+		
+		self.cifrados = ['','','','', '', 
+							'','' ,'', '', '',
+							 '','','','', '']
 		
 		#creamos la tonalidad > nombre, alteracion, modo
 		tonalidad = Tonalidad( nombre_tonalidad, '', '' )
 		
 		escala, alteraciones = tonalidad.crear_escala()
 		
-		bajo_actual = bajos_dado
-		pos = escala.index(bajo_actual[0:len(bajo_actual)-1]) 
-		alteracion = alteraciones[pos]
-		
-		#creamos una nota que representa al bajo
-		bajo = Nota()
-		#subtring del original 'mi2' se quita el '2' para que quede 'mi'
-		bajo.nombre = bajo_actual[0:len(bajo_actual)-1]
-		bajo.altura = int(bajo_actual[len(bajo_actual)-1])
-		bajo.alteracion = alteracion
-		
-		if indice == 0 :
-			self.acordes = []
-			acorde = armonizador.crear_primer_acorde( tonalidad, bajo )
-		
-		else :
-			acorde = armonizador.enlace( tonalidad, \
-											self.acordes[indice-1], bajo )
-		
-		#guardamos el resultado
-		self.acordes.append( acorde )
-		
-		return self.acordes_a_grafico( acorde ), acorde.get_full_name()
+	
+		index = 0
+		while True :
+			
+			if bajos_dados[index] == None :
+				break
+			
+			bajo_actual = bajos_dados[index]
+			pos = escala.index(bajo_actual[0:len(bajo_actual)-1]) 
+			alteracion = alteraciones[pos]
+			
+			#creamos una nota que representa al bajo
+			bajo = Nota()
+			#subtring del original 'mi2' se quita el '2' para que quede 'mi'
+			bajo.nombre = bajo_actual[0:len(bajo_actual)-1]
+			bajo.altura = int(bajo_actual[len(bajo_actual)-1])
+			bajo.alteracion = alteracion
+			
+			
+			if index == 0 :
+				
+				acorde = armonizador.crear_primer_acorde( tonalidad, bajo )
+				#backtracking
+				if acorde == None :
+					index -= 2
+				
+				else :
+					#guardamos el resultado
+					self.acordes[index] = acorde 
+					self.resultados[index] = self.acordes_a_grafico( acorde ) 
+					self.cifrados[index] = acorde.get_full_name() 
+			else :
+				acorde = armonizador.enlace( tonalidad, \
+												self.acordes[index-1], bajo )
+				#backtracking
+				if acorde == None :
+					index -= 2
+				
+				else :
+					#guardamos el resultado
+					self.acordes[index] = acorde 
+					self.resultados[index] = self.acordes_a_grafico( acorde ) 
+					self.cifrados[index] = acorde.get_full_name() 
+			
+			index += 1
+			
+			if index == 15 :
+				break
+			
+		return self.resultados, self.cifrados 
 		
 	def acordes_a_grafico( self, acorde ) :
 		"""

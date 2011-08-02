@@ -706,11 +706,11 @@ class Util :
 		escala, alteraciones = tonalidad.crear_escala()
 		 
 		if acorde_anterior.soprano.nombre == escala[6] and \
-						acorde_sgte.nombre.soprano.nombre != escala[0] :
+						acorde_sgte.soprano.nombre != escala[0] :
 			return True
 			
 		if acorde_anterior.bajo.nombre == escala[6] and \
-						acorde_sgte.nombre.bajo.nombre != escala[0] :
+						acorde_sgte.bajo.nombre != escala[0] :
 			return True
 		
 		return False
