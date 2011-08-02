@@ -110,7 +110,7 @@ class VentanaPrincipal :
 		self.draw()
 		self.draw_claves()
 		self.draw_compases()
-		self.draw_nombre_lineas()
+		#self.draw_nombre_lineas()
 		self.draw_armadura_sostenido()
 		self.draw_boton_armonizar()
 		
@@ -386,9 +386,9 @@ class VentanaPrincipal :
 		"""
 		
 		#dibuja la clave de Sol
-		fullname = os.path.join('img', 'Pergamino.gif')
+		fullname = os.path.join('img', 'Pergamino.jpg')
 		image = pygame.image.load(fullname)
-		image = pygame.transform.scale(image, (1100, 850))
+		image = pygame.transform.scale(image, (1200, 800))
 		#~ image = image.convert() # Set the right pixel depth
 		#~ colorkey = image.get_at((0,0)) # Get pixel for transparent colour
 		#~ image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
@@ -415,7 +415,7 @@ class VentanaPrincipal :
 		@return Rect: La recta que contiene los puntos de la linea
 		"""
 		puntos = [(ptox,ptoy), (ptox+self.width -100,ptoy)]
-
+	
 		rect = pygame.Rect(pygame.draw.\
 							lines(self.screen, Color.WHITE, False, puntos, 7))
 		pygame.Rect(pygame.draw.\
@@ -916,9 +916,9 @@ class VentanaPrincipal :
 		Metodo para dibuajar en pantalla el cifrado de un acorde
 		"""
 		
-		font = pygame.font.Font(None, 30)
+		font = pygame.font.Font('Fifties Regular.ttf', 30)
 		# Render the text
-		text = font.render(string, True, (0, 0, 0), (255, 255, 255, 255))
+		text = font.render(string, True, (0, 0, 0))
 		textRect = text.get_rect()
 		
 		if pos_grilla > 7 :
@@ -1056,7 +1056,7 @@ class VentanaPrincipal :
 		self.draw()
 		self.draw_claves()
 		self.draw_compases()
-		self.draw_nombre_lineas()
+		#self.draw_nombre_lineas()
 		self.draw_armadura_sostenido()
 		#dibujar las figuras anteriores
 		for index in range(len(self.notas)) :
