@@ -256,8 +256,8 @@ class VentanaPrincipal :
 		if self.boton.collidepoint(mouse_x, mouse_y) :
 			
 			#se le llama al controlador
-			resultados, cifrados  = controller.estado_actual( \
-												self.bajos_dados, "la" )
+			resultados, cifrados_americanos, cifrados  = \
+						controller.estado_actual( self.bajos_dados, "la" )
 		
 		for index in range(len(resultados)) : 
 			
@@ -268,7 +268,8 @@ class VentanaPrincipal :
 			self.draw_acorde( resultados[index][0], resultados[index][1], 
 											resultados[index][2], index )
 			#se dibujan los cifrados
-			self.draw_cifrado( cifrados[index], index )
+			self.draw_cifrado( cifrados_americanos[index], cifrados[index] \
+																,index )
 			
 		return
 		
@@ -962,26 +963,38 @@ class VentanaPrincipal :
 				
 				self.screen.blit(image, imagerect)
 
-	def draw_cifrado( self, string, pos_grilla ) :
+	def draw_cifrado( self, string, string2, pos_grilla ) :
 		"""
 		Metodo para dibuajar en pantalla el cifrado de un acorde
 		"""
 		
-		font = pygame.font.Font('Fifties Regular.ttf', 30)
+		font = pygame.font.Font('Fette Engschrift.ttf', 20)
 		# Render the text
-		text = font.render(string, True, (0, 0, 0))
+		text = font.render(string2, True, (0, 0, 0))
 		textRect = text.get_rect()
 		
 		if pos_grilla > 7 :
 			pos_grilla -= 8
 			#para que se desplace al endecagrama de abajo
-			index_desp = 400
+			index_desp = 720
+			index_desp_2 = 400
 		else :
-			index_desp = 40
+			index_desp = 360
+			index_desp_2 = 40
 		
 		
 		textRect.centerx = self.grillas_arriba[pos_grilla]
 		textRect.centery = index_desp
+		
+		self.screen.blit(text, textRect)
+		
+		
+		# Render the text
+		text = font.render(string, True, (0, 0, 0))
+		textRect = text.get_rect()
+		
+		textRect.centerx = self.grillas_arriba[pos_grilla]
+		textRect.centery = index_desp_2
 		
 		self.screen.blit(text, textRect)
 		
@@ -1028,7 +1041,7 @@ class VentanaPrincipal :
 		proceda a resolver el ejercicio de armonia
 		"""
 		
-		font = pygame.font.Font('Fifties Regular.ttf', 80)
+		font = pygame.font.Font('Fifties Regular.ttf', 70)
 		# Render the text
 		text = font.render("Armonizar", True, (0, 0, 0))
 		textRect = text.get_rect()
@@ -1045,7 +1058,7 @@ class VentanaPrincipal :
 		resalta el boton de armonizar cuando el mouse esta encima
 		"""
 		
-		font = pygame.font.Font('Fifties Regular.ttf', 80)
+		font = pygame.font.Font('Fifties Regular.ttf', 70)
 		# Render the text
 		text = font.render("Armonizar", True, (255, 0, 0))
 		textRect = text.get_rect()

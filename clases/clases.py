@@ -83,6 +83,7 @@ class Acorde :
 	en el bajo) o segunda inversion (la quinta esta en el bajo)
 	""" 
 	nombre = None
+	full_name = None
 	modo = None
 	estado = None
 	
@@ -170,6 +171,7 @@ class Acorde :
 			for i in range(4) :
 				if posibles_notas[pos_fund] == self.notas[i] :
 					self.cifrado += self.alteraciones[i]
+					self.full_name = self.cifrado
 					break
 					
 			mod = self.get_modo(pos_fund)
@@ -178,13 +180,15 @@ class Acorde :
 			
 			if mod != None :
 				self.cifrado += mod
-			
+				self.modo = mod
+				
 			posicion = self.get_estado(pos_fund)
 			
 			#print 'Estado: ' + str(posicion)
 			
-			if mod != None :
+			if posicion != None :
 				self.cifrado += posicion
+				self.estado = posicion
 				return self.cifrado
 			
 		return None
@@ -286,7 +290,58 @@ class Acorde :
 		elif nombre_5 == self.bajo.nombre :
 			self.estado = '6-4'
 			return self.estado
-
+	
+	def get_cifrado( self, tonalidad ) :
+		"""
+		Cifrado convencional de numeros romanos
+		"""
+		
+		nombre = self.get_full_name()
+		#obtenemos el estado
+		estado = self.estado
+		#el grado es relativo a la tonalidad
+		escala, alteraciones = tonalidad.crear_escala() 
+		
+		if self.nombre in escala :
+			#la fundamental da el grado
+			pos = escala.index(self.nombre)
+		else :
+			return 'Sin cifrado'
+			
+		if pos == 0 :
+			return 'I'+str(estado)
+		
+		if pos == 1 :
+			return 'II'+str(estado)
+		
+		if pos == 2 :
+			return 'III'+str(estado)
+		
+		if pos == 3 :
+			return 'IV'+str(estado)
+		
+		if pos == 4 :
+			return 'V'+str(estado)
+		
+		if pos == 5 :
+			return 'Vi'+str(estado)
+		
+		if pos == 6 :
+			return 'VII'+str(estado)
+		
+	def get_cifrado_americano( self ) :
+		"""
+		Metodo que retorna el cifrado americano de un acorde
+		"""
+		
+		nombre = self.get_full_name()
+		
+		if self.nombre == self.bajo.nombre :
+			return str(self.full_name)+str(self.modo)
+		
+		else :
+			return str(self.full_name)+str(self.modo)+'/'+ \
+						str(self.bajo.nombre) + str(self.bajo.alteracion)
 
 class Util :
 	"""

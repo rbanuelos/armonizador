@@ -54,6 +54,10 @@ class Controller :
 							'','' ,'', '', '',
 							 '','','','', '']
 		
+		self.cifrados_americanos = ['','','','', '', 
+							'','' ,'', '', '',
+							 '','','','', '']
+							 
 		#creamos la tonalidad > nombre, alteracion, modo
 		tonalidad = Tonalidad( nombre_tonalidad, '', '' )
 		
@@ -77,7 +81,7 @@ class Controller :
 			bajo.altura = int(bajo_actual[len(bajo_actual)-1])
 			bajo.alteracion = alteracion
 			
-			
+			#primer acorde debe ser tonica
 			if index == 0 :
 				
 				acorde = armonizador.crear_primer_acorde( tonalidad, bajo )
@@ -89,7 +93,28 @@ class Controller :
 					#guardamos el resultado
 					self.acordes[index] = acorde 
 					self.resultados[index] = self.acordes_a_grafico( acorde ) 
-					self.cifrados[index] = acorde.get_full_name() 
+					self.cifrados[index] = acorde.get_cifrado( tonalidad ) 
+					self.cifrados_americanos[index] = acorde.get_cifrado_americano()
+			
+			#ultimo acorde debe ser la tonica
+			elif index == 14 :
+				acorde = armonizador.enlace( tonalidad, \
+												self.acordes[index-1], bajo )
+				#backtracking
+				if acorde == None :
+					index -= 2
+				
+				elif acorde.get_full_name() == self.acordes[0].get_full_name() :
+					#guardamos el resultado
+					self.acordes[index] = acorde 
+					self.resultados[index] = self.acordes_a_grafico( acorde ) 
+					self.cifrados[index] = acorde.get_cifrado( tonalidad ) 
+					self.cifrados_americanos[index] = acorde.get_cifrado_americano()
+				
+				#backtracking
+				else :
+					index -= 1
+
 			else :
 				acorde = armonizador.enlace( tonalidad, \
 												self.acordes[index-1], bajo )
@@ -101,14 +126,17 @@ class Controller :
 					#guardamos el resultado
 					self.acordes[index] = acorde 
 					self.resultados[index] = self.acordes_a_grafico( acorde ) 
-					self.cifrados[index] = acorde.get_full_name() 
+					self.cifrados[index] = acorde.get_cifrado( tonalidad ) 
+					self.cifrados_americanos[index] = acorde.get_cifrado_americano()
 			
 			index += 1
 			
 			if index == 15 :
 				break
-			
-		return self.resultados, self.cifrados 
+		
+		#self.verificar_resultado( self.acordes )
+		
+		return self.resultados, self.cifrados_americanos, self.cifrados  
 		
 	def acordes_a_grafico( self, acorde ) :
 		"""
@@ -133,6 +161,11 @@ class Controller :
 		to_draw.append( tenor )
 		
 		return to_draw
-
+	
+	def verificar_resultado( self, acordes ) :
+		"""
+		Metodo que verifica el buen uso de los acordes de 6-4 y VII6
+		"""
+	
 #creamos una instancia para ser utilizada
 controller = Controller()
