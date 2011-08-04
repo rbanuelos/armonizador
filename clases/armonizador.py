@@ -43,7 +43,7 @@ class Armonizador :
 		
 		#elijir una aleatoriamente
 		sorteo = random.randint (0, len(soluciones)-1)  
-		
+
 		return soluciones[sorteo] 
 		
 	def disposiciones_primer_acorde( self, notas ) :
@@ -234,6 +234,25 @@ class Armonizador :
 		#elijir una aleatoriamente
 		sorteo = random.randint (0, len(resultados)-1)  
 		
+		resultados[sorteo].get_full_name()
+		acorde_anterior.get_full_name()
+		
+		#PRUEBAS
+		while True :
+			if acorde_anterior.estado == '6-4' :
+					
+				#comprobamos si alguna voz se movio mas de una 2da.
+				#en el caso de ser asi esta incorrecto el uso de este 
+				#acorde de 6-4
+				if self.comprobar_salto( acorde_anterior, resultados[sorteo] ) :
+					#elijir una aleatoriamente
+					sorteo = random.randint (0, len(resultados)-1)  
+				
+				else : 
+					break
+			else :
+				break
+				
 		return resultados[sorteo] 
 	
 	def get_triadas( self, tonalidad, bajo_dado ) :
@@ -635,6 +654,39 @@ class Armonizador :
 				return True
 		
 		return False
-
+	
+	def comprobar_salto( self, acorde_1, acorde_2 ) :
+		"""
+		
+		"""
+		pos_1 = posibles_notas.index( acorde_1.bajo.nombre )
+				
+		pos_2 = posibles_notas.index( acorde_2.bajo.nombre )
+			
+		pos_3 = posibles_notas.index( acorde_1.tenor.nombre )
+			
+		pos_4 = posibles_notas.index( acorde_2.tenor.nombre )
+			
+		pos_5 = posibles_notas.index( acorde_1.contralto.nombre )
+				
+		pos_6 = posibles_notas.index( acorde_2.contralto.nombre )
+			
+		pos_7 = posibles_notas.index( acorde_1.soprano.nombre )
+			
+		pos_8 = posibles_notas.index( acorde_2.soprano.nombre )
+		
+		dif = []
+		dif.append( abs( pos_1-pos_2 ) )
+		dif.append( abs( pos_3-pos_4 ) )
+		dif.append( abs( pos_5-pos_6 ) )
+		dif.append( abs( pos_7-pos_8 ) )
+		
+		for i in range(4) :
+			
+			if dif[i] > 1 :
+				return True
+		
+		return False
+		
 #instancia para ser utilizada por el controller
 armonizador = Armonizador()

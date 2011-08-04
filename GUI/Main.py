@@ -257,7 +257,7 @@ class VentanaPrincipal :
 			
 			#se le llama al controlador
 			resultados, cifrados_americanos, cifrados  = \
-						controller.estado_actual( self.bajos_dados, "la" )
+						controller.resolver( self.bajos_dados, "do" )
 		
 		for index in range(len(resultados)) : 
 			
@@ -409,7 +409,6 @@ class VentanaPrincipal :
 				rect = self.draw_line_negra(50, 50 + space * i, Color.BLACK)
 
 		pygame.display.flip()
-
 
 	def draw_fondo( self ) :
 		"""
@@ -837,7 +836,7 @@ class VentanaPrincipal :
 		desp_x = 9
 		
 		for desp in (0, 336):
-			for i in range(orden_sostenidos["la"]) :
+			for i in range(orden_sostenidos["do"]) :
 				
 				if i == 0 :
 					imagerect.centerx, imagerect.centery = 105+desp_x, 83+desp

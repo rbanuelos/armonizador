@@ -27,12 +27,27 @@ class Controller :
 	"""
 	
 	#registro de todos los acordes que se obtuvieron como resultado
-	acordes = []
+	acordes = ['','','','', '', 
+					'','' ,'', '', '',
+					'','','','', '']
+		
+	#resultados del ejercicio de forma dibujable
+	resultados = ['','','','', '', 
+							'','' ,'', '', '',
+							 '','','','', '']
 	
-	resultados = []
-	cifrados = []
+	#nomenclatura para expresar los acordes segun su grado y estado
+	#ej: I, III6, V6-4
+	cifrados = ['','','','', '', 
+					'','' ,'', '', '',
+					 '','','','', '']
+	#nomenclatura para expresar los acordes segun su nombre, modo y bajo
+	#ej: mi, lam, fa#/do#, dom/eb
+	cifrados_americanos = ['','','','', '', 
+								'','' ,'', '', '',
+								'','','','', '']
 	
-	def estado_actual( self, bajos_dados, nombre_tonalidad ) :
+	def estado_actual( self, bajos_dados, nombre_tonalidad, index=0 ) :
 		"""
 		Este es el metodo que sirve de intermediario entre la interfaz
 		grafica y la clase que realiza los enlaces
@@ -41,30 +56,16 @@ class Controller :
 		en la pantalla y su cifrado
 		
 		"""
-		self.acordes = ['','','','', '', 
-							'','' ,'', '', '',
-							 '','','','', '']
-		
-		
-		self.resultados = ['','','','', '', 
-							'','' ,'', '', '',
-							 '','','','', '']
-		
-		self.cifrados = ['','','','', '', 
-							'','' ,'', '', '',
-							 '','','','', '']
-		
-		self.cifrados_americanos = ['','','','', '', 
-							'','' ,'', '', '',
-							 '','','','', '']
-							 
+		for j in range( len( self.acordes )) :
+			
+			if self.acordes[j] != '' :
+				print self.acordes[j].get_full_name()
+		print '//////////////////////////////////////////'
 		#creamos la tonalidad > nombre, alteracion, modo
 		tonalidad = Tonalidad( nombre_tonalidad, '', '' )
 		
 		escala, alteraciones = tonalidad.crear_escala()
 		
-	
-		index = 0
 		while True :
 			
 			if bajos_dados[index] == None :
@@ -90,8 +91,9 @@ class Controller :
 					index -= 2
 				
 				else :
+					
 					#guardamos el resultado
-					self.acordes[index] = acorde 
+					self.acordes[index] = acorde  
 					self.resultados[index] = self.acordes_a_grafico( acorde ) 
 					self.cifrados[index] = acorde.get_cifrado( tonalidad ) 
 					self.cifrados_americanos[index] = acorde.get_cifrado_americano()
@@ -124,7 +126,7 @@ class Controller :
 				
 				else :
 					#guardamos el resultado
-					self.acordes[index] = acorde 
+					self.acordes[index] =  acorde 
 					self.resultados[index] = self.acordes_a_grafico( acorde ) 
 					self.cifrados[index] = acorde.get_cifrado( tonalidad ) 
 					self.cifrados_americanos[index] = acorde.get_cifrado_americano()
@@ -133,10 +135,6 @@ class Controller :
 			
 			if index == 15 :
 				break
-		
-		#self.verificar_resultado( self.acordes )
-		
-		return self.resultados, self.cifrados_americanos, self.cifrados  
 		
 	def acordes_a_grafico( self, acorde ) :
 		"""
@@ -162,10 +160,40 @@ class Controller :
 		
 		return to_draw
 	
-	def verificar_resultado( self, acordes ) :
+	def resolver( self, bajos_dados, nombre_tonalidad ) :
 		"""
 		Metodo que verifica el buen uso de los acordes de 6-4 y VII6
 		"""
-	
-#creamos una instancia para ser utilizada
+		
+		#se le pasa al metodo el estado actual para que encuentre una 
+		#solucion
+		self.estado_actual( bajos_dados, nombre_tonalidad )
+		
+		'''
+		#dada una solucion este metodo verifica que este correcto el uso
+		#del acorde de 6-4
+		for index in range(len(self.acordes)) :
+			
+			if self.acordes[index] == '' :
+				break
+			
+			self.acordes[index].get_full_name()
+			
+			#verificar que use correctamente los acordes 6-4
+			if self.acordes[index].estado == '6-4' :
+				
+				#comprobamos si alguna voz se movio mas de una 2da.
+				#en el caso de ser asi esta incorrecto el uso de este 
+				#acorde de 6-4
+				for i in range(10) :
+					if self.comprobar_salto( index ) :
+						self.estado_actual( \
+								bajos_dados, nombre_tonalidad, index=index )
+					else :
+						break
+		'''
+		return self.resultados, self.cifrados_americanos, self.cifrados  
+
+
+#creamos una instancia para ser uilizada
 controller = Controller()
