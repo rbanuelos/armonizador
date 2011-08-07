@@ -3,6 +3,11 @@ import random
 
 class Armonizador :
 	"""
+	Clase que se encarga de realizar los enlaces de a pares entre acordes
+	Decide que reglas se deben aplicar segun el caso particular de cada 
+	enlace.
+	
+	Se vale de la clase Util porque ahi estan definidas todas las reglas
 	"""
 	
 	def crear_primer_acorde( self, tonalidad, bajo ) :
@@ -14,8 +19,9 @@ class Armonizador :
 		#creamos la escala
 		escala, alteraciones = tonalidad.crear_escala()
 		
+		#si no esta en estado fundamental esta incorrecto
 		if escala[0] != bajo.nombre :
-			return 'Error'
+			return None
 		
 		notas = []
 		notas.append( escala[0] )
@@ -107,7 +113,8 @@ class Armonizador :
 						nuevo_acorde.tenor.alteracion = alteraciones[pos]
 						
 						nuevo_acorde.bajo = bajo
-						
+						#para evitar anhadir combinaciones que presenten
+						#cruce de voces
 						if i+3 >= j+2 and j+2 >= k+2 :
 							acordes.append( nuevo_acorde )
 		
@@ -119,6 +126,7 @@ class Armonizador :
 		esas combinaciones (acordes) mediante la validacion del 
 		cumplimiento de las reglas
 		"""
+		#dado un bajo. El maximo numero de acordes distintos es 3
 		posibles_acordes = self.get_posibles_acordes(tonalidad, bajo_dado)
 		
 		resultados = []
@@ -133,6 +141,8 @@ class Armonizador :
 			pass_regla_9 = [] 
 			pass_regla_10 = [] 
 			
+			#se toma uno de los posibles acordes y se hallan sus posibles
+			#disposiciones
 			combinaciones, s_dist, c_dist, t_dist = \
 			util.posibles_disposiciones(tonalidad, acorde_anterior, \
 									bajo_dado, posibles_acordes[index])
@@ -142,13 +152,11 @@ class Armonizador :
 			verificar_regla = self.reglas_filter( tonalidad, \
 									acorde_anterior, combinaciones[0] )
 			
-			#return verificar_regla
-			
-			#se pregunta si se debe aplicar la regla o no 
+			#se pregunta si se debe aplicar la regla 1 o no 
 			if verificar_regla[0] :
 				#Combinaciones que cumplen la primera regla
 				combinaciones = util.regla_1 (combinaciones, s_dist, \
-												c_dist, t_dist, bajo_dado)
+											c_dist, t_dist, bajo_dado)
 				
 			#instanciar las combinaciones
 			for index in range(len(combinaciones)) :
@@ -233,7 +241,8 @@ class Armonizador :
 		
 		acorde_anterior.get_full_name()
 			
-		#PRUEBAS
+		#Trata de resolver un cierto numero de veces usando el acorde 
+		#6-4, de no ser posible retorna None
 		for i in range (20) :
 			
 			#elijir una aleatoriamente
@@ -270,7 +279,8 @@ class Armonizador :
 				 
 			else :
 				break
-				
+			
+			#en este caso la tolerancia es hasta 18 veces.
 			if i == 19 :
 				return None	
 		
@@ -291,38 +301,46 @@ class Armonizador :
 		#lista de acordes. Siempre 3 acordes
 		triadas = []
 		#posicion de la nota del bajo_dado
-		pos = posibles_notas.index( bajo_dado.nombre) 
+		pos = posibles_notas.index( bajo_dado.nombre ) 
 		
 		triada = []
 		
-		triada.append( posibles_notas[pos])
-		triada.append( posibles_notas[(pos+2)%7])
-		triada.append( posibles_notas[(pos+4)%7])
+		#en este caso la fundamental esta primera. estado fundamental
+		triada.append( posibles_notas[pos] )
+		triada.append( posibles_notas[(pos+2)%7] )
+		triada.append( posibles_notas[(pos+4)%7] )
 		
-		triadas.append( triada)
+		triadas.append( triada )
 		
-		
-		triada = []
-		
-		triada.append( posibles_notas[(pos+5)%7])
-		triada.append( posibles_notas[pos])
-		triada.append( posibles_notas[(pos+2)%7])
-		
-		triadas.append( triada)
 		
 		triada = []
 		
-		triada.append( posibles_notas[(pos+3)%7])
-		triada.append( posibles_notas[(pos+5)%7])
-		triada.append( posibles_notas[pos])
+		#en este caso la fundamental esta segunda. primera inversion
+		triada.append( posibles_notas[(pos+5)%7] )
+		triada.append( posibles_notas[pos] )
+		triada.append( posibles_notas[(pos+2)%7] )
 		
-		triadas.append( triada)
+		triadas.append( triada )
 		
+		triada = []
+		
+		#en este caso la fundamental esta tercera. segunda inversion
+		triada.append( posibles_notas[(pos+3)%7] )
+		triada.append( posibles_notas[(pos+5)%7] )
+		triada.append( posibles_notas[pos] )
+		
+		triadas.append( triada )
 		
 		return triadas
 	
 	def get_posibles_acordes( self, tonalidad, bajo_dado ) :
 		"""
+		Metodo que retorna los posibles acordes que se pueden formar
+		a partir de un bajo dado
+		
+		primero obtiene las triadas. Luego segun el grado que ocupan
+		cada una en la tonalidad se determina que nota o notas se pueden
+		duplicar. Luego se verifica que cada combinacion tenga 4 notas
 		"""
 		#las posibles triadas a partir de una nota
 		triadas = self.get_triadas( tonalidad, bajo_dado )
@@ -345,7 +363,7 @@ class Armonizador :
 		#algunas se puede duplicar no solo una nota sino varias. 
 		#Hay que transformar aquellas tuplas en tuplas
 		#de 4 notas (3 distintas y 1 duplicada) para que formen acordes. 
-		return self.acordes_parser(tuplas)
+		return self.acordes_parser( tuplas )
 	
 	def acordes_parser( self, tuplas ) :
 		"""
@@ -424,31 +442,31 @@ class Armonizador :
 		es que se encuentra en 2da inversion
 		
 		En este metodo estan de forma implicita la reglas 8, 11, 13, 14,
-		15 y 16 de manera completo o parcial. 
+		15 y 16 de manera completa o parcial. 
 		
-		Las reglas antes mencionadas definen que notas se pueden 
+		Las reglas antes mencionadas definen las notas que se pueden 
 		duplicar segun el acorde y su estado
 		"""
 		
 		#Acordes de I grado
 		if grado == 1 and inversion == 0 :
-			triada.append( triada[0])
+			triada.append( triada[0] )
 		
 		if grado == 1 and inversion == 1 :
-			triada.append( triada[0])
-			triada.append( triada[2])
+			triada.append( triada[0] )
+			triada.append( triada[2] )
 		
 		if grado == 1 and inversion == 2 :
-			triada.append( triada[2])
+			triada.append( triada[2] )
 		
 		#Acordes de II grado
 		if grado == 2 and inversion == 0 :
-			triada.append( triada[1])
-			triada.append( triada[2])
+			triada.append( triada[1] )
+			triada.append( triada[2] )
 		
 		if grado == 2 and inversion == 1 :
-			triada.append( triada[1])
-			triada.append( triada[2])
+			triada.append( triada[1] )
+			triada.append( triada[2] )
 		
 		#no se usa el acorde de II grado en segunda inversion
 		if grado == 2 and inversion == 2 :
@@ -456,8 +474,8 @@ class Armonizador :
 		
 		#Acordes de III grado. Solo se usa en estado fundamental
 		if grado == 3 and inversion == 0 :
-			triada.append( triada[0])
-			triada.append( triada[1])
+			triada.append( triada[0] )
+			triada.append( triada[1] )
 		
 		if grado == 3 and inversion == 1 :
 			return []
@@ -467,31 +485,31 @@ class Armonizador :
 		
 		#Acordes de IV grado
 		if grado == 4 and inversion == 0 :
-			triada.append( triada[0])
+			triada.append( triada[0] )
 		
 		if grado == 4 and inversion == 1 :
-			triada.append( triada[0])
-			triada.append( triada[2])
+			triada.append( triada[0] )
+			triada.append( triada[2] )
 		
 		if grado == 4 and inversion == 2 :
-			triada.append( triada[2])
+			triada.append( triada[2] )
 		
 		#Acordes de V grado
 		if grado == 5 and inversion == 0 :
-			triada.append( triada[0])
+			triada.append( triada[0] )
 		
 		if grado == 5 and inversion == 1 :
-			triada.append( triada[0])
-			triada.append( triada[2])
+			triada.append( triada[0] )
+			triada.append( triada[2] )
 		
 		if grado == 5 and inversion == 2 :
-			triada.append( triada[2])
+			triada.append( triada[2] )
 		
 		#Acordes de VI grado. Solo se usa en estado fundamental
 		if grado == 6 and inversion == 0 :
-			triada.append( triada[0])
-			triada.append( triada[1])
-			triada.append( triada[2])
+			triada.append( triada[0] )
+			triada.append( triada[1] )
+			triada.append( triada[2] )
 		
 		if grado == 6 and inversion == 1 :
 			return []
@@ -504,8 +522,8 @@ class Armonizador :
 			return []
 		
 		if grado == 7 and inversion == 1 :
-			triada.append( triada[1])
-			triada.append( triada[2])
+			triada.append( triada[1] )
+			triada.append( triada[2] )
 		
 		if grado == 7 and inversion == 2 :
 			return []
@@ -514,12 +532,11 @@ class Armonizador :
 		
 	def reglas_filter( self, tonalidad, acorde_anterior, combinacion ) :
 		"""
+		
 		Metodo que determina que reglas deben aplicarse de acuerdo a los 
 		acordes que componen el enlace
 		recibe el acorde anterior y una triada que corresponde a un 
 		posible acordes siguiente
-		
-		Recibe el acorde anterior y algun posible acorde solucion
 		
 		"""
 		
@@ -652,7 +669,7 @@ class Armonizador :
 		#verifica que los grados sean respectivamente IV y V
 		if grado_1 == 4 and grado_2 == 5:
 			
-			#verifica que esten ambos acordes en estado fundamental
+			#verifica que uno este en primera inversion y el otro no
 			if estado_1 == '6' and estado_2 == '' :
 				return True
 			
@@ -670,7 +687,7 @@ class Armonizador :
 		#verifica que los grados sean respectivamente IV y V
 		if grado_1 == 4 and grado_2 == 5:
 			
-			#verifica que esten ambos acordes en estado fundamental
+			#verifica que esten ambos acordes en primera inversion
 			if estado_1 == '6' and estado_2 == '6' :
 				return True
 		
@@ -678,7 +695,14 @@ class Armonizador :
 	
 	def comprobar_salto( self, acorde_1, acorde_2 ) :
 		"""
+		Metodo que comprueba que de un acorde a otro las voces se muevan 
+		por grados conjuntos.
 		
+		Ej.	soprano pasa de 'do' a 're'
+			contralto pasa de 'sol' a 'sol'
+			etc.
+			
+		No mas que una 2da
 		"""
 		pos_1 = posibles_notas.index( acorde_1.bajo.nombre )
 				

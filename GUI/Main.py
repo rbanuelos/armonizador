@@ -103,10 +103,12 @@ class VentanaPrincipal :
 		self.width, self.height = width, height
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		self.screen.fill(Color.WHITE)
-
+		
+		self.screen.set_colorkey((255, 255, 255, 0), RLEACCEL)
+		
 		pygame.display.set_caption(title)
 		
-		self.draw_fondo()
+		#self.draw_fondo()
 		self.draw()
 		#self.draw_fondo()
 		#self.draw_lineas_negras()
