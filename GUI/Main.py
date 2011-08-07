@@ -102,13 +102,12 @@ class VentanaPrincipal :
 
 		self.width, self.height = width, height
 		self.screen = pygame.display.set_mode((self.width, self.height))
-		self.screen.fill(Color.WHITE)
 		
 		self.screen.set_colorkey((255, 255, 255, 0), RLEACCEL)
 		
 		pygame.display.set_caption(title)
 		
-		#self.draw_fondo()
+		self.draw_fondo()
 		self.draw()
 		#self.draw_fondo()
 		#self.draw_lineas_negras()
@@ -416,15 +415,9 @@ class VentanaPrincipal :
 		"""
 		
 		#dibuja la clave de Sol
-		fullname = os.path.join('img', 'White-Board.jpg')
+		fullname = os.path.join('img', 'green.png')
 		image = pygame.image.load(fullname)
 		image = pygame.transform.scale(image, (1100, 800))
-		#~ image = image.convert() # Set the right pixel depth
-		#~ colorkey = image.get_at((0,0)) # Get pixel for transparent colour
-		#~ image.set_colorkey(colorkey, RLEACCEL) # Set transparent colour
-		#~ imagerect = image.get_rect() # Get the rect of the image
-		#~ screenrect = self.screen.get_rect()
-		#~ imagerect.centerx, imagerect.centery = 80, 120 + desp
 		
 		self.screen.blit(image, (0, 0))
 
@@ -444,14 +437,34 @@ class VentanaPrincipal :
 
 		@return Rect: La recta que contiene los puntos de la linea
 		"""
-		puntos = [(ptox,ptoy), (ptox+self.width -100,ptoy)]
+		
+		#crear la superficie transparente 
+		s = pygame.Surface((self.width-100,7)) 
+		
+		s.fill((255,255,255)) # no se si esto es necesario
+
+		#definir el valor para la transparencia
+		s.set_alpha(0)                
+
+		puntos = [(ptox,ptoy), (ptox+self.width-100, ptoy)]
 	
 		rect = pygame.Rect(pygame.draw.\
-							lines(self.screen, Color.WHITE, False, puntos, 7))
-		pygame.Rect(pygame.draw.\
+								lines(s, Color.WHITE, False, puntos, 7))
+		
+		if color == Color.BLACK :
+			pygame.Rect(pygame.draw.\
 							lines(self.screen, color, False, puntos, 1))
+		
+		else :
+			pygame.Rect(pygame.draw.\
+							lines(s, color, False, puntos, 1))
+		
+		# dibujar la superficie transparente sobre la superficie
+		# de la pantalla. Se debe usar el metodo blit()
+		self.screen.blit(s, (ptox,ptoy-3))
+		
 		return rect
-
+		
 	def draw_line_negra( self, ptox, ptoy, color ):
 		"""
 		Mbaez : 13/07/2011
@@ -479,6 +492,8 @@ class VentanaPrincipal :
 		Mbaez : 13/07/2011
 		Dibuja una blanca
 		"""
+		ptoy = ptoy-2.5
+		
 		dif_1 = ptox - int(ptox)
 		dif_2 = ptoy - int(ptoy)
 		
