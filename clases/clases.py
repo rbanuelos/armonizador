@@ -63,7 +63,7 @@ class Acorde :
 	>>>mi_acorde.bajo.nombre = 'Fa'
 	>>>mi_acorde.bajo.altura = 2
 
-	>>>print mi_acorde.get_nombre()
+	>>>print mi_acorde.nombre()
 	>>>Fa
 	"""
 	soprano = None
@@ -133,20 +133,24 @@ class Acorde :
 	
 	def get_full_name( self ) :
 		"""
+		
+		Metodo que establece el nombre, estado, modo y cifrado
+		del acorde.
+		
 		"""
 		self.notas = []
 		#se guardan los nombres de las notas en una lista
-		self.notas.append(self.soprano.nombre)
-		self.notas.append(self.contralto.nombre)
-		self.notas.append(self.tenor.nombre)
-		self.notas.append(self.bajo.nombre)
+		self.notas.append( self.soprano.nombre )
+		self.notas.append( self.contralto.nombre )
+		self.notas.append( self.tenor.nombre )
+		self.notas.append( self.bajo.nombre )
 		
 		self.alteraciones = []
 		#se guardan los nombres de las notas en una lista
-		self.alteraciones.append(self.soprano.alteracion)
-		self.alteraciones.append(self.contralto.alteracion)
-		self.alteraciones.append(self.tenor.alteracion)
-		self.alteraciones.append(self.bajo.alteracion)
+		self.alteraciones.append( self.soprano.alteracion )
+		self.alteraciones.append( self.contralto.alteracion )
+		self.alteraciones.append( self.tenor.alteracion )
+		self.alteraciones.append( self.bajo.alteracion )
 		
 		#si algun nombre no esta dentro de los nombres posibles no existe
 		#el acorde
@@ -176,15 +180,11 @@ class Acorde :
 					
 			mod = self.get_modo(pos_fund)
 			
-			#print 'Es de modo: ' + str(mod)  
-			
 			if mod != None :
 				self.cifrado += mod
 				self.modo = mod
 				
 			posicion = self.get_estado(pos_fund)
-			
-			#print 'Estado: ' + str(posicion)
 			
 			if posicion != None :
 				self.cifrado += posicion
@@ -203,6 +203,10 @@ class Acorde :
 		*	si la distancia entre la fundamental y la tercera es de 1.5 
 		tonos y la distancia entre la tercera y la quinta es 2 tonos 
 		entonces es un acorde menor.
+		
+		*	si la distancia entre la fundamental y la tercera es de 1.5 
+		tonos y la distancia entre la tercera y la quinta es 1.5 tonos 
+		entonces es un acorde disminuido.
 		"""
 		
 		nombre_1 = posibles_notas[pos_fund]
@@ -246,6 +250,9 @@ class Acorde :
 
 	def get_duplicado( self, notas, alteraciones ) :
 		"""
+		
+		Metodo que retorna el duplicado en un acorde
+		
 		"""
 		
 		#si solo hay una sola nota repetida el len de la lista sin 
@@ -276,6 +283,9 @@ class Acorde :
 
 	def get_estado( self, pos_fund ) :
 		"""
+		
+		Metodo que establece y retorna retorna el estado de un acorde 
+		
 		"""
 		nombre_1 = posibles_notas[pos_fund]
 		nombre_3 = posibles_notas[(pos_fund + 2)%7]
@@ -293,7 +303,9 @@ class Acorde :
 	
 	def get_cifrado( self, tonalidad ) :
 		"""
+		
 		Cifrado convencional de numeros romanos
+		
 		"""
 		
 		nombre = self.get_full_name()
@@ -331,7 +343,9 @@ class Acorde :
 		
 	def get_cifrado_americano( self ) :
 		"""
+		
 		Metodo que retorna el cifrado americano de un acorde
+		
 		"""
 		
 		nombre = self.get_full_name()
@@ -345,13 +359,16 @@ class Acorde :
 
 class Util :
 	"""
-	Metodos utiles
+	
+	Clase que engloba como metodos principales a las reglas de la Armonia
+	
 	"""
 	def distancia( self, nota_1, nota_2 ) :
 		"""
 		Metodo para hallar las distancias entre las notas
 		Utilizado para generar las escalas de las tonalidades
 		"""
+		
 		dist_count = 0
 
 		if nota_1.alteracion == '#' :
@@ -424,10 +441,12 @@ class Util :
 	def get_movimientos( self, tonalidad, acorde_anterior, bajo_dado, \
 														posible_acorde ) :
 		"""
+		
 		Metodo para obtener los movimientos posibles de cada voz
 		Una voz puede ir a cualquiera de las 3 notas del siguiente 
 		acorde y cada una de esas posibilidades tiene una distancia 
 		asociada
+		
 		"""
 		
 		#auxiliares para guardar los distintas variantes
@@ -545,7 +564,9 @@ class Util :
 	def posibles_disposiciones( self, tonalidad, acorde_anterior, \
 											bajo_dado, posible_acorde ) :
 		"""
+		
 		Determina la combinacion de notas para el siguiente acorde
+		
 		"""
 		#lista de posibles movimientos de la soprano, contralto y
 		#tenor y sus respectivas distancias
@@ -692,7 +713,7 @@ class Util :
 		Osea, 
 			Si tomamos al tenor como ejemplo la nota cantada por la 
 			contralto en el acorde anterior sirve como limite para 
-			que el tenor no puede cruzar en el sigueinte acorde
+			que el tenor no puede cruzar en el siguiente acorde
 			
 		Retorna Booleano 
 		True en el caso de que tenga cruce, False en caso contrario
@@ -733,6 +754,10 @@ class Util :
 		
 	def cruce( self, nota_1, nota_2 ) :
 		"""
+		
+		Metodo que toma un par de notas y retorna si la nota_2 es mas 
+		aguda que la nota_1
+		
 		"""
 		
 		if nota_1.altura < nota_2.altura :
@@ -751,11 +776,13 @@ class Util :
 	################## REGLA 3 - SENSIBLE A TONICA #################
 	def regla_3( self, tonalidad, acorde_anterior, acorde_sgte ) :
 		"""
+		
 		Si la sensible de una tonalidad (VII grado en la escala) se 
 		encuentra en la soprano o en el bajo, en el acorde siguiente 
 		esa voz debe pasar a la tonica (I grado) 
 		
 		Retorna True si no cumple con la regla
+		
 		"""
 		
 		escala, alteraciones = tonalidad.crear_escala()
@@ -763,6 +790,9 @@ class Util :
 		nombre_1 = acorde_anterior.get_full_name()
 		nombre_2 = acorde_sgte.get_full_name()
 		
+		#si se trata del mismo acorde la sensible puede repetirse en el 
+		#siguiente acorde. Luego de eso puede volver a repetirse o ir 
+		#a la tonica
 		if nombre_1 == nombre_2 :
 			return False
 		
@@ -839,11 +869,13 @@ class Util :
 	########## REGLA 4 - PROHIBIDO 5tas y 8vas PARALELAS #############
 	def regla_4( self, acorde_ant, acorde_sgte ) :
 		"""
+		
 		Prohibida las 5tas y 8vas paralelas.
 		si entre un par de voces por ejemplo (tenor y soprano)
 		se forma una 5ta o una 8va, en el siguiente acorde esta 
 		prohibido que se formen una 5ta u 8va nuevamente entre dichas 
 		voces
+		
 		"""
 		
 		#verificamos si los nombres de las notas son iguales
@@ -924,6 +956,10 @@ class Util :
 		
 	def _5ta_( self, nota_1, nota_2 ) :
 		"""
+		
+		Metodo que recibe 2 notas y verifica si existe una 5ta de 
+		distancia
+		
 		"""
 		pos_1 = posibles_notas.index( nota_1.nombre )
 		#posicion de la 5ta es a 4 pasos adelante en el array de posibles
@@ -937,6 +973,10 @@ class Util :
 		
 	def _8va_( self, nota_1, nota_2 ) :
 		"""
+		
+		Metodo que recibe 2 notas y verifica si existe una 8va de 
+		distancia
+		
 		"""
 		#si tienen el mismo nombre pero son de diferentes alturas entonces
 		#existe una octava
@@ -985,11 +1025,13 @@ class Util :
 		
 	def direccion_movimiento (self, nota_1, nota_2):
 		"""
-		Metodo que determina la direccion en la que una nota se mueve
-		si la nota_2 es mas aguda que la nota_1 entonces el movimiento 
+		
+		Metodo que determina la direccion en la que una nota se mueve.
+		Si la nota_2 es mas aguda que la nota_1 entonces el movimiento 
 		fue ascendente, si la nota se mantuvo en su misma posicion
 		entonces no hubo movimiento y en el ultimo caso la direccion es
 		descendente.
+		
 		"""
 		
 		#este valor se mantiene si es que no hubo movimiento
@@ -1020,10 +1062,12 @@ class Util :
 	################ REGLA 9 - ENLACE IV6-V y IV-V6 ###################
 	def regla_9( self, acorde_ant, acorde_sgte ) :
 		"""
+		
 		La Novena regla de armonia tradicional. Enlace IV6-V y IV-V6.
 		En ambos casos el bajo debe descender
 		
 		Retorna True en caso de que no se cumpla la regla
+		
 		"""
 		#la nota del bajo de un acorde al siguiente debe presentar un 
 		#movimiento descendente
@@ -1036,11 +1080,13 @@ class Util :
 	################### REGLA 10 - ENLACE IV6-V6 ######################
 	def regla_10( self, acorde_ant, acorde_sgte ) :
 		"""
+		
 		La Decima regla de armonia tradicional. Enlace IV6-V6.
 		Esta regla establece que en el acorde IV6 se debe duplicar la 
 		fundamental y en el acorde V6 la quinta
 		
 		Retorna True en caso de que no se cumpla la regla
+		
 		"""
 		acorde_ant.get_full_name()
 		acorde_sgte.get_full_name()
@@ -1073,11 +1119,9 @@ class Util :
 			#encontramos la nota que queremos que este duplicada en cada
 			#lista
 			if notas_1[index] == nombre_1 :
-				print str(notas_1[index])+' y '+str(nombre_1)
 				count_1 += 1
 			
 			if notas_2[index] == nombre_2 :
-				print str(notas_2[index])+' y '+str(nombre_2)
 				count_2 += 1
 			
 		if count_1 == 2 and count_2 == 2 :
@@ -1088,8 +1132,10 @@ class Util :
 		
 	def comprobar_tesitura( self, acorde ) :
 		"""
+		
 		Metodo que comprueba que las voces se encuentren dentro de su 
 		tesitura
+		
 		"""
 		
 		nombre_soprano = str(acorde.soprano.nombre) \
@@ -1112,13 +1158,14 @@ class Util :
 		
 		return False
 
-		 
 util = Util()
 
 class Tonalidad :
 	"""
+	
 	Clase que define la tonalidad del ejercicio de armonia a resolver
-	Contiene metodos necesarios para la generacion de acordes
+	Contiene metodos necesarios para la generacion de escalas
+	
 	"""
 	nota = None
 	modo = None
@@ -1149,7 +1196,7 @@ class Tonalidad :
 		n1 = Nota() 
 		n2 = Nota()
 		
-		#FALTA COMPROBAR PARA EL MODO MENOR
+		#modo mayor
 		dist_modo_mayor = [1, 1, 0.5, 1, 1, 1, 0.5]
 		
 		for i in range (7) :
