@@ -243,10 +243,10 @@ class Armonizador :
 			
 		#Trata de resolver un cierto numero de veces usando el acorde 
 		#6-4, de no ser posible retorna None
-		for i in range (20) :
+		for i in range (30) :
 			
 			#elijir una aleatoriamente
-			sorteo = random.randint (0, len(resultados)-1)  
+			sorteo = random.randint( 0, len(resultados)-1 )  
 			resultados[sorteo].get_full_name()
 			
 			if acorde_anterior.estado == '6-4' :
@@ -256,32 +256,27 @@ class Armonizador :
 				#acorde de 6-4
 				if not self.comprobar_salto( acorde_anterior, \
 												resultados[sorteo] ) : 
-					break
-				#comprobamos que las voces se muevan de acuerdo al enla
-				#ce 6-4
-				if self.uso_6_4( acorde_anterior, resultados[sorteo] ) :
-					break
-				
-			else :
-				break
+					#comprobamos que las voces se muevan de acuerdo al enla
+					#ce 6-4
+					if self.uso_6_4( acorde_anterior, resultados[sorteo] ) :
+						break
 			
-			if resultados[sorteo].estado == '6-4' :
+			elif resultados[sorteo].estado == '6-4' :
 				#comprobamos si alguna voz se movio mas de una 2da.
 				#en el caso de ser asi esta incorrecto el uso de este 
 				#acorde de 6-4
 				if not self.comprobar_salto( acorde_anterior, \
 												resultados[sorteo] ) : 
-					break
-				#comprobamos que las voces se muevan de acuerdo al enla
-				#ce 6-4
-				if self.uso_6_4( resultados[sorteo], acorde_anterior ) :
-					break
-				 
+					#comprobamos que las voces se muevan de acuerdo al enla
+					#ce 6-4
+					if self.uso_6_4( resultados[sorteo], acorde_anterior ) :
+						break
+					 
 			else :
 				break
 			
 			#en este caso la tolerancia es hasta 18 veces.
-			if i == 19 :
+			if i == 29 :
 				return None	
 		
 		return resultados[sorteo] 
@@ -735,11 +730,13 @@ class Armonizador :
 	
 	def uso_6_4( self, acorde_1, acorde_2 ) :
 		"""
+		
 		Metodo para verificar el movimiento de las voces en el correcto
 		uso del enlace 6-4
+		
 		""" 
 		#movimientos en el caso de que sea correcto solo puede presentar 
-		#2 combinaciones.. o [0, 1, 1, -1] o [-1 ,-1, 0, 1 ] 
+		#2 combinaciones.. o [0, 1, 1, -1] o [-1 , 1, 0, 1 ] o etc
 		#osea.. debe presentar 1 voz que no se mueve (0) y 2 voces iguales
 		# y una distinta
 		movimientos = []
