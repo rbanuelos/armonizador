@@ -760,12 +760,22 @@ class Util :
 		
 		escala, alteraciones = tonalidad.crear_escala()
 		 
+		nombre_1 = acorde_anterior.get_full_name()
+		nombre_2 = acorde_sgte.get_full_name()
+		
+		if nombre_1 == nombre_2 :
+			return False
+		
+		if acorde_anterior.nombre == acorde_sgte.nombre : 
+			return False
+	
 		if acorde_anterior.soprano.nombre == escala[6] and \
 						acorde_sgte.soprano.nombre != escala[0] :
 			return True
 			
 		if acorde_anterior.bajo.nombre == escala[6] and \
 						acorde_sgte.bajo.nombre != escala[0] :
+			print 'true en el bajoooo'
 			return True
 		
 		return False
@@ -835,56 +845,79 @@ class Util :
 		prohibido que se formen una 5ta u 8va nuevamente entre dichas 
 		voces
 		"""
+		
+		#verificamos si los nombres de las notas son iguales
+		soprano_iguales = \
+				acorde_ant.soprano.nombre == acorde_sgte.soprano.nombre
+		
+		contralto_iguales = \
+			acorde_ant.contralto.nombre == acorde_sgte.contralto.nombre
+		
+		tenor_iguales = acorde_ant.tenor.nombre == acorde_sgte.tenor.nombre
+		
+		
 		#si existe una 5ta entre las voces y la 5ta se repite en el acorde
 		#siguiente entre las mismas voces entonces es una 5ta paralela
 		if self._5ta_(acorde_ant.contralto, acorde_ant.soprano)  \
-				and	self._5ta_(acorde_sgte.contralto, acorde_sgte.soprano) :
+				and	self._5ta_(acorde_sgte.contralto, acorde_sgte.soprano) \
+											and not soprano_iguales :
 			return True
 		
 		if self._5ta_(acorde_ant.tenor, acorde_ant.soprano)  \
-				and	self._5ta_(acorde_sgte.tenor, acorde_sgte.soprano) :
+				and	self._5ta_(acorde_sgte.tenor, acorde_sgte.soprano) \
+											and not soprano_iguales :
 			return True
 		
 		if self._5ta_(acorde_ant.bajo, acorde_ant.soprano)  \
-				and self._5ta_(acorde_sgte.bajo, acorde_sgte.soprano) :
+				and self._5ta_(acorde_sgte.bajo, acorde_sgte.soprano) \
+											and not soprano_iguales :
 			return True
 		
 		if self._5ta_(acorde_ant.tenor, acorde_ant.contralto)  \
-				and self._5ta_(acorde_sgte.tenor, acorde_sgte.contralto) :
+				and self._5ta_(acorde_sgte.tenor, acorde_sgte.contralto) \
+												and not tenor_iguales :
 			return True
 		
 		if self._5ta_(acorde_ant.bajo, acorde_ant.contralto) \
-				and	self._5ta_(acorde_sgte.bajo, acorde_sgte.contralto) :
+				and	self._5ta_(acorde_sgte.bajo, acorde_sgte.contralto) \
+												and not contralto_iguales :
 			return True
 		
 		if self._5ta_(acorde_ant.bajo, acorde_ant.tenor)  \
-				and	self._5ta_(acorde_sgte.bajo, acorde_sgte.tenor) :
+				and	self._5ta_(acorde_sgte.bajo, acorde_sgte.tenor) \
+												and not tenor_iguales :
 			return True
 		
 		#si existe una 8va entre las voces y la 8va se repite en el acorde
 		#siguiente entre las mismas voces entonces es una 8va paralela
-		if self._8va_(acorde_ant.contralto, acorde_ant.soprano) \
-				and self._8va_(acorde_sgte.contralto, acorde_sgte.soprano) :
+		if self._8va_(acorde_ant.contralto, acorde_ant.soprano)  \
+				and	self._8va_(acorde_sgte.contralto, acorde_sgte.soprano) \
+											and not soprano_iguales :
 			return True
 		
-		if self._8va_(acorde_ant.tenor, acorde_ant.soprano) \
-				and self._8va_(acorde_sgte.tenor, acorde_sgte.soprano) :
+		if self._8va_(acorde_ant.tenor, acorde_ant.soprano)  \
+				and	self._8va_(acorde_sgte.tenor, acorde_sgte.soprano) \
+											and not soprano_iguales :
 			return True
 		
 		if self._8va_(acorde_ant.bajo, acorde_ant.soprano)  \
-				and self._8va_(acorde_sgte.bajo, acorde_sgte.soprano) :
+				and self._8va_(acorde_sgte.bajo, acorde_sgte.soprano) \
+											and not soprano_iguales :
 			return True
 		
-		if self._8va_(acorde_ant.tenor, acorde_ant.contralto) \
-				and self._8va_(acorde_sgte.tenor, acorde_sgte.contralto) :
+		if self._8va_(acorde_ant.tenor, acorde_ant.contralto)  \
+				and self._8va_(acorde_sgte.tenor, acorde_sgte.contralto) \
+												and not tenor_iguales :
 			return True
 		
-		if self._8va_(acorde_ant.bajo, acorde_ant.contralto)  \
-				and self._8va_(acorde_sgte.bajo, acorde_sgte.contralto) :
+		if self._8va_(acorde_ant.bajo, acorde_ant.contralto) \
+				and	self._8va_(acorde_sgte.bajo, acorde_sgte.contralto) \
+												and not contralto_iguales :
 			return True
 		
-		if self._8va_(acorde_ant.bajo, acorde_ant.tenor) \
-				and self._8va_(acorde_sgte.bajo, acorde_sgte.tenor) :
+		if self._8va_(acorde_ant.bajo, acorde_ant.tenor)  \
+				and	self._8va_(acorde_sgte.bajo, acorde_sgte.tenor) \
+												and not tenor_iguales :
 			return True
 		
 		return False
@@ -892,7 +925,7 @@ class Util :
 	def _5ta_( self, nota_1, nota_2 ) :
 		"""
 		"""
-		pos_1 = posibles_notas.index( nota_1.nombre)
+		pos_1 = posibles_notas.index( nota_1.nombre )
 		#posicion de la 5ta es a 4 pasos adelante en el array de posibles
 		#notas
 		pos_5ta = (pos_1 + 4)%7
@@ -973,8 +1006,8 @@ class Util :
 		#si ambas alturas son iguales es mas agudo aquel que tenga mayor 
 		#posicion dentro del array de notas posibles
 		else :
-			pos_1 = posibles_notas.index( nota_1.nombre)
-			pos_2 = posibles_notas.index( nota_2.nombre)
+			pos_1 = posibles_notas.index( nota_1.nombre )
+			pos_2 = posibles_notas.index( nota_2.nombre )
 			
 			if pos_1 > pos_2 :
 				movimiento = 'descendente'
@@ -1051,8 +1084,9 @@ class Util :
 			return False
 		
 		return True
- 		
- 	def comprobar_tesitura( self, acorde ) :
+		
+		
+	def comprobar_tesitura( self, acorde ) :
 		"""
 		Metodo que comprueba que las voces se encuentren dentro de su 
 		tesitura

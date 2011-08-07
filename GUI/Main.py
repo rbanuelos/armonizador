@@ -116,7 +116,6 @@ class VentanaPrincipal :
 		self.draw_armadura_sostenido()
 		self.draw_boton_armonizar()
 		
-		
 		pygame.display.flip()
 		
 	def handler( self, handler_method=None ) :
@@ -153,7 +152,6 @@ class VentanaPrincipal :
 				#evento click sobre la pantalla
 				elif event.type == 5: 
 					
-					print str(mouse_x) +' - '+ str(mouse_y)
 					
 					#evento que dibuja sobre la pantalla
 					self.clic_handler_draw(mouse_x, mouse_y)

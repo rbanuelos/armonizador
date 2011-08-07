@@ -230,29 +230,50 @@ class Armonizador :
 		#si no se encontraron soluciones se retorna None
 		if len(resultados) == 0 :
 			return None 
-			
-		#elijir una aleatoriamente
-		sorteo = random.randint (0, len(resultados)-1)  
 		
-		resultados[sorteo].get_full_name()
 		acorde_anterior.get_full_name()
-		
+			
 		#PRUEBAS
-		while True :
+		for i in range (20) :
+			
+			#elijir una aleatoriamente
+			sorteo = random.randint (0, len(resultados)-1)  
+			resultados[sorteo].get_full_name()
+			
 			if acorde_anterior.estado == '6-4' :
-					
+									
 				#comprobamos si alguna voz se movio mas de una 2da.
 				#en el caso de ser asi esta incorrecto el uso de este 
 				#acorde de 6-4
-				if self.comprobar_salto( acorde_anterior, resultados[sorteo] ) :
-					#elijir una aleatoriamente
-					sorteo = random.randint (0, len(resultados)-1)  
-				
-				else : 
+				if not self.comprobar_salto( acorde_anterior, \
+												resultados[sorteo] ) : 
 					break
+				#comprobamos que las voces se muevan de acuerdo al enla
+				#ce 6-4
+				if self.uso_6_4( acorde_anterior, resultados[sorteo] ) :
+					break
+				
+			else :
+				break
+			
+			if resultados[sorteo].estado == '6-4' :
+				#comprobamos si alguna voz se movio mas de una 2da.
+				#en el caso de ser asi esta incorrecto el uso de este 
+				#acorde de 6-4
+				if not self.comprobar_salto( acorde_anterior, \
+												resultados[sorteo] ) : 
+					break
+				#comprobamos que las voces se muevan de acuerdo al enla
+				#ce 6-4
+				if self.uso_6_4( resultados[sorteo], acorde_anterior ) :
+					break
+				 
 			else :
 				break
 				
+			if i == 19 :
+				return None	
+		
 		return resultados[sorteo] 
 	
 	def get_triadas( self, tonalidad, bajo_dado ) :
@@ -687,6 +708,73 @@ class Armonizador :
 				return True
 		
 		return False
+	
+	def uso_6_4( self, acorde_1, acorde_2 ) :
+		"""
+		Metodo para verificar el movimiento de las voces en el correcto
+		uso del enlace 6-4
+		""" 
+		#movimientos en el caso de que sea correcto solo puede presentar 
+		#2 combinaciones.. o [0, 1, 1, -1] o [-1 ,-1, 0, 1 ] 
+		#osea.. debe presentar 1 voz que no se mueve (0) y 2 voces iguales
+		# y una distinta
+		movimientos = []
+		
+		movimientos_contador = [0, 0, 0]
+		movimientos_resultado = [1, 2, 1]
+		
+		movimiento_1 = util.direccion_movimiento( acorde_1.soprano, \
+														acorde_2.soprano ) 
+		
+		movimiento_2 = util.direccion_movimiento( acorde_1.contralto, \
+														acorde_2.contralto ) 
+		
+		movimiento_3 = util.direccion_movimiento( acorde_1.tenor, \
+														acorde_2.tenor ) 
+		
+		movimiento_4 = util.direccion_movimiento( acorde_1.bajo, \
+														acorde_2.bajo ) 
+		#movimiento de la soprano
+		if movimiento_1 == 'ascendente' :
+			movimientos_contador[1] += 1 
+		
+		elif movimiento_1 == 'descendente' :
+			movimientos_contador[2] += 1 
+		
+		else :
+			movimientos_contador[0] += 1 
+		
+		#movimiento de la contralto
+		if movimiento_2 == 'ascendente' :
+			movimientos_contador[1] += 1 
+		
+		elif movimiento_2 == 'descendente' :
+			movimientos_contador[2] += 1 
+		
+		else :
+			movimientos_contador[0] += 1 
+		
+		#movimiento del tenor
+		if movimiento_3 == 'ascendente' :
+			movimientos_contador[1] += 1 
+		
+		elif movimiento_3 == 'descendente' :
+			movimientos_contador[2] += 1 
+		
+		else :
+			movimientos_contador[0] += 1 
+		
+		#movimiento del bajo
+		if movimiento_4 == 'ascendente' :
+			movimientos_contador[1] += 1 
+		
+		elif movimiento_4 == 'descendente' :
+			movimientos_contador[2] += 1 
+		
+		else :
+			movimientos_contador[0] += 1 
+		
+		return movimientos_contador == movimientos_resultado 
 		
 #instancia para ser utilizada por el controller
 armonizador = Armonizador()

@@ -56,11 +56,7 @@ class Controller :
 		en la pantalla y su cifrado
 		
 		"""
-		for j in range( len( self.acordes )) :
-			
-			if self.acordes[j] != '' :
-				print self.acordes[j].get_full_name()
-		print '//////////////////////////////////////////'
+		
 		#creamos la tonalidad > nombre, alteracion, modo
 		tonalidad = Tonalidad( nombre_tonalidad, '', '' )
 		
@@ -88,10 +84,9 @@ class Controller :
 				acorde = armonizador.crear_primer_acorde( tonalidad, bajo )
 				#backtracking
 				if acorde == None :
-					index -= 2
+					index = -1
 				
 				else :
-					
 					#guardamos el resultado
 					self.acordes[index] = acorde  
 					self.resultados[index] = self.acordes_a_grafico( acorde ) 
@@ -104,7 +99,7 @@ class Controller :
 												self.acordes[index-1], bajo )
 				#backtracking
 				if acorde == None :
-					index -= 2
+					index = -1
 				
 				elif acorde.get_full_name() == self.acordes[0].get_full_name() :
 					#guardamos el resultado
@@ -115,14 +110,14 @@ class Controller :
 				
 				#backtracking
 				else :
-					index -= 1
+					index = -1
 
 			else :
 				acorde = armonizador.enlace( tonalidad, \
 												self.acordes[index-1], bajo )
 				#backtracking
 				if acorde == None :
-					index -= 2
+					index = -1
 				
 				else :
 					#guardamos el resultado
@@ -169,29 +164,6 @@ class Controller :
 		#solucion
 		self.estado_actual( bajos_dados, nombre_tonalidad )
 		
-		'''
-		#dada una solucion este metodo verifica que este correcto el uso
-		#del acorde de 6-4
-		for index in range(len(self.acordes)) :
-			
-			if self.acordes[index] == '' :
-				break
-			
-			self.acordes[index].get_full_name()
-			
-			#verificar que use correctamente los acordes 6-4
-			if self.acordes[index].estado == '6-4' :
-				
-				#comprobamos si alguna voz se movio mas de una 2da.
-				#en el caso de ser asi esta incorrecto el uso de este 
-				#acorde de 6-4
-				for i in range(10) :
-					if self.comprobar_salto( index ) :
-						self.estado_actual( \
-								bajos_dados, nombre_tonalidad, index=index )
-					else :
-						break
-		'''
 		return self.resultados, self.cifrados_americanos, self.cifrados  
 
 
