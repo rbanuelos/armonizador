@@ -103,7 +103,7 @@ class VentanaPrincipal :
 		self.width, self.height = width, height
 		self.screen = pygame.display.set_mode((self.width, self.height))
 		
-		self.screen.set_colorkey((255, 255, 255, 0), RLEACCEL)
+		self.screen.fill( Color.WHITE )
 		
 		pygame.display.set_caption(title)
 		
@@ -133,7 +133,7 @@ class VentanaPrincipal :
 			for event in pygame.event.get():
 
 				mouse_x, mouse_y = pygame.mouse.get_pos()
-				mouse_y -= 2
+				mouse_y -= 0
 				mouse_x += 0.5
 				
 				#resaltar el boton cuando el mouse esta encima
@@ -256,7 +256,7 @@ class VentanaPrincipal :
 			
 			#se le llama al controlador
 			resultados, cifrados_americanos, cifrados  = \
-						controller.resolver( self.bajos_dados, "do" )
+						controller.resolver( self.bajos_dados, "mi" )
 		
 		for index in range(len(resultados)) : 
 			
@@ -415,10 +415,10 @@ class VentanaPrincipal :
 		"""
 		
 		#dibuja la clave de Sol
-		fullname = os.path.join('img', 'green.png')
+		fullname = os.path.join('img', 'Partituras.jpg')
 		image = pygame.image.load(fullname)
 		image = pygame.transform.scale(image, (1100, 800))
-		
+		image.set_alpha(200)
 		self.screen.blit(image, (0, 0))
 
 	def draw_line (self, ptox, ptoy, color):
@@ -851,7 +851,7 @@ class VentanaPrincipal :
 		desp_x = 9
 		
 		for desp in (0, 336):
-			for i in range(orden_sostenidos["do"]) :
+			for i in range(orden_sostenidos["mi"]) :
 				
 				if i == 0 :
 					imagerect.centerx, imagerect.centery = 105+desp_x, 83+desp
