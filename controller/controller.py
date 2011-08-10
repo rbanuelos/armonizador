@@ -157,7 +157,7 @@ class Controller :
 	
 	def resolver( self, bajos_dados, nombre_tonalidad ) :
 		"""
-		Metodo que verifica el buen uso de los acordes de 6-4 y VII6
+		Metodo que continene la solucion final de los ejercicios
 		"""
 		
 		#se le pasa al metodo el estado actual para que encuentre una 

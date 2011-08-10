@@ -2,28 +2,30 @@
 
 from armonizador import *
 import random
-
-#~ """
-#~ Prueba de reconocer acordes
-#~ """
 #~ 
-#~ mi_acorde = Acorde()
-#~ mi_acorde.soprano.nombre = 'Si'
-#~ mi_acorde.soprano.altura = 4
-#~ mi_acorde.soprano.alteracion = ''
-#~ mi_acorde.contralto.nombre = 'Sol'
-#~ mi_acorde.contralto.altura = 4
-#~ mi_acorde.contralto.alteracion = ''
-#~ mi_acorde.tenor.nombre = 'Mi'
-#~ mi_acorde.tenor.altura = 4
-#~ mi_acorde.tenor.alteracion = ''
-#~ mi_acorde.bajo.nombre = 'Sol'
-#~ mi_acorde.bajo.altura = 4
-#~ mi_acorde.bajo.alteracion = ''
+"""
+Prueba de reconocer acordes
+"""
 #~ 
-#~ print mi_acorde.get_nombre()
+#~ pepito = Acorde()
+#~ pepito.soprano.nombre = 'si'
+#~ pepito.soprano.altura = 3
+#~ pepito.soprano.alteracion = ''
+#~ pepito.contralto.nombre = 'sol'
+#~ pepito.contralto.altura = 3
+#~ pepito.contralto.alteracion = '#'
+#~ pepito.tenor.nombre = 'mi'
+#~ pepito.tenor.altura = 3
+#~ pepito.tenor.alteracion = ''
+#~ pepito.bajo.nombre = 'si'
+#~ pepito.bajo.altura = 1
+#~ pepito.bajo.alteracion = ''
+#~ 
+#~ print pepito.get_full_name()
+#~ print pepito.modo
+#~ print pepito.estado
 
-
+#~ 
 #~ """
 #~ Prueba de reconocer distancia entre notas
 #~ """
@@ -43,17 +45,17 @@ import random
 #~ Prueba de creacion de escala
 #~ """
 #~ 
-#~ modo = 'm'
-#~ tonalidad = Tonalidad ('Mi', '', modo) 
+#~ modo = ''
+#~ tonalidad = Tonalidad ('mi', 'b', modo) 
 #~ 
 #~ lista1, lista2 = tonalidad.crear_escala() 
 #~ 
 #~ print lista1
 #~ print  lista2
-
-"""
-Prueba para enlazar acordes
-"""
+#~ 
+#~ """
+#~ Prueba para enlazar acordes
+#~ """
 
 
 bajo = Nota ()
@@ -62,23 +64,23 @@ bajo.alteracion = ''
 bajo.altura = 1
 
 tonalidad = Tonalidad ('la', '', '')
-#~ 
-#~ 
-#~ acorde_anterior = Acorde()
-#~ acorde_anterior.soprano.nombre = 'si'
-#~ acorde_anterior.soprano.altura = 3
-#~ acorde_anterior.soprano.alteracion = ''
-#~ acorde_anterior.contralto.nombre = 'sol'
-#~ acorde_anterior.contralto.altura = 3
-#~ acorde_anterior.contralto.alteracion = '#'
-#~ acorde_anterior.tenor.nombre = 'mi'
-#~ acorde_anterior.tenor.altura = 3
-#~ acorde_anterior.tenor.alteracion = ''
-#~ acorde_anterior.bajo.nombre = 'mi'
-#~ acorde_anterior.bajo.altura = 2
-#~ acorde_anterior.bajo.alteracion = ''
-#~ 
-#~ armonizador = Armonizador()
+
+
+acorde_anterior = Acorde()
+acorde_anterior.soprano.nombre = 'si'
+acorde_anterior.soprano.altura = 3
+acorde_anterior.soprano.alteracion = ''
+acorde_anterior.contralto.nombre = 'sol'
+acorde_anterior.contralto.altura = 3
+acorde_anterior.contralto.alteracion = '#'
+acorde_anterior.tenor.nombre = 'mi'
+acorde_anterior.tenor.altura = 3
+acorde_anterior.tenor.alteracion = ''
+acorde_anterior.bajo.nombre = 'mi'
+acorde_anterior.bajo.altura = 2
+acorde_anterior.bajo.alteracion = ''
+
+armonizador = Armonizador()
 
 
 #~ 
@@ -89,23 +91,23 @@ tonalidad = Tonalidad ('la', '', '')
 		#~ print acordes[i][j]
 	#~ print '--------------------------------------'
 	
-acordes = armonizador.crear_primer_acorde( tonalidad, bajo )
+acordes = armonizador.enlace( tonalidad, acorde_anterior, bajo )
 
 
 
+
+print 'Acorde Anterior : ' + str(acorde_anterior.get_full_name())
+
+print 'soprano : ' + str(acorde_anterior.soprano.nombre) \
+	+ str(acorde_anterior.soprano.alteracion)+ str(acorde_anterior.soprano.altura)
+print 'contralto : ' + str(acorde_anterior.contralto.nombre) \
+	+ str(acorde_anterior.contralto.alteracion)+ str(acorde_anterior.contralto.altura)
+print 'tenor : ' + str(acorde_anterior.tenor.nombre) \
+	+ str(acorde_anterior.tenor.alteracion)+ str(acorde_anterior.tenor.altura)
+print 'bajo : ' + str(acorde_anterior.bajo.nombre) \
+	+ str(acorde_anterior.bajo.alteracion)+ str(acorde_anterior.bajo.altura)
 #~ 
-#~ print 'Acorde Anterior : ' + str(acorde_anterior.get_full_name())
-#~ 
-#~ print 'soprano : ' + str(acorde_anterior.soprano.nombre) \
-	#~ + str(acorde_anterior.soprano.alteracion)+ str(acorde_anterior.soprano.altura)
-#~ print 'contralto : ' + str(acorde_anterior.contralto.nombre) \
-	#~ + str(acorde_anterior.contralto.alteracion)+ str(acorde_anterior.contralto.altura)
-#~ print 'tenor : ' + str(acorde_anterior.tenor.nombre) \
-	#~ + str(acorde_anterior.tenor.alteracion)+ str(acorde_anterior.tenor.altura)
-#~ print 'bajo : ' + str(acorde_anterior.bajo.nombre) \
-	#~ + str(acorde_anterior.bajo.alteracion)+ str(acorde_anterior.bajo.altura)
-
-#~ print '----------------------------------------------------------------'
+print '----------------------------------------------------------------'
 #~ if len(acordes) > 0 :
 	#~ 
 	#~ for pos in range (len (acordes)) :
@@ -123,3 +125,12 @@ acordes = armonizador.crear_primer_acorde( tonalidad, bajo )
 #~ 
 #~ else :
 	#~ print 'No existe solucion que cumpla las reglas'
+print 'Una posible solucion : ' + str (acordes.get_full_name()) 
+print  'soprano : ' + str(acordes.soprano.nombre) \
+	+str(acordes.soprano.alteracion) + str(acordes.soprano.altura)
+print  'contralto : ' + str(acordes.contralto.nombre) \
+	+str(acordes.contralto.alteracion) + str(acordes.contralto.altura)
+print  'tenor : ' + str(acordes.tenor.nombre) \
+	+str(acordes.tenor.alteracion) + str(acordes.tenor.altura)
+print  'bajo : ' + str(acordes.bajo.nombre) \
+	+str(acordes.bajo.alteracion) + str(acordes.bajo.altura)

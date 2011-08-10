@@ -336,7 +336,7 @@ class Acorde :
 			return 'V'+str(estado)
 		
 		if pos == 5 :
-			return 'Vi'+str(estado)
+			return 'VI'+str(estado)
 		
 		if pos == 6 :
 			return 'VII'+str(estado)

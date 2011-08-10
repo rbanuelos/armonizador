@@ -136,6 +136,7 @@ class VentanaPrincipal :
 				mouse_y -= 0
 				mouse_x += 0.5
 				
+				#print str(mouse_x) + ' - ' + str(mouse_y)
 				#resaltar el boton cuando el mouse esta encima
 				if self.boton.collidepoint(mouse_x, mouse_y) :
 					self.set_highligthed()
@@ -256,7 +257,7 @@ class VentanaPrincipal :
 			
 			#se le llama al controlador
 			resultados, cifrados_americanos, cifrados  = \
-						controller.resolver( self.bajos_dados, "mi" )
+						controller.resolver( self.bajos_dados, "do" )
 		
 		for index in range(len(resultados)) : 
 			
@@ -415,10 +416,10 @@ class VentanaPrincipal :
 		"""
 		
 		#dibuja la clave de Sol
-		fullname = os.path.join('img', 'Partituras.jpg')
+		fullname = os.path.join('img', 'bach.JPG')
 		image = pygame.image.load(fullname)
 		image = pygame.transform.scale(image, (1100, 800))
-		image.set_alpha(200)
+		image.set_alpha(170)
 		self.screen.blit(image, (0, 0))
 
 	def draw_line (self, ptox, ptoy, color):
@@ -724,6 +725,10 @@ class VentanaPrincipal :
 		#desplazamiento hacia abajo
 		desp_y = 176
 		
+		#primeras lineas
+		dibujar.vline(self.screen, 50, pos_y, 322, Color.BLACK )
+		
+		
 		for i in range(4) :
 			dibujar.vline(self.screen, pos_x + i*210, pos_y, pos_y  \
 											+ desp_y + tam, Color.BLACK )
@@ -732,7 +737,9 @@ class VentanaPrincipal :
 		for i in range(3) :
 			dibujar.vline(self.screen, pos_x + i*210, pos_y, pos_y  \
 											+ desp_y + tam, Color.BLACK )
-			
+		
+		dibujar.vline(self.screen, 50, pos_y, 656, Color.BLACK )
+		
 		#rayas finales
 		dibujar.vline(self.screen, pos_x + 3*208, pos_y, pos_y  \
 											+ desp_y + tam, Color.BLACK )
@@ -851,7 +858,7 @@ class VentanaPrincipal :
 		desp_x = 9
 		
 		for desp in (0, 336):
-			for i in range(orden_sostenidos["mi"]) :
+			for i in range(orden_sostenidos["do"]) :
 				
 				if i == 0 :
 					imagerect.centerx, imagerect.centery = 105+desp_x, 83+desp
@@ -1055,12 +1062,12 @@ class VentanaPrincipal :
 		proceda a resolver el ejercicio de armonia
 		"""
 		
-		font = pygame.font.Font('Fifties Regular.ttf', 70)
+		font = pygame.font.Font('Campaign-Normal.ttf', 70)
 		# Render the text
 		text = font.render("Armonizar", True, (0, 0, 0))
 		textRect = text.get_rect()
 		#posicion
-		textRect.centerx = 900
+		textRect.centerx = 930
 		textRect.centery = 750
 	
 		self.screen.blit(text, textRect)
@@ -1072,12 +1079,12 @@ class VentanaPrincipal :
 		resalta el boton de armonizar cuando el mouse esta encima
 		"""
 		
-		font = pygame.font.Font('Fifties Regular.ttf', 70)
+		font = pygame.font.Font('Campaign-Normal.ttf', 70)
 		# Render the text
 		text = font.render("Armonizar", True, (255, 0, 0))
 		textRect = text.get_rect()
 		#posicion
-		textRect.centerx = 900
+		textRect.centerx = 930
 		textRect.centery = 750
 	
 		self.screen.blit(text, textRect)
