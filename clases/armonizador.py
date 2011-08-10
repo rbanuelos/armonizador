@@ -140,6 +140,7 @@ class Armonizador :
 			pass_regla_7 = [] 
 			pass_regla_9 = [] 
 			pass_regla_10 = [] 
+			pass_regla_15 = []
 			
 			#se toma uno de los posibles acordes y se hallan sus posibles
 			#disposiciones
@@ -232,8 +233,15 @@ class Armonizador :
 						pass_regla_10.append( pass_regla_9[index] )
 			else :
 				pass_regla_10 += pass_regla_9
-				
-			resultados += pass_regla_10
+			
+			if verificar_regla[14] :
+				for index in range(len(pass_regla_10)) :
+					if not util.regla_15( acorde_anterior, pass_regla_10[index] ) :
+						pass_regla_15.append( pass_regla_10[index] )
+			else :
+				pass_regla_15 += pass_regla_10
+			
+			resultados += pass_regla_15
 		
 		#si no se encontraron soluciones se retorna None
 		if len(resultados) == 0 :
@@ -557,7 +565,7 @@ class Armonizador :
 		
 		#incializamos el array booleano que nos permite saber si aplicar
 		#o no la regla de acuerdo a la posicion dentro del array
-		for index in range(14):
+		for index in range(15):
 			reglas_a_aplicar.append(True)
 		
 		escala, alteraciones = tonalidad.crear_escala()
@@ -593,13 +601,16 @@ class Armonizador :
 		reglas_a_aplicar[5] = False
 		
 		reglas_a_aplicar[6] = self.regla_7_filter( grado_1, estado_1, \
-														grado_2, estado_2)
+														grado_2, estado_2 )
 		
 		reglas_a_aplicar[8] = self.regla_9_filter( grado_1, estado_1, \
-														grado_2, estado_2)
+														grado_2, estado_2 )
 		
 		reglas_a_aplicar[9] = self.regla_10_filter( grado_1, estado_1, \
-														grado_2, estado_2)
+														grado_2, estado_2 )
+		
+		reglas_a_aplicar[14] = self.regla_15_filter( grado_1, grado_2 )
+		
 		return reglas_a_aplicar
 		
 	def regla_1_filter( self, grado_1, grado_2 ) :
@@ -686,6 +697,18 @@ class Armonizador :
 			if estado_1 == '6' and estado_2 == '6' :
 				return True
 		
+		return False
+	
+	def regla_15_filter( self, grado_1, grado_2 ) : 
+		"""
+		Metodo que determina si se comprueba la regla 10 o no.
+		Se aplica solo para el enlace V - VI 
+		
+		"""
+		#verifica que los grados sean respectivamente V y VI
+		if grado_1 == 5 and grado_2 == 6:
+			return True
+			
 		return False
 	
 	def comprobar_salto( self, acorde_1, acorde_2 ) :

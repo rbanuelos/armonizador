@@ -321,24 +321,31 @@ class Acorde :
 			return 'Sin cifrado'
 			
 		if pos == 0 :
+			self.grado = 1
 			return 'I'+str(estado)
 		
 		if pos == 1 :
+			self.grado = 2
 			return 'II'+str(estado)
 		
 		if pos == 2 :
+			self.grado = 3
 			return 'III'+str(estado)
 		
 		if pos == 3 :
+			self.grado = 4
 			return 'IV'+str(estado)
 		
 		if pos == 4 :
+			self.grado = 5
 			return 'V'+str(estado)
 		
 		if pos == 5 :
+			self.grado = 6
 			return 'VI'+str(estado)
 		
 		if pos == 6 :
+			self.grado = 7
 			return 'VII'+str(estado)
 		
 	def get_cifrado_americano( self ) :
@@ -1157,6 +1164,41 @@ class Util :
 			return True
 		
 		return False
+
+	################### REGLA 15 - ENLACE V-VI ######################
+	def regla_15( self, acorde_ant, acorde_sgte ) :
+		"""
+		
+		La Decimo quinta regla de armonia tradicional. Enlace V-VI o 
+		cadencia rota.
+		Esta regla establece que en el acorde V se debe duplicar la 
+		fundamental y en el acorde VI la tercera
+		
+		Retorna True en caso de que no se cumpla la regla
+		
+		"""
+		acorde_sgte.get_full_name()
+
+		pos_3era = posibles_notas.index(acorde_sgte.nombre) + 2
+		
+		nombre_3era = posibles_notas[pos_3era%7]
+		
+		count = 0
+		
+		if acorde_sgte.soprano.nombre == nombre_3era :
+			count += 1
+			
+		if acorde_sgte.contralto.nombre == nombre_3era :
+			count += 1
+		 
+		if acorde_sgte.tenor.nombre == nombre_3era :
+			count += 1
+			
+		if acorde_sgte.bajo.nombre == nombre_3era :
+			count += 1
+		
+		return count != 2
+
 
 util = Util()
 

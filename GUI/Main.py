@@ -419,7 +419,7 @@ class VentanaPrincipal :
 		fullname = os.path.join('img', 'bach.JPG')
 		image = pygame.image.load(fullname)
 		image = pygame.transform.scale(image, (1100, 800))
-		image.set_alpha(170)
+		image.set_alpha(150)
 		self.screen.blit(image, (0, 0))
 
 	def draw_line (self, ptox, ptoy, color):
