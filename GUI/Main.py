@@ -416,7 +416,7 @@ class VentanaPrincipal :
 		"""
 		
 		#dibuja la clave de Sol
-		fullname = os.path.join('img', 'bach.JPG')
+		fullname = os.path.join('img', 'Mozartninio.jpg')
 		image = pygame.image.load(fullname)
 		image = pygame.transform.scale(image, (1100, 800))
 		image.set_alpha(150)

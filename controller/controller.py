@@ -194,7 +194,8 @@ class Controller :
 
 			if self.acordes[index].get_cifrado( tonalidad ) == 'VII6' :
 				pos = index
-		
+				break
+
 		if pos == None :
 			return pos
 		
